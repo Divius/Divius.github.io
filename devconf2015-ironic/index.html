@@ -88,6 +88,121 @@
                 </li>
             </ul>
         </section>
+        <section>
+            <section>
+                <h2>Ironic Architecture</h2>
+            </section>
+            <section>
+                <h3>... in 30 seconds</h3>
+                <img src="img/Ironic_bear_arch.png">
+                <p><small>by Kyle Stevenson</small></p>
+            </section>
+            <section>
+                <h3>... in 2 minutes</h3>
+                <img src="img/logical_architecture.png">
+                <p><small>
+                    <a href="http://docs.openstack.org/developer/ironic/deploy/user-guide.html">http://docs.openstack.org/developer/ironic/deploy/user-guide.html</a>
+                </small></p>
+            </section>
+            <section>
+                <h3>... in 5 minutes</h3>
+                <img src="img/deployment_steps.png">
+                <p><small>Example workflow for <tt>pxe_ipmitool</tt> driver</small></p>
+            </section>
+        </section>
+        <section>
+            <h2>Architecture: hash ring</h2>
+            <ul>
+                <li>Ironic conductors are organized in a stable hash ring</li>
+                <li>Each conductor maps to a configurable number of hashes in the ring</li>
+                <li>Each node is mapped to a host by it's UUID</li>
+                <li>On conductor enter/leave the hash ring is rebuilt and node
+                mapping is updated</li>
+            </ul>
+        </section>
+        <section>
+            <section>
+                <h2>Drivers</h2>
+                <p>Ironic delegates dealing with particular hardware to number of
+                drivers.</p>
+                <p>Drivers consist of several interfaces, each having some
+                specific role in the deployment process.</p>
+            </section>
+            <section>
+                <h3>Interfaces: Juno version</h3>
+                <ul>
+                    <li>Power<br>
+                        Handles power actions, such as power on or reboot</li>
+                    <li>Deploy<br>
+                        Handles imaging the target system</li>
+                    <li>Vendor passthru<br>
+                        Anything vendor-specific</li>
+                    <li>Management<br>
+                        Other utilities e.g. changing boot device or getting
+                        sensors reading using IPMI</li>
+                    <li>Console<br>
+                        Provides remote console</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Interfaces: power</h3>
+                <p><ul>
+                    <li>IPMI</li>
+                    <li>SNMP</li>
+                    <li>SSH (virsh etc)</li>
+                    <li>DRAC (DELL)</li>
+                    <li>iLO (HP)</li>
+                    <li>iRMC (FUJITSU)
+                        <sup style="color:red"><small>Kilo!</small></sup></li>
+                </ul></p>
+            </section>
+            <section>
+                <h3>Interfaces: deploy</h3>
+                <ul>
+                    <li>Actually a mix of boot method and deploy method</li>
+                    <li>Boot method defines how Ironic is going to reach the
+                    machine for deploying on it (usually by running some
+                    ramdisk on the machine)</li>
+                    <li>Deploy method defines how Ironic will be moving images on
+                    the machine</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Interfaces: deploy: boot part</h3>
+                <ul>
+                    <li>PXE<br>
+                        <small>Preboot Execution Environment (PXE) enables
+                        system’s BIOS and network interface card to bootstrap
+                        a computer from the network using TFTP in place of a disk.
+                        </small>
+                    </li>
+                    <li>iPXE<br>
+                        <small>Mostly the same as PXE but using HTTP instead of
+                               TFTP.</small>
+                    </li>
+                    <li>Virtual media<br>
+                        <small>Some vendors support attaching ISO or floppy
+                               disk image to the machine remotely.</small>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h3>Interfaces: deploy: deploy part</h3>
+                <ul>
+                    <li>iSCSI<br>
+                        <small>Ramdisk publishes the hard drive via iSCSI, Ironic
+                            conductor put the image on it and signals back.</small>
+                    </li>
+                    <li>IPA<br>
+                        <small>Ironic Python Agent is an effort to create a smart
+                            ramdisk for Ironic capable of downloading and writing
+                            images without help of the conductor.<br>
+                            <a href="https://github.com/openstack/ironic-python-agent">https://github.com/openstack/ironic-python-agent</a>
+                        </small>
+                    </li>
+                </ul>
+            </section>
+        </section>
 
 <!--
                         <section data-markdown>
