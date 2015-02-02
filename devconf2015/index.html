@@ -203,6 +203,85 @@
                 </ul>
             </section>
         </section>
+        <section>
+            <section>
+                <h2>Kilo Cycle Challenges</h2>
+            </section>
+            <section>
+                <h3>Images and Local Booting</h3>
+                <p>Two types of images:
+                    <ul><li>Partition image<br>
+                        <small>only root partition, partitioning is done by Ironic</small></li>
+                        <li>Whole disk image<br>
+                        <small>all partitions are created on an image</small></li>
+                    </ul>
+                </p>
+                <p>Two types of possible boot modes:
+                    <ul><li>PXE boot</li>
+                        <li>Local boot
+                            <sup style="color:red"><small>Kilo!</small></sup></li>
+                    </ul>
+                </p><br>
+                <h4>Challenge</h4>
+                <p>Make all combinations possible with all drivers.</p>
+            </section>
+            <section>
+                <h3>New operations</h3>
+                <ul>
+                    <li>Cleaning<br>
+                        <small>Ensure that nothing from previous tenant is
+                            exposed to the new tenant</small></li>
+                    <li>Zapping<br>
+                        <small>Additional operations to make sure the machine
+                            is in an expected state, e.g.
+                            <ul><li>RAID configuration
+                                <sup style="color:red"><small>Kilo!</small></sup></li>
+                                <li>Firmware updates</li>
+                            </ul>
+                        These actions are usually driver-specific.</small>
+                        </li>
+                    <li>Inspecting (aka discovery)</li>
+                </ul>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>Hardware Inspection</h2>
+                <p>Discovering required hardware properties for a machine,
+                    knowing only power credentials (e.g. IPMI).</p>
+                <p>Not to confuse with auto-discovery, when new
+                    hardware is enrolled automagically.</p>
+            </section>
+            <section>
+                <h3>What to discover</h3>
+                <ul>
+                    <li>Basic scheduling properties<br>
+                        <small>CPU count and architecture, memory size, disk size</small></li>
+                    <li>MAC addresses of NICs</li>
+                    <li>Vendor-specific hardware capabilities<br>
+                        <small>boot modes, RAID level, GPU devices, etc</small></li>
+                </ul>
+            </section>
+            <section>
+                <h3>Out-of-band</h3>
+                <p>Possible with e.g. iLO (HP) <sup style="color:red"><small>Kilo!</small></sup>
+                    and DRAC (DELL).</p>
+                <br>
+                <p>Pros: usually fast and simple.</p>
+                <p>Cons: limited by BMC capabilities.</p>
+            </section>
+            <section>
+                <h3>In-band</h3>
+                <p>Implemented via booting a special ramdisk on a node.</p>
+                <br>
+                <p>Pros: can discover anything that can be discovered in theory.</p>
+                <p>Cons: complex and long, requires special DHCP configuration
+                    and a whole boot cycle.</p>
+                <br>
+                <p>There was an agreement not to implement it as part of
+                    Ironic codebase.</p>
+            </section>
+        </section>
 
 <!--
                         <section data-markdown>
