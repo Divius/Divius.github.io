@@ -114,24 +114,19 @@
                 </small></p>
             </section>
             <section>
-                <h3>... in 5 minutes</h3>
-                <img src="img/deployment_steps.png">
-                <p><small>Example workflow for <tt>pxe_ipmitool</tt> driver</small></p>
+                <h2>Architecture: hash ring</h2>
+                <ul>
+                    <li>Ironic conductors are organized in a stable hash ring</li>
+                    <li>Each conductor maps to a configurable number of hashes in the ring</li>
+                    <li>Each node is mapped to a conductor by it's UUID</li>
+                    <li>On conductor enter/leave the hash ring is rebuilt and node
+                    mapping is updated</li>
+                </ul>
             </section>
         </section>
         <section>
-            <h2>Architecture: hash ring</h2>
-            <ul>
-                <li>Ironic conductors are organized in a stable hash ring</li>
-                <li>Each conductor maps to a configurable number of hashes in the ring</li>
-                <li>Each node is mapped to a host by it's UUID</li>
-                <li>On conductor enter/leave the hash ring is rebuilt and node
-                mapping is updated</li>
-            </ul>
-        </section>
-        <section>
             <section>
-                <h2>Architecture: drivers</h2>
+                <h2>Drivers</h2>
                 <p>Ironic delegates dealing with particular hardware to number of
                 drivers.</p>
                 <p>Drivers consist of several interfaces, each having some
@@ -214,6 +209,10 @@
                     </li>
                 </ul>
             </section>
+            <section>
+                <p>Management and console interface are usually closely
+                related to the power interface</p>
+            </section>
         </section>
 
         <section>
@@ -225,6 +224,7 @@
                 <li>Added management interface to drivers</li>
                 <li>iLO and DRAC drivers</li>
                 <li>UEFI boot mode support</li>
+                <li>Sending IPMI sensors readings to Ceilometer</li>
             </ul>
             <p><small>
                 And many more: <a href="https://blueprints.launchpad.net/ironic/juno">https://blueprints.launchpad.net/ironic/juno</a>
@@ -242,10 +242,11 @@
                 <p>Two types of images:
                     <ul><li>Partition image<br>
                         <small>only root partition, partitioning is done by Ironic</small></li>
-                        <li>Whole disk image<br>
+                        <li>Whole disk image
+                            <sup style="color:red"><small>Kilo!</small></sup><br>
                         <small>all partitions are created on an image</small></li>
                     </ul>
-                </p>
+                </p><br>
                 <p>Two types of possible boot modes:
                     <ul><li>PXE boot</li>
                         <li>Local boot
@@ -261,13 +262,17 @@
                 on a node:</p>
                 <ul>
                     <li>Cleaning<br>
-                        <small>Ensure that nothing from previous tenant is
-                            exposed to the new tenant</small></li>
+                        <small>Clean up after the previous tenant so that
+                            nothing is exposed to the new tenant, e.g.:
+                            <ul><li>Hard drive erasure</li>
+                                <li>Applying BIOS settings</li>
+                            </ul>
+                        </small></li>
                     <li>Zapping<br>
-                        <small>Additional operations to make sure the machine
-                            is in an expected state, e.g.
-                            <ul><li>RAID configuration
-                                <sup style="color:red"><small>Kilo!</small></sup></li>
+                        <small>Additional long-running and/or destructive
+                            operations that may be run between workloads, or
+                            before the first workload, e.g.:
+                            <ul><li>RAID configuration</li>
                                 <li>Firmware updates</li>
                             </ul>
                         These actions are usually driver-specific.</small>
@@ -280,7 +285,8 @@
                 <ul>
                     <li>Configdrive support</li>
                     <li>AMT and iRMC drivers</li>
-                    <li>Ongoing work to support operations with RAID</li>
+                    <li>Support operations with RAID</li>
+                    <li>API microversioning</li>
                 </ul>
             </section>
         </section>
@@ -300,6 +306,8 @@
                     <li>MAC addresses of NICs</li>
                     <li>Vendor-specific hardware capabilities<br>
                         <small>boot modes, RAID level, GPU devices, etc</small></li>
+                    <li>Matching hardware against roles/flavors<br>
+                        <small>or even creating flavors based on hardware</small></li>
                 </ul>
             </section>
             <section>
@@ -326,16 +334,16 @@
                 <p><small>
                     <a href="https://pypi.python.org/pypi/ironic-discoverd">https://pypi.python.org/pypi/ironic-discoverd</a>
                 </small></p>
-                <p>Service developed specifically for conducting
-                    in-band introspection.</p>
+                <p>Service developed specifically for conducting in-band inspection.</p>
                 <p><ul>
-                    <li>Sets instances for introspection</li>
+                    <li>Sets instances for inspection</li>
                     <li>Manages firewall setting to be able to coexist with
                         Neutron</li>
                     <li>Processes data received from the ramdisk<br>
                         <small>And supports plugins for vendor-specific
                         processing!</small></li>
-                    <li>Will support updating IPMI credentials in the future</li>
+                    <li>Will support initializing IPMI credentials in the future<br>
+                        <small>Requires manual power on</small></li>
                 </ul></p>
                 <br>
                 <p>A special ramdisk is required which is provided within
