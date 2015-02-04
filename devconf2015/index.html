@@ -49,6 +49,15 @@
                 <small>with help of Pixie Boots, the Ironic drummer bear</small>
             </p>
         </section>
+        <section>
+            <h2>This talk is about</h2>
+            <ul>
+                <li>Ironic architecture overview</li>
+                <li>Ironic drivers overview</li>
+                <li>Juno achievements</li>
+                <li>Kilo plans and progress</li>
+            </ul>
+        </section>
 
         <section>
             <h2>Becoming Ironic</h2>
@@ -90,7 +99,7 @@
         </section>
         <section>
             <section>
-                <h2>Ironic Architecture</h2>
+                <h2>Architecture: overview</h2>
             </section>
             <section>
                 <h3>... in 30 seconds</h3>
@@ -122,7 +131,7 @@
         </section>
         <section>
             <section>
-                <h2>Drivers</h2>
+                <h2>Architecture: drivers</h2>
                 <p>Ironic delegates dealing with particular hardware to number of
                 drivers.</p>
                 <p>Drivers consist of several interfaces, each having some
@@ -152,7 +161,10 @@
                     <li>SSH (virsh etc)</li>
                     <li>DRAC (DELL)</li>
                     <li>iLO (HP)</li>
+                    <li>SeaMicro</li>
                     <li>iRMC (FUJITSU)
+                        <sup style="color:red"><small>Kilo!</small></sup></li>
+                    <li>AMT/vPro
                         <sup style="color:red"><small>Kilo!</small></sup></li>
                 </ul></p>
             </section>
@@ -203,12 +215,30 @@
                 </ul>
             </section>
         </section>
+
+        <section>
+            <h2>Juno Cycle Results</h2>
+            <ul>
+                <li>Ironic graduated and driver merged into Nova</li>
+                <li>Deploy driver for IPA</li>
+                <li>iPXE support</li>
+                <li>Added management interface to drivers</li>
+                <li>iLO and DRAC drivers</li>
+                <li>UEFI boot mode support</li>
+            </ul>
+            <p><small>
+                And many more: <a href="https://blueprints.launchpad.net/ironic/juno">https://blueprints.launchpad.net/ironic/juno</a>
+            </small></p>
+        </section>
         <section>
             <section>
                 <h2>Kilo Cycle Challenges</h2>
+                <p><small>
+                    <a href="https://blueprints.launchpad.net/ironic/kilo">https://blueprints.launchpad.net/ironic/kilo</a>
+                </small></p>
             </section>
             <section>
-                <h3>Images and Local Booting</h3>
+                <h3>Kilo: Images and Local Booting</h3>
                 <p>Two types of images:
                     <ul><li>Partition image<br>
                         <small>only root partition, partitioning is done by Ironic</small></li>
@@ -226,7 +256,9 @@
                 <p>Make all combinations possible with all drivers.</p>
             </section>
             <section>
-                <h3>New operations</h3>
+                <h3>Kilo: New operations</h3>
+                <p>We've refactored our state machine and added new operations
+                on a node:</p>
                 <ul>
                     <li>Cleaning<br>
                         <small>Ensure that nothing from previous tenant is
@@ -241,6 +273,14 @@
                         These actions are usually driver-specific.</small>
                         </li>
                     <li>Inspecting (aka discovery)</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Kilo: Smaller Changes</h3>
+                <ul>
+                    <li>Configdrive support</li>
+                    <li>AMT and iRMC drivers</li>
+                    <li>Ongoing work to support operations with RAID</li>
                 </ul>
             </section>
         </section>
@@ -281,6 +321,47 @@
                 <p>There was an agreement not to implement it as part of
                     Ironic codebase.</p>
             </section>
+            <section>
+                <h3>Meet Discoverd</h3>
+                <p><small>
+                    <a href="https://pypi.python.org/pypi/ironic-discoverd">https://pypi.python.org/pypi/ironic-discoverd</a>
+                </small></p>
+                <p>Service developed specifically for conducting
+                    in-band introspection.</p>
+                <p><ul>
+                    <li>Sets instances for introspection</li>
+                    <li>Manages firewall setting to be able to coexist with
+                        Neutron</li>
+                    <li>Processes data received from the ramdisk<br>
+                        <small>And supports plugins for vendor-specific
+                        processing!</small></li>
+                    <li>Will support updating IPMI credentials in the future</li>
+                </ul></p>
+                <br>
+                <p>A special ramdisk is required which is provided within
+                diskimage-builder</p>
+            </section>
+            <section>
+                <h3>Discoverd Workflow - part 1</h3>
+                <ol>
+                    <li>Introspection on a given node UUID is requested via HTTP API</li>
+                    <li>Discoverd requests node details from Ironic and
+                    validates node state</li>
+                    <li>Discoverd fetches attributes useful for finding node
+                    and stores them in local database</li>
+                    <li>Discoverd updates firewall to allow PXE-booting from
+                    node MAC (if it's already set)</li>
+                    <li>Discoverd asks Ironic to PXE-boot the node</li>
+                </ol>
+            </section>
+            <section>
+                <h3>Discoverd Workflow - part 2</h3>
+                <ol>
+                </ol>
+            </section>
+        </section>
+        <section>
+            <h2>Future Plans</h2>
         </section>
 
 <!--
