@@ -161,6 +161,8 @@
                         <sup style="color:red"><small>Kilo!</small></sup></li>
                     <li>AMT/vPro
                         <sup style="color:red"><small>Kilo!</small></sup></li>
+                    <li>Dataprobe iBoot
+                        <sup style="color:red"><small>Kilo!</small></sup></li>
                 </ul></p>
             </section>
             <section>
@@ -287,6 +289,8 @@
                     <li>AMT and iRMC drivers</li>
                     <li>Support operations with RAID</li>
                     <li>API microversioning</li>
+                    <li>Separate node state for nodes that are managed by
+                    Ironic but should not be provided to Nova for deploying</li>
                 </ul>
             </section>
         </section>
@@ -342,8 +346,6 @@
                     <li>Processes data received from the ramdisk<br>
                         <small>And supports plugins for vendor-specific
                         processing!</small></li>
-                    <li>Will support initializing IPMI credentials in the future<br>
-                        <small>Requires manual power on</small></li>
                 </ul></p>
                 <br>
                 <p>A special ramdisk is required which is provided within
@@ -365,101 +367,30 @@
             <section>
                 <h3>Discoverd Workflow - part 2</h3>
                 <ol>
+                    <li>Ramdisk posts collected information back to Discoverd</li>
+                    <li>Plugins hooks are executed to pre-process the data</li>
+                    <li>Discoverd looks up node in the local database</li>
+                    <li>Discoverd creates Ironic ports</li>
+                    <li>Plugins hooks are executed to detect which changes to
+                    apply to the node</li>
+                    <li>Discoverd updates the node and powers off it</li>
                 </ol>
+            </section>
+            <section>
+                <h3>Discoverd: possible applications</h3>
+                <ul>
+                    <li>Support initializing IPMI credentials in the future<br>
+                        <small>Requires manual power on</small></li>
+                    <li>Node validation as part of cleaning or zapping
+                        <small>Compare discovered data with what you have in Ironic</small></li>
+                    <li>Node trust validation via Intel TXT</li>
+                </ul>
             </section>
         </section>
         <section>
             <h2>Future Plans</h2>
         </section>
 
-<!--
-                        <section data-markdown>
-                                <script type="text/template">
-                                        ## Markdown support
-
-                                        For those of you who like that sort of thing. Instructions and a bit more info available [here](https://github.com/hakimel/reveal.js#markdown).
-
-                                        ```
-                                        <section data-markdown>
-                                          ## Markdown support
-
-                                          For those of you who like that sort of thing.
-                                          Instructions and a bit more info available [here](https://github.com/hakimel/reveal.js#markdown).
-                                        </section>
-                                        ```
-                                </script>
-                        </section>
-
-                        <section>
-                                <h2>Clever Quotes</h2>
-                                <p>
-                                        These guys come in two forms, inline: <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-                                        &ldquo;The nice thing about standards is that there are so many to choose from&rdquo;</q> and block:
-                                </p>
-                                <blockquote cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-                                        &ldquo;For years there has been a theory that millions of monkeys typing at random on millions of typewriters would
-                                        reproduce the entire works of Shakespeare. The Internet has proven this theory to be untrue.&rdquo;
-                                </blockquote>
-                        </section>
-
-                        <section>
-                                <h2>Pretty Code</h2>
-                                <pre><code data-trim contenteditable>
-function linkify( selector ) {
-  if( supports3DTransforms ) {
-
-    var nodes = document.querySelectorAll( selector );
-
-    for( var i = 0, len = nodes.length; i &lt; len; i++ ) {
-      var node = nodes[i];
-
-      if( !node.className ) {
-        node.className += ' roll';
-      }
-    }
-  }
-}
-                                </code></pre>
-                                <p>Courtesy of <a href="http://softwaremaniacs.org/soft/highlight/en/description/">highlight.js</a>.</p>
-                        </section>
-
-                        <section>
-                                <section id="fragments">
-                                        <h2>Fragmented Views</h2>
-                                        <p>Hit the next arrow...</p>
-                                        <p class="fragment">... to step through ...</p>
-                                        <ol>
-                                                <li class="fragment"><code>any type</code></li>
-                                                <li class="fragment"><em>of view</em></li>
-                                                <li class="fragment"><strong>fragments</strong></li>
-                                        </ol>
-
-                                        <aside class="notes">
-                                                This slide has fragments which are also stepped through in the notes window.
-                                        </aside>
-                                </section>
-                                <section>
-                                        <h2>Fragment Styles</h2>
-                                        <p>There's a few styles of fragments, like:</p>
-                                        <p class="fragment grow">grow</p>
-                                        <p class="fragment shrink">shrink</p>
-                                        <p class="fragment roll-in">roll-in</p>
-                                        <p class="fragment fade-out">fade-out</p>
-                                        <p class="fragment highlight-red">highlight-red</p>
-                                        <p class="fragment highlight-green">highlight-green</p>
-                                        <p class="fragment highlight-blue">highlight-blue</p>
-                                        <p class="fragment current-visible">current-visible</p>
-                                        <p class="fragment highlight-current-blue">highlight-current-blue</p>
-                                </section>
-                        </section>
-
-                        <section>
-                                <h2>Spectacular image!</h2>
-                                <a class="image" href="http://lab.hakim.se/meny/" target="_blank">
-                                        <img width="320" height="299" src="http://s3.amazonaws.com/hakim-static/portfolio/images/meny.png" alt="Meny">
-                                </a>
-                        </section>
--->
     </div>
 
 </div>
