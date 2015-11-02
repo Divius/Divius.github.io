@@ -1,0 +1,4 @@
+Sitemap: http://dtantsur.github.io/sitemapindex.xml
+
+User-Agent: *
+Host: dtantsur.github.io
