@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>OpenStack Baremetal (Ironic) Status Update</title>
+
+    <meta name="description" content="OpenStack Baremetal (Ironic) Status Update">
+    <meta name="author" content="Dmitry Tantsur (dtantsur@redhat.com)">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+    <script>
+            if( window.location.search.match( /print-pdf/gi ) ) {
+                    var link = document.createElement( 'link' );
+                    link.rel = 'stylesheet';
+                    link.type = 'text/css';
+                    link.href = 'css/print/pdf.css';
+                    document.getElementsByTagName( 'head' )[0].appendChild( link );
+            }
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h1>OpenStack Baremetal (Ironic)</h1>
+            <img src="img/Ironic_mascot_color.png" width="240" height="241" alt="Pixie Boot">
+            <p>
+                <small>By Dmitry Tantsur &lt;<a href="mailto:dtantsur@redhat.com">dtantsur@redhat.com</a>&gt;</small>
+                <br>
+                <small>with help of Pixie Boots, the Ironic drummer bear</small>
+            </p>
+        </section>
+        <section>
+            <h2>This talk is about</h2>
+            <ul>
+                <li>Ironic architecture overview</li>
+                <li>Ironic drivers overview</li>
+                <li>Juno achievements</li>
+                <li>Kilo plans and progress</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Becoming Ironic</h2>
+            <p>
+                Ironic is an OpenStack project which provisions bare metal (as
+                opposed to virtual) machines by leveraging common technologies such
+                as PXE boot and IPMI to cover a wide range of hardware, while
+                supporting pluggable drivers to allow vendor-specific functionality
+                to be added.
+                <br>
+                <small>&copy; <a href="http://docs.openstack.org/developer/ironic/">http://docs.openstack.org/developer/ironic/</a></small>
+            </p>
+            <p class="fragment">
+                Or simply speaking: tool for building clouds, where each
+                instance occupy the whole physical machine.
+            </p>
+        </section>
+
+        <section>
+            <h2>Use Cases</h2>
+            <ul>
+                <li>
+                    <p>TripleO</p>
+                    <p><small>TripleO is a program aimed at installing, upgrading
+                    and operating OpenStack clouds using OpenStack's own cloud
+                    facilities as the foundations.</small></p>
+                    <small>&copy; <a href="https://wiki.openstack.org/wiki/TripleO">https://wiki.openstack.org/wiki/TripleO</a></small>
+                </li>
+                <li>
+                    <p>Bare Metal Clouds</p>
+                    <p><small>Provide bare metal instances to the clients for
+                    better and more predictable performance, or access to
+                    low-level hardware features (like OpenCL).</small></p>
+                </li>
+                <li>
+                    <p>General purpose hardware provisioning</p>
+                </li>
+            </ul>
+        </section>
+        <section>
+            <section>
+                <h2>Architecture: overview</h2>
+            </section>
+            <section>
+                <h3>... in 30 seconds</h3>
+                <img src="img/Ironic_bear_arch.png">
+                <p><small>by Kyle Stevenson</small></p>
+            </section>
+            <section>
+                <h3>... in 2 minutes</h3>
+                <img src="img/logical_architecture.png">
+                <p><small>
+                    <a href="http://docs.openstack.org/developer/ironic/deploy/user-guide.html">http://docs.openstack.org/developer/ironic/deploy/user-guide.html</a>
+                </small></p>
+            </section>
+            <section>
+                <h2>Architecture: hash ring</h2>
+                <ul>
+                    <li>Ironic conductors are organized in a stable hash ring</li>
+                    <li>Each conductor maps to a configurable number of hashes in the ring</li>
+                    <li>Each node is mapped to a conductor by it's UUID</li>
+                    <li>On conductor enter/leave the hash ring is rebuilt and node
+                    mapping is updated</li>
+                </ul>
+            </section>
+            <section>
+                <h2>Architecture: HA</h2>
+                <img src="img/ironic_ha.png">
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>Ironic Drivers</h2>
+                <img src="img/driver.png">
+            </section>
+            <section>
+                <p>Ironic delegates dealing with particular hardware to number of
+                drivers.</p>
+                <p>Drivers consist of several interfaces, each having some
+                specific role in the deployment process.</p>
+            </section>
+            <section>
+                <h3>Interfaces: Juno version</h3>
+                <ul>
+                    <li>Power<br>
+                        Handles power actions, such as power on or reboot</li>
+                    <li>Deploy<br>
+                        Handles imaging the target system</li>
+                    <li>Vendor passthru<br>
+                        Anything vendor-specific</li>
+                    <li>Management<br>
+                        Other utilities e.g. changing boot device or getting
+                        sensors reading using IPMI</li>
+                    <li>Console<br>
+                        Provides remote console</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Interfaces: power</h3>
+                <p><ul>
+                    <li>IPMI</li>
+                    <li>SNMP</li>
+                    <li>SSH (virsh etc)</li>
+                    <li>DRAC (DELL)</li>
+                    <li>iLO (HP)</li>
+                    <li>SeaMicro</li>
+                    <li>Dataprobe iBoot</li>
+                    <li>iRMC (FUJITSU)
+                        <sup style="color:red"><small>Kilo!</small></sup></li>
+                    <li>AMT/vPro
+                        <sup style="color:red"><small>Kilo!</small></sup></li>
+                </ul></p>
+            </section>
+            <section>
+                <h3>Interfaces: deploy</h3>
+                <ul>
+                    <li>Actually a mix of boot method and deploy method</li>
+                    <li>Boot method defines how Ironic is going to reach the
+                    machine for deploying on it (usually by running some
+                    ramdisk on the machine)</li>
+                    <li>Deploy method defines how Ironic will be moving images on
+                    the machine</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Interfaces: deploy: boot part</h3>
+                <ul>
+                    <li>PXE<br>
+                        <small>Preboot Execution Environment (PXE) enables
+                        system’s BIOS and network interface card to bootstrap
+                        a computer from the network using TFTP in place of a disk.
+                        </small>
+                    </li>
+                    <li>iPXE<br>
+                        <small>Mostly the same as PXE but using HTTP instead of
+                               TFTP.</small>
+                    </li>
+                    <li>Virtual media<br>
+                        <small>Some vendors support attaching ISO or floppy
+                               disk image to the machine remotely.</small>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <h3>Interfaces: deploy: deploy part</h3>
+                <ul>
+                    <li>iSCSI<br>
+                        <small>Ramdisk publishes the hard drive via iSCSI, Ironic
+                            conductor put the image on it and signals back.</small>
+                    </li>
+                    <li>IPA<br>
+                        <small>Ironic Python Agent is an effort to create a smart
+                            ramdisk for Ironic capable of downloading and writing
+                            images without help of the conductor.<br>
+                            <a href="https://github.com/openstack/ironic-python-agent">https://github.com/openstack/ironic-python-agent</a>
+                        </small>
+                    </li>
+                </ul>
+            </section>
+            <section>
+                <p>Management and console interface are usually closely
+                related to the power interface</p>
+            </section>
+        </section>
+
+        <section>
+            <h2>Juno Cycle Results</h2>
+            <ul>
+                <li>Ironic graduated and driver merged into Nova</li>
+                <li>Deploy driver for IPA</li>
+                <li>iPXE support</li>
+                <li>Added management interface to drivers</li>
+                <li>iLO and DRAC drivers</li>
+                <li>UEFI boot mode support</li>
+                <li>Sending IPMI sensors readings to Ceilometer</li>
+            </ul>
+            <p><small>
+                And many more: <a href="https://blueprints.launchpad.net/ironic/juno">https://blueprints.launchpad.net/ironic/juno</a>
+            </small></p>
+        </section>
+        <section>
+            <section>
+                <h2>Kilo Cycle Challenges</h2>
+                <p><small>
+                    <a href="https://blueprints.launchpad.net/ironic/kilo">https://blueprints.launchpad.net/ironic/kilo</a>
+                </small></p>
+            </section>
+            <section>
+                <h3>Kilo: Images and Local Booting</h3>
+                <p>Two types of images:
+                    <ul><li>Partition image<br>
+                        <small>only root partition, partitioning is done by Ironic</small></li>
+                        <li>Whole disk image
+                            <sup style="color:red"><small>Kilo!</small></sup><br>
+                        <small>all partitions are created on an image</small></li>
+                    </ul>
+                </p><br>
+                <p>Two types of possible boot modes:
+                    <ul><li>PXE boot</li>
+                        <li>Local boot
+                            <sup style="color:red"><small>Kilo!</small></sup></li>
+                    </ul>
+                </p><br>
+                <h4>Challenge</h4>
+                <p>Make all combinations possible with all drivers.</p>
+            </section>
+            <section>
+                <h3>Kilo: New operations</h3>
+                <p>We've refactored our state machine and added new operations
+                on a node:</p>
+                <ul>
+                    <li>Cleaning<br>
+                        <small>Clean up after the previous tenant so that
+                            nothing is exposed to the new tenant, e.g.:
+                            <ul><li>Hard drive erasing</li>
+                                <li>Applying BIOS settings</li>
+                            </ul>
+                        </small></li>
+                    <li>Zapping<br>
+                        <small>Additional long-running and/or destructive
+                            operations that may be run between workloads, or
+                            before the first workload, e.g.:
+                            <ul><li>RAID configuration</li>
+                                <li>Firmware updates</li>
+                            </ul>
+                        These actions are usually driver-specific.</small>
+                        </li>
+                    <li>Inspecting (aka discovery)</li>
+                </ul>
+            </section>
+            <section>
+                <h3>Kilo: Smaller Changes</h3>
+                <ul>
+                    <li>Configdrive support</li>
+                    <li>AMT and iRMC drivers</li>
+                    <li>Support operations with RAID</li>
+                    <li>API microversioning</li>
+                    <li>Separate node state for nodes that are managed by
+                    Ironic but should not be provided to Nova for deploying</li>
+                </ul>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h2>Hardware Inspection</h2>
+                <p>Discovering required hardware properties for a machine,
+                    knowing only power credentials (e.g. IPMI).</p>
+                <p>Not to confuse with auto-discovery, when new
+                    hardware is enrolled automagically.</p>
+            </section>
+            <section>
+                <h3>What to discover</h3>
+                <ul>
+                    <li>Basic scheduling properties<br>
+                        <small>CPU count and architecture, memory size, disk size</small></li>
+                    <li>MAC addresses of NICs</li>
+                    <li>Vendor-specific hardware capabilities<br>
+                        <small>boot modes, RAID level, GPU devices, etc</small></li>
+                    <li>Matching hardware against roles/flavors<br>
+                        <small>or even creating flavors based on hardware</small></li>
+                </ul>
+            </section>
+            <section>
+                <h3>Out-of-band</h3>
+                <p>Possible with e.g. iLO (HP) <sup style="color:red"><small>Kilo!</small></sup>
+                    and DRAC (DELL).</p>
+                <br>
+                <p>Pros: usually fast and simple.</p>
+                <p>Cons: limited by BMC capabilities.</p>
+            </section>
+            <section>
+                <h3>In-band</h3>
+                <p>Implemented via booting a special ramdisk on a node.</p>
+                <br>
+                <p>Pros: can discover anything that can be discovered in theory.</p>
+                <p>Cons: complex and long, requires special DHCP configuration
+                    and a whole boot cycle.</p>
+                <br>
+                <p>There was an agreement not to implement it as part of
+                    Ironic codebase.</p>
+            </section>
+            <section>
+                <h3>Meet Discoverd</h3>
+                <p><small>
+                    <a href="https://pypi.python.org/pypi/ironic-discoverd">https://pypi.python.org/pypi/ironic-discoverd</a>
+                </small></p>
+                <p>Service developed specifically for conducting in-band inspection.</p>
+                <p><ul>
+                    <li>Sets instances for inspection</li>
+                    <li>Manages firewall setting to be able to coexist with
+                        Neutron</li>
+                    <li>Processes data received from the ramdisk<br>
+                        <small>And supports plugins for vendor-specific
+                        processing!</small></li>
+                </ul></p>
+                <br>
+                <p>A special ramdisk is required which is provided within
+                diskimage-builder</p>
+            </section>
+            <section>
+                <h3>Discoverd Workflow - part 1</h3>
+                <ol>
+                    <li>Introspection on a given node UUID is requested via HTTP API</li>
+                    <li>Discoverd requests node details from Ironic and
+                    validates node state</li>
+                    <li>Discoverd fetches attributes useful for finding node
+                    and stores them in local database</li>
+                    <li>Discoverd updates firewall to allow PXE-booting from
+                    node MAC (if it's already set)</li>
+                    <li>Discoverd asks Ironic to PXE-boot the node</li>
+                </ol>
+            </section>
+            <section>
+                <h3>Discoverd Workflow - part 2</h3>
+                <ol>
+                    <li>Ramdisk posts collected information back to Discoverd</li>
+                    <li>Plugins hooks are executed to pre-process the data</li>
+                    <li>Discoverd looks up node in the local database</li>
+                    <li>Discoverd creates Ironic ports</li>
+                    <li>Plugins hooks are executed to detect which changes to
+                    apply to the node</li>
+                    <li>Discoverd updates the node and powers off it</li>
+                </ol>
+            </section>
+            <section>
+                <h3>Discoverd: possible applications</h3>
+                <ul>
+                    <li>Support initializing IPMI credentials in the future<br>
+                        <small>Requires manual power on</small></li>
+                    <li>Node validation as part of cleaning or zapping
+                        <small>Compare discovered data with what you have in Ironic</small></li>
+                    <li>Node trust validation via Intel TXT</li>
+                </ul>
+            </section>
+        </section>
+        <section>
+            <h2>That's all</h2>
+        </section>
+        <section>
+            <h2>Links</h2>
+            <p><ul>
+                <li>Ironic: <a href="https://wiki.openstack.org/wiki/Ironic">https://wiki.openstack.org/wiki/Ironic</a>
+                    <small>Juno: <a href="https://blueprints.launchpad.net/ironic/juno">https://blueprints.launchpad.net/ironic/juno</a></small>
+                    <small>Kilo: <a href="https://blueprints.launchpad.net/ironic/kilo">https://blueprints.launchpad.net/ironic/kilo</a></small>
+                </li>
+                <li>Discoverd: <a href="https://pypi.python.org/pypi/ironic-discoverd">https://pypi.python.org/pypi/ironic-discoverd</a></li>
+            </ul></p>
+            <br>
+            <p><ul>
+                <li>These slides: <a href="http://divius.github.io/devconf2015">http://divius.github.io/devconf2015</a></li>
+                <li>Give feedback: <a href="http://devconf.cz/f/25">http://devconf.cz/f/25</a></li>
+            </ul></p>
+            <h4>Thank you!</h4>
+        </section>
+    </div>
+
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.min.js"></script>
+
+<script>
+
+        // Full list of configuration options available here:
+        // https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+
+                theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+                transition: Reveal.getQueryHash().transition || 'none', // default/cube/page/concave/zoom/linear/fade/none
+
+                // Parallax scrolling
+                // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+                // parallaxBackgroundSize: '2100px 900px',
+
+                // Optional libraries used to extend on reveal.js
+                dependencies: [
+                        { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                        { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                        { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                        { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                        { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                        { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+                ]
+        });
+
+</script>
+
+</body>
+</html>
