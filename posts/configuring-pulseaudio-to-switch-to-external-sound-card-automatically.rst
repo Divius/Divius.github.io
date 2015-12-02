@@ -17,4 +17,4 @@ Now I've found a simple solution for this problem. Edit
     load-module module-switch-on-connect
 
 Now restart PulseAudio with ``pulseaudio -k``. That's it, credit for the
-solution goes to `this answer <load-module module-switch-on-connect>`_.
+solution goes to `this answer <http://askubuntu.com/a/396166>`_.
