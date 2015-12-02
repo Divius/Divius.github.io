@@ -603,7 +603,8 @@ LICENSE = """<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.
 
 # A small copyright notice for the page footer (in HTML).
 # (translatable)
-CONTENT_FOOTER = 'Contents &copy; {date}         {author} {license} - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>'
+CONTENT_FOOTER = 'Contents &copy; {date} {author} {license} - Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a>'
+CONTENT_FOOTER += ' using <a href="https://themes.getnikola.com/#zen" rel="nofollow">Zen</a> theme.'
 
 # Things that will be passed to CONTENT_FOOTER.format().  This is done
 # for translatability, as dicts are not formattable.  Nikola will
