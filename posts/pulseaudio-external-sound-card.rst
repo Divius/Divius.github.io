@@ -12,7 +12,7 @@ your desktop audio experience. Some defaults, however, may be confusing. As
 any musician I use an external sound card a lot for both practice and
 recording and manually switching to it every time is *really* annoying.
 Now I've found a simple solution for this problem. Edit
-``/etc/pulse/default.pa`` as root and prepend the following line::
+``/etc/pulse/default.pa`` as root and append the following line::
 
     load-module module-switch-on-connect
 

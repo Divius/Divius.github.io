@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Coding Music</title><link>http://dtantsur.github.io</link><description>Coding Music. Site by DAZE aka Dmitry Tantsur.</description><atom:link type="application/rss+xml" rel="self" href="http://dtantsur.github.io/rss.xml"></atom:link><language>en</language><lastBuildDate>Wed, 02 Dec 2015 19:27:19 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Configuring PulseAudio to switch to external sound card automatically</title><link>http://dtantsur.github.io/posts/pulseaudio-external-sound-card.html</link><dc:creator>Dmitry Tantsur</dc:creator><description>&lt;div&gt;&lt;p&gt;PulseAudio is a nice piece of software and has plenty of options for tuning
+<?xml-stylesheet type="text/xsl" href="assets/xml/rss.xsl" media="all"?><rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Coding Music</title><link>http://dtantsur.github.io</link><description>Coding Music. Site by DAZE aka Dmitry Tantsur.</description><atom:link href="http://dtantsur.github.io/rss.xml" rel="self" type="application/rss+xml"></atom:link><language>en</language><lastBuildDate>Wed, 02 Dec 2015 19:43:02 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Configuring PulseAudio to switch to external sound card automatically</title><link>http://dtantsur.github.io/posts/pulseaudio-external-sound-card.html</link><dc:creator>Dmitry Tantsur</dc:creator><description>&lt;div&gt;&lt;p&gt;PulseAudio is a nice piece of software and has plenty of options for tuning
 your desktop audio experience. Some defaults, however, may be confusing. As
 any musician I use an external sound card a lot for both practice and
 recording and manually switching to it every time is &lt;em&gt;really&lt;/em&gt; annoying.
 Now I've found a simple solution for this problem. Edit
-&lt;tt class="docutils literal"&gt;/etc/pulse/default.pa&lt;/tt&gt; as root and prepend the following line:&lt;/p&gt;
+&lt;tt class="docutils literal"&gt;/etc/pulse/default.pa&lt;/tt&gt; as root and append the following line:&lt;/p&gt;
 &lt;pre class="literal-block"&gt;
 load-module module-switch-on-connect
 &lt;/pre&gt;
