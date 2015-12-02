@@ -7,23 +7,27 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>http://dtantsur.github.io/2014/index.html</loc>
-  <lastmod>2015-11-02T16:38:00Z</lastmod>
+  <lastmod>2015-12-02T19:27:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://dtantsur.github.io/2015/index.html</loc>
+  <lastmod>2015-12-02T19:27:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/archive.html</loc>
-  <lastmod>2015-11-02T16:34:00Z</lastmod>
+  <lastmod>2015-12-02T19:27:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/index.html</loc>
-  <lastmod>2015-11-02T16:34:00Z</lastmod>
+  <lastmod>2015-12-02T19:27:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/music.html</loc>
-  <lastmod>2015-11-02T16:34:00Z</lastmod>
+  <lastmod>2015-12-02T19:27:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/software.html</loc>
-  <lastmod>2015-11-02T16:34:00Z</lastmod>
+  <lastmod>2015-12-02T19:27:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/devconf2015/index.html</loc>
@@ -75,10 +79,14 @@
  </url>
  <url>
   <loc>http://dtantsur.github.io/index.html</loc>
-  <lastmod>2015-11-02T16:34:00Z</lastmod>
+  <lastmod>2015-12-02T19:27:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/guitarpro-6-on-fedora-20-x86_64.html</loc>
-  <lastmod>2015-11-02T16:34:00Z</lastmod>
+  <lastmod>2015-12-02T19:27:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://dtantsur.github.io/posts/pulseaudio-external-sound-card.html</loc>
+  <lastmod>2015-12-02T19:27:00Z</lastmod>
  </url>
 </urlset>

@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/"><channel><title>Coding Music (software)</title><link>http://dtantsur.github.io</link><description></description><atom:link href="http://dtantsur.github.io/categories/software.xml" type="application/rss+xml" rel="self"></atom:link><language>en</language><lastBuildDate>Mon, 02 Nov 2015 16:34:40 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>GuitarPro 6 on Fedora 20 x86_64</title><link>http://dtantsur.github.io/posts/guitarpro-6-on-fedora-20-x86_64.html</link><dc:creator>Dmitry Tantsur</dc:creator><description>&lt;div&gt;&lt;p&gt;Well, since I started using Fedora, some things are harder than in Ubuntu. For
+<?xml-stylesheet type="text/xsl" href="../assets/xml/rss.xsl" media="all"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title>Coding Music (software)</title><link>http://dtantsur.github.io</link><description></description><atom:link type="application/rss+xml" rel="self" href="http://dtantsur.github.io/categories/software.xml"></atom:link><language>en</language><lastBuildDate>Wed, 02 Dec 2015 19:27:19 GMT</lastBuildDate><generator>https://getnikola.com/</generator><docs>http://blogs.law.harvard.edu/tech/rss</docs><item><title>Configuring PulseAudio to switch to external sound card automatically</title><link>http://dtantsur.github.io/posts/pulseaudio-external-sound-card.html</link><dc:creator>Dmitry Tantsur</dc:creator><description>&lt;div&gt;&lt;p&gt;PulseAudio is a nice piece of software and has plenty of options for tuning
+your desktop audio experience. Some defaults, however, may be confusing. As
+any musician I use an external sound card a lot for both practice and
+recording and manually switching to it every time is &lt;em&gt;really&lt;/em&gt; annoying.
+Now I've found a simple solution for this problem. Edit
+&lt;tt class="docutils literal"&gt;/etc/pulse/default.pa&lt;/tt&gt; as root and prepend the following line:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+load-module module-switch-on-connect
+&lt;/pre&gt;
+&lt;p&gt;Now restart PulseAudio with &lt;tt class="docutils literal"&gt;pulseaudio &lt;span class="pre"&gt;-k&lt;/span&gt;&lt;/tt&gt;. That's it, credit for the
+solution goes to &lt;a class="reference external" href="http://dtantsur.github.io/posts/load-modulemodule-switch-on-connect"&gt;this answer&lt;/a&gt;.&lt;/p&gt;&lt;/div&gt;</description><category>software</category><guid>http://dtantsur.github.io/posts/pulseaudio-external-sound-card.html</guid><pubDate>Wed, 02 Dec 2015 19:20:19 GMT</pubDate></item><item><title>GuitarPro 6 on Fedora 20 x86_64</title><link>http://dtantsur.github.io/posts/guitarpro-6-on-fedora-20-x86_64.html</link><dc:creator>Dmitry Tantsur</dc:creator><description>&lt;div&gt;&lt;p&gt;Well, since I started using Fedora, some things are harder than in Ubuntu. For
 example, GuitarPro only provides i686 .deb installer which just does not work.&lt;/p&gt;
 &lt;p&gt;Here what you do:&lt;/p&gt;
 &lt;ol class="arabic"&gt;

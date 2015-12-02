@@ -6,11 +6,15 @@
 <meta name="description" content="Coding Music. Site by DAZE aka Dmitry Tantsur.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Coding Music</title>
-<link href="assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="assets/css/rst.css" rel="stylesheet" type="text/css">
+<link href="assets/css/code.css" rel="stylesheet" type="text/css">
+<link href="assets/css/colorbox.css" rel="stylesheet" type="text/css">
+<link href="assets/css/theme.css" rel="stylesheet" type="text/css">
 <meta content="#5670d4" name="theme-color">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="http://dtantsur.github.io/index.html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/guitarpro-6-on-fedora-20-x86_64.html" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/pulseaudio-external-sound-card.html" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -59,7 +63,35 @@
             
 
 <div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/guitarpro-6-on-fedora-20-x86_64.html" class="u-url">GuitarPro 6 on Fedora 20 x86_64</a></h1>
+    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/pulseaudio-external-sound-card.html" class="u-url">Configuring PulseAudio to switch to external sound card automatically</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn">
+                Dmitry Tantsur
+            </span></p>
+            <p class="dateline"><a href="posts/pulseaudio-external-sound-card.html" rel="bookmark"><time class="published dt-published" datetime="2015-12-02T20:20:19+01:00" title="2015-12-02 20:20">2015-12-02 20:20</time></a></p>
+                <p class="commentline">
+        
+    <a href="posts/pulseaudio-external-sound-card.html#disqus_thread" data-disqus-identifier="cache/posts/configuring-pulseaudio-to-switch-to-external-sound-card-automatically.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>PulseAudio is a nice piece of software and has plenty of options for tuning
+your desktop audio experience. Some defaults, however, may be confusing. As
+any musician I use an external sound card a lot for both practice and
+recording and manually switching to it every time is <em>really</em> annoying.
+Now I've found a simple solution for this problem. Edit
+<tt class="docutils literal">/etc/pulse/default.pa</tt> as root and prepend the following line:</p>
+<pre class="literal-block">
+load-module module-switch-on-connect
+</pre>
+<p>Now restart PulseAudio with <tt class="docutils literal">pulseaudio <span class="pre">-k</span></tt>. That's it, credit for the
+solution goes to <a class="reference external" href="posts/load-modulemodule-switch-on-connect">this answer</a>.</p>
+</div>
+    </div>
+    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/guitarpro-6-on-fedora-20-x86_64.html" class="u-url">GuitarPro 6 on Fedora 20 x86_64</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn">
                 Dmitry Tantsur
@@ -125,7 +157,7 @@ sudo yum -y install libstdc++.i686 mesa-libGL.i686 alsa-lib.i686 portaudio.i686 
 </div>
 
 
-            <script src="assets/js/all-nocdn.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
+            <script src="assets/js/jquery.min.js"></script><script src="assets/js/bootstrap.min.js"></script><script src="assets/js/moment-with-locales.min.js"></script><script src="assets/js/fancydates.js"></script><script src="assets/js/jquery.colorbox-min.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
     moment.locale("en");
     fancydates(0, "YYYY-MM-DD HH:mm");
     </script><!-- end fancy dates -->
