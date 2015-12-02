@@ -2,82 +2,50 @@
 <html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
 <head>
 <meta charset="utf-8">
-<base href="http://dtantsur.github.io/index.html">
 <meta name="description" content="Coding Music. Site by DAZE aka Dmitry Tantsur.">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Coding Music</title>
-<link href="assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="assets/css/rst.css" rel="stylesheet" type="text/css">
-<link href="assets/css/code.css" rel="stylesheet" type="text/css">
-<link href="assets/css/colorbox.css" rel="stylesheet" type="text/css">
-<link href="assets/css/theme.css" rel="stylesheet" type="text/css">
-<meta content="#5670d4" name="theme-color">
+<meta name="viewport" content="width=device-width">
+<title>Coding Music | Coding Music</title>
+<link href="assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
-<link rel="canonical" href="http://dtantsur.github.io/index.html">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/pulseaudio-external-sound-card.html" type="text/html">
+<link rel="canonical" href="http://dtantsur.github.io/">
+<!--[if lt IE 9]><script src="/assets/js/html5.js"></script><![endif]-->
 </head>
 <body>
-<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+    <section class="social"><ul>
+<li><a href="#" title="Home"><i class="icon-home"></i></a></li>
+            <li><a href="archive.html" title="Archives"><i class="icon-folder-open-alt"></i></a></li>
+            <li><a href="categories/index.html" title="Tags"><i class="icon-tags"></i></a></li>
+            <li><a href="rss.xml" title="RSS"><i class="icon-rss"></i></a></li>
+            <li><a href="https://twitter.com/creepy_owlet" title="My Twitter"><i class="icon-twitter"></i></a></li>
+            <li><a href="https://instagram.com/creepy_owlet" title="My Instagram"><i class="icon-instagram"></i></a></li>
+            <li><a href="https://github.com/dtantsur" title="My Github"><i class="icon-github"></i></a></li>
 
-<!-- Menubar -->
-
-<nav class="navbar navbar-inverse navbar-static-top"><div class="container">
-<!-- This keeps the margins nice -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="http://dtantsur.github.io/">
-
-                <span id="blog-title">Coding Music</span>
-            </a>
-        </div>
-<!-- /.navbar-header -->
-        <div class="collapse navbar-collapse" id="bs-navbar" aria-expanded="false">
-            <ul class="nav navbar-nav">
-<li>
-<a href="archive.html">Archive</a>
-                </li>
-<li>
-<a href="categories/index.html">Tags</a>
-                </li>
-<li>
-<a href="rss.xml">RSS feed</a>
-
-                
-            </li>
-</ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+        </ul></section><section class="page-content"><div class="content" rel="main">
+            
+        <div class="post">
+            <h1 class="title"><a href="posts/pulseaudio-external-sound-card.html">Configuring PulseAudio to switch to external sound card automatically</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2015-12-02T20:20:19+01:00">2015-12-02 20:20</time>
 </div>
-<!-- /.navbar-collapse -->
-    </div>
-<!-- /.container -->
-</nav><!-- End of Menubar --><div class="container" id="content" role="main">
-    <div class="body-content">
-        <!--Body content-->
-        <div class="row">
-            
-            
-
-<div class="postindex">
-    <article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/pulseaudio-external-sound-card.html" class="u-url">Configuring PulseAudio to switch to external sound card automatically</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
-                Dmitry Tantsur
-            </span></p>
-            <p class="dateline"><a href="posts/pulseaudio-external-sound-card.html" rel="bookmark"><time class="published dt-published" datetime="2015-12-02T20:20:19+01:00" title="2015-12-02 20:20">2015-12-02 20:20</time></a></p>
-                <p class="commentline">
+                <div class="stats">
+                    
         
     <a href="posts/pulseaudio-external-sound-card.html#disqus_thread" data-disqus-identifier="cache/posts/configuring-pulseaudio-to-switch-to-external-sound-card-automatically.html">Comments</a>
 
 
-        </p>
+                </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="categories/software.html" rel="tag">software</a></li>
+        </ul>
 </div>
-    </header><div class="p-summary entry-summary">
-    <div>
+
+            </div>
+            <div class="body">
+                <div>
 <p>PulseAudio is a nice piece of software and has plenty of options for tuning
 your desktop audio experience. Some defaults, however, may be confusing. As
 any musician I use an external sound card a lot for both practice and
@@ -90,22 +58,33 @@ load-module module-switch-on-connect
 <p>Now restart PulseAudio with <tt class="docutils literal">pulseaudio <span class="pre">-k</span></tt>. That's it, credit for the
 solution goes to <a class="reference external" href="posts/load-modulemodule-switch-on-connect">this answer</a>.</p>
 </div>
-    </div>
-    </article><article class="h-entry post-text"><header><h1 class="p-name entry-title"><a href="posts/guitarpro-6-on-fedora-20-x86_64.html" class="u-url">GuitarPro 6 on Fedora 20 x86_64</a></h1>
-        <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn">
-                Dmitry Tantsur
-            </span></p>
-            <p class="dateline"><a href="posts/guitarpro-6-on-fedora-20-x86_64.html" rel="bookmark"><time class="published dt-published" datetime="2014-03-07T22:23:00+01:00" title="2014-03-07 22:23">2014-03-07 22:23</time></a></p>
-                <p class="commentline">
+            </div>
+        </div>
+        <div class="post">
+            <h1 class="title"><a href="posts/guitarpro-6-on-fedora-20-x86_64.html">GuitarPro 6 on Fedora 20 x86_64</a></h1>
+            <div class="meta">
+                <div class="authordate">
+                    <time class="timeago" datetime="2014-03-07T22:23:00+01:00">2014-03-07 22:23</time>
+</div>
+                <div class="stats">
+                    
         
     <a href="posts/guitarpro-6-on-fedora-20-x86_64.html#disqus_thread" data-disqus-identifier="cache/posts/guitarpro-6-on-fedora-20-x86_64.html">Comments</a>
 
 
-        </p>
+                </div>
+            
+        <div itemprop="keywords" class="tags">
+        <ul>
+        Tags : 
+           <li><a class="tag p-category" href="categories/music.html" rel="tag">music</a></li>
+           <li><a class="tag p-category" href="categories/software.html" rel="tag">software</a></li>
+        </ul>
 </div>
-    </header><div class="p-summary entry-summary">
-    <div>
+
+            </div>
+            <div class="body">
+                <div>
 <p>Well, since I started using Fedora, some things are harder than in Ubuntu. For
 example, GuitarPro only provides i686 .deb installer which just does not work.</p>
 <p>Here what you do:</p>
@@ -137,29 +116,21 @@ sudo yum -y install libstdc++.i686 mesa-libGL.i686 alsa-lib.i686 portaudio.i686 
 </ol>
 <p>That's it! Now just run ./GuitarPro</p>
 </div>
-    </div>
-    </article>
-</div>
+            </div>
+        </div>
+    
 
-
-
+    
         
-       <script>var disqus_shortname="diviusnet2";(function(){var a=document.createElement("script");a.async=true;a.src="//"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script>
-</div>
-        <!--End of body content-->
-
-        <footer id="footer">
-            Contents © 2015         Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
-<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"></a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a>
+       <script>var disqus_shortname="diviusnet2";(function(){var a=document.createElement("script");a.async=true;a.src="//"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><footer id="footer"><p>Contents © 2015         Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"></a> - Powered by         <a href="http://getnikola.com" rel="nofollow">Nikola</a></p>
             
         </footer>
 </div>
-</div>
-
-
-            <script src="assets/js/jquery.min.js"></script><script src="assets/js/bootstrap.min.js"></script><script src="assets/js/moment-with-locales.min.js"></script><script src="assets/js/fancydates.js"></script><script src="assets/js/jquery.colorbox-min.js"></script><script>$('a.image-reference:not(.islink) img:not(.islink)').parent().colorbox({rel:"gal",maxWidth:"100%",maxHeight:"100%",scalePhotos:true});</script><!-- fancy dates --><script>
-    moment.locale("en");
-    fancydates(0, "YYYY-MM-DD HH:mm");
-    </script><!-- end fancy dates -->
+    </section><script src="assets/js/all-nocdn.js" type="text/javascript"></script><script type="text/javascript">
+            $(function(){
+                $('.timeago').timeago();
+            });
+        </script>
 </body>
 </html>
