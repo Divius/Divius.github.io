@@ -121,8 +121,12 @@ lang="${lang}">
 
 <%def name="html_navigation_links()">
     %for url, text, icon in navigation_links[lang]:
-        % if rel_link(permalink, url) == "#":
-            <li><a href="${url}" title="${text}"><i class="${icon}"></i></a></li>
+        %if icon == '':
+            %if url == '':
+                <li><hr></li>
+            %else:
+                <li><a href="${url}" title="${text}"><i>${text}</i></a></li>
+            %endif
         %else:
             <li><a href="${url}" title="${text}"><i class="${icon}"></i></a></li>
         %endif

@@ -128,6 +128,8 @@ NAVIGATION_LINKS = {
         ('https://twitter.com/creepy_owlet', 'My Twitter', 'icon-twitter'),
         ('https://instagram.com/creepy_owlet', 'My Instagram', 'icon-instagram'),
         ('https://github.com/dtantsur', 'My Github', 'icon-github'),
+        ('', 'Talks', ''),
+        ('/talks/devconf2015', 'DevConf 2015 Ironic', ''),
     )
 }
 
@@ -215,7 +217,7 @@ PAGES = (
 # One or more folders containing files to be copied as-is into the output.
 # The format is a dictionary of {source: relative destination}.
 # Default is:
-FILES_FOLDERS = {'devconf2015': 'devconf2015'}
+FILES_FOLDERS = {'talks': 'talks'}
 # Which means copy 'files' into 'output'
 
 # One or more folders containing listings to be processed and stored into
