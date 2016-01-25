@@ -129,7 +129,8 @@ NAVIGATION_LINKS = {
         ('https://instagram.com/creepy_owlet', 'My Instagram', 'icon-instagram'),
         ('https://github.com/dtantsur', 'My Github', 'icon-github'),
         ('', 'Talks', ''),
-        ('/talks/devconf2015', 'DevConf 2015 Ironic', ''),
+        ('/talks/fosdem2016', 'FOSDEM 2016 Ironic Debugging', ''),
+        ('/talks/devconf2015', 'DevConf 2015 Ironic Overview', ''),
     )
 }
 
