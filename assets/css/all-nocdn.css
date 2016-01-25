@@ -2115,7 +2115,7 @@ a:focus {
 }
 .social a {
   color: #ffffff;
-  line-height: 44.400000000000006px;
+  //line-height: 44.400000000000006px;
   -webkit-transition: text-shadow 0.5s;
   -moz-transition: text-shadow 0.5s;
   -o-transition: text-shadow 0.5s;
