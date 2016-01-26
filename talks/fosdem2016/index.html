@@ -1588,9 +1588,7 @@ animation:         icon-animation-short 3.5s 1.5s 1;
   margin: 0 1px;
 }
 
-.reveal code {font-size: 50%;}
-
-.reveal .red {color: red;}
+.reveal code {font-size: 60%;}
 
 		</style>
 
@@ -1606,6 +1604,7 @@ animation:         icon-animation-short 3.5s 1.5s 1;
 <p> </p>
 
 <h3>Dmitry Tantsur</h3>
+<p><a href="http://dtantsur.github.io/talks/fosdem2016/">http://dtantsur.github.io/talks/fosdem2016/</a></p>
 </div></div>
 <div data-block-id="a8f72eeb9be7bdf534757bc1cacbd290" class="sl-block" data-block-type="image" style="width: 360px; height: 135px; left: 45px; top: 70px;"><div class="sl-block-content" style="z-index: 12;" data-inline-svg="true">
 <img data-src="rhassets/1552030-redhat-logo.svg" data-natural-width="320" data-natural-height="120" style="display: none;"><svg xmlns="http://www.w3.org/2000/svg" class="redhat-logo" width="320" height="120" viewbox="0 0 494 180" preserveaspectratio="xMidYMid meet">
@@ -1710,6 +1709,8 @@ animation:         icon-animation-short 3.5s 1.5s 1;
 		<li>another DHCP server listening on the provisioning network.</li>
 	</ol>
 	</li>
+        <li>Ancient iPXE ROM (e.g. in CentOS 7).<br>
+        The biggest known problem with itis that you can't introspect a node with several NIC's on the provisioning network.</li>
 </ol>
 </div></div>
 </section>
@@ -1744,11 +1745,14 @@ animation:         icon-animation-short 3.5s 1.5s 1;
 
 <h3>Preparing for Deployment</h3>
 <ol>
-	<li>When Ironic fails to deploy, Nova usually cleans everything up and reschedules, meaning you won't get any helpful error messages from it. Check "ironic-conductor" logs if Nova says something like " Exceeded max scheduling attempts 3 for instance &lt;UUID&gt;".</li>
+	<li>When Ironic fails to deploy, Nova usually cleans everything up and reschedules, meaning you won't get any helpful error messages from it.
+        Check "ironic-conductor" logs if Nova says something like "Exceeded max scheduling attempts 3 for instance &lt;UUID&gt;".</li>
 	<li>Ironic needs enough disk space to download all images (and sometimes convert them).</li>
-	<li>Ironic needs access to the bare metal node management interface (BMC) for many tasks during deployment. Some management interface implementations are known to lock up from time to time, resulting in deployment failures and nodes going to maintenance mode.</li>
+	<li>Ironic needs access to the bare metal node management interface (BMC) for many tasks during deployment.
+        Some management interface implementations are known to lock up from time to time, resulting in deployment failures and nodes going to maintenance mode.</li>
 	<li>Ironic has different drivers. Some hardware is supported by more than one of them.<br>
-	Make sure to carefully choose a driver to use: vendor-specific drivers (like pxe_drac or pxe_ilo) are usually preferred over more generic ones (like pxe_ipmitool). Unless they don't work :)</li>
+	Make sure to carefully choose a driver to use: vendor-specific drivers (like pxe_drac or pxe_ilo) are usually preferred over more generic ones (like pxe_ipmitool).
+        Unless they don't work :)</li>
 	<li>Use 'ironic driver-list' command to ensure that some Ironic conductors support your driver.<br>
 	And that there are some working Ironic conductors at all.</li>
 </ol>
@@ -1762,12 +1766,11 @@ animation:         icon-animation-short 3.5s 1.5s 1;
 <h2>Fragile Parts: Where Things Break</h2>
 <h3>Deploying</h3>
 <ol>
-<li>When Ironic fails to deploy, Nova usually cleans everything up and reschedules, meaning you won't get any helpful error messages from it. Check "ironic-conductor" logs if Nova says something like " Exceeded max scheduling attempts 3 for instance &lt;UUID&gt;".<br>
-</li>
-<li>Ironic needs enough disk space to download all images (and sometimes convert them).<br>
-</li>
-<li>A bare metal node will try to DHCP and PXE-boot from the conductor (i.e. undercloud).<br><br>
-</li>
+        <li>A bare metal node need to DHCP from the Neutron DHCP server and PXE-boot from Ironic conductor.</li>
+        <li>Ancient iPXE ROM again (e.g. in CentOS 7) may get in way.</li>
+        <li>Setting up bootloader is known to break sometimes.<br>
+        Sometimes it helps to wipe the existing hard drive partitioning before deploying.<br>
+        If nothing works, disable local boot by removing "boot_option" capability from both node properties and flavor.</li>
 </ol>
 </div></div>
 </section>
@@ -1985,8 +1988,32 @@ $ ironic node-show &lt;UUID or NAME&gt;</code></pre>
 <ol>
 	<li>Check that power credentials are still valid</li>
 	<li>Ensure that node's BMC has not locked up, reset it if needed</li>
+        <li>Research logs for more details on the problem.<br>
+        E.g. sometimes <tt>ipmitool</tt> crashes with IPMI v2.
+        The workaround is to switch to IPMI v1.5 or to a vendor-specific driver.</li>
 </ol>
 </div></div></section>
+
+
+<section data-background-image="rhassets/1748213-drawing2.svg" data-background-color="#fafafa" class="has-light-background">
+<div data-block-id="cb7876abae506979929c0d1e99239325" class="sl-block" data-block-type="text" style="height: auto; width: 915px; left: 45px; top: 70px;"><div dir="ui" class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left; border-width: 1px;">
+<h1>Debugging Bare Metal</h1>
+
+<h2>Ask for help (and complain)</h2>
+
+<ol>
+        <li>IRC: #openstack-ironic on Freenode.</li>
+        <li>Bug tracker: <a href="https://bugs.launchpad.net/ironic">https://bugs.launchpad.net/ironic</a>
+</ol>
+<br>
+<br>
+<hr>
+<h3>Thank you for attention</h3>
+
+<p><a href="http://dtantsur.github.io/talks/fosdem2016/">http://dtantsur.github.io/talks/fosdem2016/</a></p>
+
+</div></div>
+</section>
 
 
 
