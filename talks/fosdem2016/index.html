@@ -1995,6 +1995,82 @@ $ ironic node-show &lt;UUID or NAME&gt;</code></pre>
 </div></div></section>
 
 
+<section class="has-light-background" data-background-color="#fafafa" data-background-image="rhassets/1748213-drawing2.svg"><div data-block-id="226385b4d9570cc8beac3b5eb43b5e8a" class="sl-block" data-block-type="text" style="height: auto; width: 915px; left: 45px; top: 278px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;">
+<h2>Case Study: Stack Deletion with a Failed Node</h2>
+</div></div></section>
+
+
+<section data-background-image="rhassets/1748213-drawing2.svg" data-background-color="#fafafa" class="has-light-background">
+<div data-block-id="7198a921390583a825e741ac95315b50" class="sl-block" data-block-type="text" style="height: auto; width: 915px; left: 45px; top: 70px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; text-align: left; border-width: 1px;">
+<h1>Debugging Bare Metal</h1>
+
+<h2>Symptoms</h2>
+<p>Sometimes operators have to physically remove a broken node from the cloud.
+In this case manual removal maybe required, as stack deletion won't work:</p>
+<pre class="bash"><code>$ heat stack-delete overcloud
+$ heat stack-list
++--------------------------------------+------------+---------------+---------------------+--------------+
+| id                                   | stack_name | stack_status  | creation_time       | updated_time |
++--------------------------------------+------------+---------------+---------------------+--------------+
+| 8223f727-d618-4776-9c7e-7f8924bc2d9e | overcloud  | DELETE_FAILED | 2016-01-15T15:11:34 | None         |
++--------------------------------------+------------+---------------+---------------------+--------------+
+</code></pre>
+</div></div></section>
+
+
+<section data-background-image="rhassets/1748213-drawing2.svg" data-background-color="#fafafa" class="has-light-background">
+<div data-block-id="7198a921390583a825e741ac95315b50" class="sl-block" data-block-type="text" style="height: auto; width: 915px; left: 45px; top: 70px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; text-align: left; border-width: 1px;">
+<h1>Debugging Bare Metal</h1>
+
+<h2>Checking Node States</h2>
+<pre class="bash"><code>$ nova list
++--------------------------------------+-------------------------+--------+------------+-------------+----------+
+| ID                                   | Name                    | Status | Task State | Power State | Networks |
++--------------------------------------+-------------------------+--------+------------+-------------+----------+
+| 0bfae06b-9c1c-4559-a033-c08bead6c884 | overcloud-novacompute-0 | ERROR  | - | Running     |          |
++--------------------------------------+-------------------------+--------+------------+-------------+----------+
+$ nova show overcloud-novacompute-0 | grep ' fault '
+| fault                                | {"message": "Failed to validate power driver interface. Can not delete instance.
+Error: SSH connection cannot be established: Failed to establish SSH connection to host 192.168.122.1. (HTTP 500)",
+"code": 500, "details": "  File \"/usr/lib/python2.7/site-packages/nova/compute/manager.py\", line 366, in decorated_function |
+</code></pre>
+
+<pre class="bash"><code>$ ironic node-list
++--------------------------------------+--------+--------------------------------------+-------------+--------------------+-------------+
+| UUID                                 | Name   | Instance UUID                        | Power State | Provisioning State | Maintenance |
++--------------------------------------+--------+--------------------------------------+-------------+--------------------+-------------+
+| 03731c5b-c72a-419e-9716-a60755019519 | node-0 | None                                 | power off   | available          | False       |
+| 7c9d7690-45f8-4f7d-a6d1-0ecddf6bd6ec | node-1 | 0bfae06b-9c1c-4559-a033-c08bead6c884 | None        | active             | True        |
++--------------------------------------+--------+--------------------------------------+-------------+--------------------+-------------+
+</code></pre>
+<h3>Findings</h3>
+
+<p>We have removed a node from operation, but Ironic and Nova both still
+remember it and try to clean up the instance. We need to delete it before we
+can delete the stack.</p>
+</div></div></section>
+
+
+<section data-background-image="rhassets/1748213-drawing2.svg" data-background-color="#fafafa" class="has-light-background">
+<div data-block-id="7198a921390583a825e741ac95315b50" class="sl-block" data-block-type="text" style="height: auto; width: 915px; left: 45px; top: 70px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; text-align: left; border-width: 1px;">
+<h1>Debugging Bare Metal</h1>
+
+<h2>The Solution</h2>
+<pre class="bash"><code>$ ironic node-set-maintenance node-1 on
+$ ironic node-update node-1 remove instance_uuid
+$ ironic node-list
++--------------------------------------+--------+---------------+-------------+--------------------+-------------+
+| UUID                                 | Name   | Instance UUID | Power State | Provisioning State | Maintenance |
++--------------------------------------+--------+---------------+-------------+--------------------+-------------+
+| 03731c5b-c72a-419e-9716-a60755019519 | node-0 | None          | power off   | available          | False       |
+| 7c9d7690-45f8-4f7d-a6d1-0ecddf6bd6ec | node-1 | None          | None        | active             | True        |
++--------------------------------------+--------+---------------+-------------+--------------------+-------------+
+$ heat stack-delete overcloud
+</code></pre>
+<p>You may have to repeat the last command several times.</p>
+</div></div></section>
+
+
 <section data-background-image="rhassets/1748213-drawing2.svg" data-background-color="#fafafa" class="has-light-background">
 <div data-block-id="cb7876abae506979929c0d1e99239325" class="sl-block" data-block-type="text" style="height: auto; width: 915px; left: 45px; top: 70px;"><div dir="ui" class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left; border-width: 1px;">
 <h1>Debugging Bare Metal</h1>
