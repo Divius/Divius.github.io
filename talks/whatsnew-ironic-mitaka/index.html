@@ -1645,12 +1645,20 @@ actions, such as
 </ul></p>
 <p>Possible steps are defined by a driver.</p>
 <p>Actual steps to run and their parameters are provided by an operator.</p>
+<p><small>
+    <a href="http://docs.openstack.org/developer/ironic/mitaka/deploy/cleaning.html#manual-cleaning">
+        http://docs.openstack.org/developer/ironic/mitaka/deploy/cleaning.html#manual-cleaning</a>
+</small></p>
 
 <br>
 <h2>UEFI support with iPXE</h2>
 
 <p>Previously only plain PXE was supported with UEFI.</p>
 <p>iPXE is much better for production in many cases.</p>
+<p><small>
+    <a href="http://docs.openstack.org/developer/ironic/mitaka/deploy/install-guide.html#ipxe-setup">
+        http://docs.openstack.org/developer/ironic/mitaka/deploy/install-guide.html#ipxe-setup</a>
+</small></p>
 
 </div></div></section>
 
@@ -1662,8 +1670,12 @@ actions, such as
 <h2>Flashing Images</h2>
 <p><ul>
     <li>Support for defining the disk label (MBR or GPT).<br>
-    Previously GPT as used for UEFI, MBR otherwise.</li>
-    <li>New root device hints: wwn_{with, vendor}_extension and name.</li>
+    Previously GPT as used for UEFI, MBR otherwise.<br>
+    <small><a href="http://docs.openstack.org/developer/ironic/mitaka/deploy/install-guide.html#choosing-the-disk-label">
+            http://docs.openstack.org/developer/ironic/mitaka/deploy/install-guide.html#choosing-the-disk-label</a></small></li>
+    <li>New root device hints: wwn_{with, vendor}_extension and name.<br>
+    <small><a href="http://docs.openstack.org/developer/ironic/mitaka/deploy/install-guide.html#specifying-the-disk-for-deployment">
+            http://docs.openstack.org/developer/ironic/mitaka/deploy/install-guide.html#specifying-the-disk-for-deployment</a></small></li>
 </ul></p>
 
 <br>
@@ -1730,13 +1742,37 @@ actions, such as
 
 
 <section data-background-image="rhassets/1748213-drawing2.svg" data-background-color="#fafafa" class="has-light-background">
-<div data-block-id="cb7876abae506979929c0d1e99239325" class="sl-block" data-block-type="text" style="height: auto; width: 915px; left: 45px; top: 70px;"><div dir="ui" class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left; border-width: 1px;">
-<h1>That's all</h1>
+<div data-block-id="72ec31dd33e14aad762693d77418cd2f" class="sl-block" data-block-type="text" style="height: auto; width: 915px; left: 45px; top: 70px;"><div dir="ui" class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;">
+<h1>Future Plans</h1>
 
-<h2>Contacts</h2>
+<h2>Unfinished from Mitaka</h2>
+<p><ul>
+    <li>Tenant network separation.</li>
+    <li>Support for multiple Nova computes with Ironic driver.</li>
+    <li>Support live upgrades of Ironic deployments.</li>
+    <li>Third party CI for all in-tree drivers.</li>
+</ul></p>
+
+<br>
+<h2>New (Very Tentative)</h2>
+<p><ul>
+    <li>Reworking driver composition.</li>
+    <li>Boot from volume (Cinder, iSCSI, UEFI, etc).</li>
+    <li>Notifications.</li>
+    <li>Rescue mode.</li>
+</ul></p>
+</div></div></section>
+
+
+<section data-background-image="rhassets/1748213-drawing2.svg" data-background-color="#fafafa" class="has-light-background">
+<div data-block-id="cb7876abae506979929c0d1e99239325" class="sl-block" data-block-type="text" style="height: auto; width: 915px; left: 45px; top: 70px;"><div dir="ui" class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left; border-width: 1px;">
+<h1>Questions?</h1>
 
 <ol>
-        <li>IRC: #openstack-ironic on Freenode.</li>
+        <li>All release notes:
+        <a href="http://docs.openstack.org/releasenotes/ironic/mitaka.html">
+            http://docs.openstack.org/releasenotes/ironic/mitaka.html</a></li>
+        <li>IRC: #openstack-ironic on Freenode</li>
         <li>Bug tracker: <a href="https://bugs.launchpad.net/ironic">https://bugs.launchpad.net/ironic</a>
 </ol>
 <br>
@@ -1744,8 +1780,8 @@ actions, such as
 <hr>
 <h3>Thank you for attention</h3>
 
-<p><a
-    href="http://dtantsur.github.io/talks/whatsnew-ironic-mitaka/">http://dtantsur.github.io/talks/whatsnew-ironic-mitaka/</a></p>
+<p><a href="http://dtantsur.github.io/talks/whatsnew-ironic-mitaka/">
+    http://dtantsur.github.io/talks/whatsnew-ironic-mitaka/</a></p>
 
 </div></div>
 </section>
