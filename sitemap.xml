@@ -19,7 +19,7 @@
  </url>
  <url>
   <loc>http://dtantsur.github.io/archive.html</loc>
-  <lastmod>2016-01-26T16:14:00Z</lastmod>
+  <lastmod>2016-04-07T14:33:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/</loc>
@@ -27,19 +27,19 @@
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/music.html</loc>
-  <lastmod>2016-01-26T16:14:00Z</lastmod>
+  <lastmod>2016-04-07T14:33:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/software.html</loc>
-  <lastmod>2016-01-26T16:14:00Z</lastmod>
+  <lastmod>2016-04-07T14:33:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/guitarpro-6-on-fedora-20-x86_64.html</loc>
-  <lastmod>2016-01-26T16:14:00Z</lastmod>
+  <lastmod>2016-04-07T14:33:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/pulseaudio-external-sound-card.html</loc>
-  <lastmod>2016-01-26T16:14:00Z</lastmod>
+  <lastmod>2016-04-07T14:33:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/talks/devconf2015/</loc>
@@ -96,5 +96,13 @@
  <url>
   <loc>http://dtantsur.github.io/talks/fosdem2016/lib/reveal-plugins/notes/notes.html</loc>
   <lastmod>2016-01-20T09:41:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://dtantsur.github.io/talks/whatsnew-ironic-mitaka/</loc>
+  <lastmod>2016-04-07T14:33:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://dtantsur.github.io/talks/whatsnew-ironic-mitaka/lib/reveal-plugins/notes/notes.html</loc>
+  <lastmod>2016-04-07T12:15:00Z</lastmod>
  </url>
 </urlset>
