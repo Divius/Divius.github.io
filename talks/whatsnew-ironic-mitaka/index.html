@@ -1623,10 +1623,58 @@ animation:         icon-animation-short 3.5s 1.5s 1;
 <h1>Agenda</h1>
 
 <ol>
+	<li>Intro</li>
 	<li>Mitaka highlights</li>
 	<li>Plans for the future</li>
 	<li>Questions</li>
 </ol>
+</div></div></section>
+
+
+
+<section class="has-light-background" data-background-color="#fafafa" data-background-image="rhassets/1748213-drawing2.svg">
+<div data-block-id="7e131fb23e1a81e40c67ad9a72b54c36" class="sl-block" data-block-type="text" style="height: auto; width: 915px; left: 45px; top: 70px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;">
+<h1>About Ironic</h1>
+
+<p>Ironic is an OpenStack project which provisions bare metal (as opposed to
+virtual) machines by leveraging common technologies such as PXE boot and IPMI
+to cover a wide range of hardware, while supporting pluggable drivers to allow
+vendor-specific functionality to be added.</p>
+<p><a href="http://docs.openstack.org/developer/ironic/">
+    http://docs.openstack.org/developer/ironic/</a></p>
+</div></div></section>
+
+
+
+<section class="has-light-background" data-background-color="#fafafa" data-background-image="rhassets/1748213-drawing2.svg">
+<div data-block-id="7e131fb23e1a81e40c67ad9a72b54c36" class="sl-block" data-block-type="text" style="height: auto; width: 915px; left: 45px; top: 70px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;">
+<h1>Ironic in RDO</h1>
+
+<h3>openstack-ironic-api</h3>
+
+<p>The main API service for Ironic.</p>
+
+<h3>openstack-ironic-conductor</h3>
+
+<p>The service doing most of the actual baremetal management work.</p>
+
+<h3>python-ironicclient</h3>
+
+<p>The CLI and Python client liberty for Ironic API.</p>
+
+<h3>openstack-ironic-inspector</h3>
+
+<p>A separate service for conducting hardware introspection.</p>
+
+<h3>python-ironic-inspector-client</h3>
+
+<p>CLI and Python library for the hardware introspection API.</p>
+
+<h3>openstack-ironic-python-agent</h3>
+
+<p>The service to be run on the Ironic deployment and introspection ramdisk.</p>
+
+<p>This package MUST NOT be installed outside of the ramdisk.</p>
 </div></div></section>
 
 
