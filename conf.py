@@ -129,6 +129,7 @@ NAVIGATION_LINKS = {
         ('https://instagram.com/creepy_owlet', 'My Instagram', 'icon-instagram'),
         ('https://github.com/dtantsur', 'My Github', 'icon-github'),
         ('', 'Talks', ''),
+        ('/talks/mitaka-inspector-status', 'Ironic Inspector Mitaka Status', ''),
         ('/talks/whatsnew-ironic-mitaka', 'What\'s New in Ironic Mitaka', ''),
         ('/talks/fosdem2016', 'FOSDEM16: Ironic Debugging', ''),
         ('/talks/devconf2015', 'DevConf15: Ironic Overview', ''),
