@@ -41,13 +41,14 @@
 <div class="reveal">
     <div class="slides">
         <section>
-            <h1 class="title">Bare Metal Inspection</h1>
-            <h2>Ironic Inspector Mitaka Status Update</h2>
+            <h1 class="title">The Omniscient Cloud</h1>
+            <h2>Bare Metal Inspection Status Update</h2>
             <br><br>
             <p><small>Dmitry Tantsur (Principal Software Engineer, Red Hat)</small>
             <br>
             <small>
-                <a href="https://dtantsur.github.io/talks/mitaka-ironic-inspector">dtantsur.github.io/talks/mitaka-ironic-inspector</a>
+                <a href="https://dtantsur.github.io/talks/mitaka-inspector-status">
+                    dtantsur.github.io/talks/mitaka-inspector-status</a>
             </small></p>
         </section>
         <section>
@@ -57,9 +58,9 @@
                 <li>Ironic Inspector architecture</li>
                 <li>Beyond basic inspection:
                     <ul>
-                        <li>Liberty: introspection rules</li>
-                        <li>Mitaka: hardware discovery</li>
-                        <li>Smaller improvements</li>
+                        <li>Plugins</li>
+                        <li>Introspection rules</li>
+                        <li>Hardware discovery</li>
                     </ul>
                 </li>
                 <li>Looking into the future</li>
@@ -101,6 +102,14 @@
         </section>
 
         <section>
+            <h1>Ironic Inspector Project</h1>
+            <p>A separate service under the Bare metal project umbrella.</p>
+            <p><strong>96</strong> commits by <strong>16</strong> contributors
+            from <strong>8</strong> companies.</p>
+            <p><strong>5</strong> core team members from <strong>4</strong>
+            companies (not counting the main ironic core team).</p>
+        </section>
+        <section>
             <h1>Architecture</h1>
             <ul>
                 <li>Ironic Python Agent (IPA) - the generic ramdisk for Ironic</li>
@@ -113,11 +122,15 @@
                         <li>Accepts and processes data from the ramdisk</li>
                     </ul>
                 </li>
+                <li>The python-ironic-inspector-client project provides CLI
+                    and a Python client library.</li>
             </ul>
         </section>
         <section>
             <h1>Flow</h1>
             <ol>
+                <li>A node is created in Ironic with its power
+                    credentials.</li>
                 <li>In-band inspection is requested for a node via
                     the Ironic Inspector API</li>
                 <li>Ironic Inspector configures firewall to ensure that the
@@ -131,6 +144,8 @@
                     information belongs to</li>
                 <li>Ironic Inspector processes the information and updates the
                     node record in the Ironic database</li>
+                <li>Ironic Inspector optionally stores the whole processed
+                    data in the object storage (Swift).</li>
             </ol>
         </section>
 
@@ -146,7 +161,14 @@
                     receiving it</li>
                 <li>Making changes to the Ironic node based on collected
                     data</li>
-            </ul>
+            </ul></p>
+            <h3>Example</h3>
+            <pre class="python"><code>class RamdiskErrorHook(ironic_inspector.plugins.base.ProcessingHook):
+    def before_processing(self, introspection_data, **kwargs):
+        error = introspection_data.get('error')
+        if error:
+            raise RuntimeError(_('Ramdisk reported error: %s') % error)
+            </code></pre>
         </section>
         <section>
             <h1>Plugins: collectors</h1>
@@ -155,7 +177,25 @@
             <p>Adding a new collector requires rebuilding the ramdisk image.
             Enabling an existing collector is possible via the kernel command
             line.</p>
+            <h3>Example</h3>
+            <pre class="python"><code>def collect_cpuinfo(data, failures):
+    try:
+        data['cpuinfo'] = open('/proc/cpuinfo', 'rt').read()
+    except EnvironmentError as exc:
+        failures.add('Unable to read cpuinfo: %s', exc)
+            </code></pre>
             <p><small>Introduced in the Liberty release.</small></p>
+        </section>
+        <section>
+            <h1>Extra hardware plugin</h1>
+            <p>Collects a huge number of hardware facts from a node.</p>
+            <p>Requires the <a href="https://pypi.python.org/pypi/hardware">hardware</a>
+            Python package on the ramdisk</p>
+            <p>Enable <em>extra-hardware</em> collector and
+            <em>extra_hardware</em> processing hook to use.</p>
+            <p>Can also benchmark CPU, main memory and disks.
+            Pass <em>ipa-inspection-benchmarks=cpu,mem,disk</em> to the
+            IPA kernel command line to enable (takes time!).</p>
         </section>
 
         <section>
@@ -163,39 +203,99 @@
             <p>Allows <strong>a user</strong> to define actions to run during
             the introspection data processing.</p>
             <p>Uses a simple JSON-based domain-specific language.</p>
-            <p>A very simple example:
-                <pre class="python"><code>
+            <h3>Example</h3>
+            <pre class="json"><code>
 {
+    "conditions": [
+        {"op": "lt", "field": "inventory.memory.physical_mb",
+         "value": 1024}
+    ],
     "actions": [
-        {"action": "set-attribute", "path": "/extra/inspected",
-         "value": True}
+        {"action": "fail", "message": "memory is too low"}
     ]
 }</code></pre>
             <p><small>Introduced in the Liberty release.</small></p>
         </section>
         <section>
             <h1>Introspection rules</h1>
-            <h2>More complex example</h2>
-                <pre class="python"><code>
+            <h2>Example: vendor capability</h2>
+            <pre class="json"><code>
 {
     "conditions": [
-        {"op": "contains", "field": "inventory.system_vendor.manufacturer",
+        {"op": "contains",
+         "field": "inventory.system_vendor.manufacturer",
          "value": "Awesome Inc"},
-        {"op": "lt", "field": "cpus", "value": 1}
+        {"op": "eq",
+         "field": "inventory.disks[*].rotational",
+         "value": false,
+         "multiple": "all"}
     ],
     "actions": [
-        {"action": "set-capability", "name": "awesome-multi-cpu,
+        {"action": "set-capability", "name": "awesome-ssd",
          "value": "true"}
+    ]
+}</code></pre>
+            <p>Sets a given capability for nodes of a specific vendor with all
+            disks not rotational.</p>
+        </section>
+
+        <section>
+            <h1>Hardware Discovery</h1>
+            <p>Enrolling of new hardware combined with its inspection.</p>
+            <p>Enabled by setting the <em>node_not_found_hook</em>
+            configuration option to <em>enroll</em>.</p>
+            <h3>Flow</h3>
+            <ol>
+                <li>A new node is powered on manually.</li>
+                <li>IPA is booted, data is posted to Ironic Inspector.</li>
+                <li>If Ironic Inspector cannot find the node in Ironic,
+                    it creates a new one, then proceeds with processing.</li>
+            </ol>
+            <p>Introspection rules can be used to populate power
+            credentials</p>
+            <p><small>Introduced in the Liberty release.</small></p>
+        </section>
+        <section>
+            <h1>Hardware Discovery</h1>
+            <h2>Example Rules</h2>
+            <pre class="json"><code>{
+    "conditions": [
+        {"op": "contains",
+         "field": "inventory.system_vendor.manufacturer",
+         "value": "Dell"},
+        {"op": "eq", "field": "auto_discovered", "value": true}
+    ],
+    "actions": [
+        {"action": "set-attribute", "path": "/driver",
+         "value": "pxe_drac"},
+        {"action": "set-attribute", "path": "/driver_info/drac_host",
+         "value": "{data[inventory][bmc_address]}"},
+        {"action": "set-attribute", "path": "/driver_info/drac_username",
+         "value": "root"},
+        {"action": "set-attribute", "path": "/driver_info/drac_password",
+         "value": "calvin"},
     ]
 }</code></pre>
         </section>
 
         <section>
+            <h1>Future Plans</h1>
+            <ul>
+                <li>HA architecture</li>
+                <li>CMDB integration</li>
+                <li>Further development of introspection rules</li>
+            </ul>
+        </section>
+
+        <section>
             <h2>Links</h2>
             <p><ul>
-                <li>PyPI: <a href="https://pypi.python.org/pypi/ironic-inspector">https://pypi.python.org/pypi/ironic-inspector</a></li>
-                <li><a href="https://dtantsur.github.io/talks/mitaka-ironic-inspector">
-                        https://dtantsur.github.io/talks/mitaka-ironic-inspector</a></li>
+                <li>PyPI: <a href="https://pypi.python.org/pypi/ironic-inspector">
+                        https://pypi.python.org/pypi/ironic-inspector</a></li>
+                <li>Bugs: <a href="https://bugs.launchpad.net/ironic-inspector">
+                        https://bugs.launchpad.net/ironic-inspector</a></li>
+                <li><a href="https://dtantsur.github.io/talks/mitaka-inspector-status">
+                        https://dtantsur.github.io/talks/mitaka-inspector-status</a></li>
             </ul></p>
             <h3>Thank you!</h3>
         </section>
