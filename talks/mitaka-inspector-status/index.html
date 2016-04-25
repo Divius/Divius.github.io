@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Baremetal Inspection Status Update</title>
+
+    <meta name="description" content="OpenStack Baremetal (Ironic) Status Update">
+    <meta name="author" content="Dmitry Tantsur (dtantsur@redhat.com)">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/dtantsur.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+    <script>
+            if( window.location.search.match( /print-pdf/gi ) ) {
+                    var link = document.createElement( 'link' );
+                    link.rel = 'stylesheet';
+                    link.type = 'text/css';
+                    link.href = 'css/print/pdf.css';
+                    document.getElementsByTagName( 'head' )[0].appendChild( link );
+            }
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+</head>
+
+<body>
+
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h1 class="title">Bare Metal Inspection</h1>
+            <h2>Ironic Inspector Mitaka Status Update</h2>
+            <br><br>
+            <p><small>Dmitry Tantsur (Principal Software Engineer, Red Hat)</small>
+            <br>
+            <small>
+                <a href="https://dtantsur.github.io/talks/mitaka-ironic-inspector">dtantsur.github.io/talks/mitaka-ironic-inspector</a>
+            </small></p>
+        </section>
+        <section>
+            <h1>Agenda</h1>
+            <ul>
+                <li>Brief introduction into baremetal inspection</li>
+                <li>Ironic Inspector architecture</li>
+                <li>Beyond basic inspection:
+                    <ul>
+                        <li>Liberty: introspection rules</li>
+                        <li>Mitaka: hardware discovery</li>
+                        <li>Smaller improvements</li>
+                    </ul>
+                </li>
+                <li>Looking into the future</li>
+            </ul>
+        </section>
+
+        <section>
+            <h1>Baremetal Inspection</h1>
+            <p>Bare metal inspection (or introspection<sup><small>[*]</small></sup>)
+            is a process of finding out hardware properties requried for deployment
+            from the node itself.</p>
+            <p>The bare minimum for inspection in case of Ironic:
+                <ul>
+                    <li>CPU architecture and count</li>
+                    <li>Memory size</li>
+                    <li>Hard drive size</li>
+                    <li>Hardware addresses of NIC's</li>
+                </ul>
+            </p>
+            <p><small>[*] in this context we use
+                both words and treat them as synonyms</small></p>
+        </section>
+
+        <section>
+            <h1>Baremetal Inspection</h1>
+            <h2>Out-of-band</h2>
+            <p>Uses vendor BMC features.<br>
+            Pros: quick and reliable. Cons: highly vendor-specific<sup><small>[*]</small></sup>
+            with limited customization.
+            </p>
+            <h2>In-band</h2>
+            <p>Works by booting a ramdisk on the node.<br>
+                Pros: can collect essentially anything from a wide
+                selection of hardware. Cons: slow and more fragile.
+            </p>
+            <p>Implemented by Ironic Inspector.</p>
+            <p><small>[*] The <strong>Redfish</strong> specification might change
+                this situation.</small></p>
+        </section>
+
+        <section>
+            <h1>Architecture</h1>
+            <ul>
+                <li>Ironic Python Agent (IPA) - the generic ramdisk for Ironic</li>
+                <li>Static DHCP server (usually <strong>dnsmasq</strong>)
+                instructing hosts to boot IPA with inspection.</li>
+                <li>Ironic Inspector service:
+                    <ul>
+                        <li>Provides HTTP API</li>
+                        <li>Manages access to the DHCP server</li>
+                        <li>Accepts and processes data from the ramdisk</li>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+        <section>
+            <h1>Flow</h1>
+            <ol>
+                <li>In-band inspection is requested for a node via
+                    the Ironic Inspector API</li>
+                <li>Ironic Inspector configures firewall to ensure that the
+                    node will boot IPA with the correct kernel arguments</li>
+                <li>Ironic Inspector sets the node boot device to network and
+                    powers it on</li>
+                <li>IPA boots on the node and collects information</li>
+                <li>IPA posts the collected information to the Ironic
+                    Inspector API</li>
+                <li>Ironic Inspector figures out which Ironic node this
+                    information belongs to</li>
+                <li>Ironic Inspector processes the information and updates the
+                    node record in the Ironic database</li>
+            </ol>
+        </section>
+
+        <section>
+            <h1>Beyond Basic Inspection</h1>
+        </section>
+
+        <section>
+            <h1>Plugins: processing hooks</h1>
+            <p>Allows writing Python plugins, to extend both processing stages:
+            <ul>
+                <li>Checking and preprocessing node information right after
+                    receiving it</li>
+                <li>Making changes to the Ironic node based on collected
+                    data</li>
+            </ul>
+        </section>
+        <section>
+            <h1>Plugins: collectors</h1>
+            <p>Collectors extend the introspection process at the data
+            collection stage, i.e. during the ramdisk run.</p>
+            <p>Adding a new collector requires rebuilding the ramdisk image.
+            Enabling an existing collector is possible via the kernel command
+            line.</p>
+            <p><small>Introduced in the Liberty release.</small></p>
+        </section>
+
+        <section>
+            <h1>Introspection rules</h1>
+            <p>Allows <strong>a user</strong> to define actions to run during
+            the introspection data processing.</p>
+            <p>Uses a simple JSON-based domain-specific language.</p>
+            <p>A very simple example:
+                <pre class="python"><code>
+{
+    "actions": [
+        {"action": "set-attribute", "path": "/extra/inspected",
+         "value": True}
+    ]
+}</code></pre>
+            <p><small>Introduced in the Liberty release.</small></p>
+        </section>
+        <section>
+            <h1>Introspection rules</h1>
+            <h2>More complex example</h2>
+                <pre class="python"><code>
+{
+    "conditions": [
+        {"op": "contains", "field": "inventory.system_vendor.manufacturer",
+         "value": "Awesome Inc"},
+        {"op": "lt", "field": "cpus", "value": 1}
+    ],
+    "actions": [
+        {"action": "set-capability", "name": "awesome-multi-cpu,
+         "value": "true"}
+    ]
+}</code></pre>
+        </section>
+
+        <section>
+            <h2>Links</h2>
+            <p><ul>
+                <li>PyPI: <a href="https://pypi.python.org/pypi/ironic-inspector">https://pypi.python.org/pypi/ironic-inspector</a></li>
+                <li><a href="https://dtantsur.github.io/talks/mitaka-ironic-inspector">
+                        https://dtantsur.github.io/talks/mitaka-ironic-inspector</a></li>
+            </ul></p>
+            <h3>Thank you!</h3>
+        </section>
+    </div>
+
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.min.js"></script>
+
+<script>
+
+        // Full list of configuration options available here:
+        // https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+
+                theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+                transition: Reveal.getQueryHash().transition || 'none', // default/cube/page/concave/zoom/linear/fade/none
+
+                // Parallax scrolling
+                // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+                // parallaxBackgroundSize: '2100px 900px',
+
+                // Optional libraries used to extend on reveal.js
+                dependencies: [
+                        { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                        { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                        { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                        { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                        { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                        { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+                ]
+        });
+
+</script>
+
+</body>
+</html>
