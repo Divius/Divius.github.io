@@ -150,12 +150,12 @@ Most of the patches are up, the feature is tested with the CoreOS-based
 ramdisk for now. Still, the ramdisk side poses a problem: while using DHCP is
 easy, static network configuration seems not. It's especially problematic in
 CoreOS. Might be much easier in the DIB-based ramdisk, but we don't support it
-offcially in the Ironic community.
+officially in the Ironic community.
 
 RedFish driver
 ~~~~~~~~~~~~~~
 
-We want to get a driver supporting redfish soon. There was some critics raised
+We want to get a driver supporting RedFish soon. There was some critics raised
 around the currently proposed python-redfish library. As an alternative,
 `a new library <https://github.com/openstack/sushy>`_ was written. Is it
 lightweight, covered by unit tests and only contain what Ironic needs.
