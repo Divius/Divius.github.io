@@ -7,18 +7,22 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
   <loc>http://dtantsur.github.io/categories/music.xml</loc>
-  <lastmod>2016-01-25T13:19:00Z</lastmod>
+  <lastmod>2017-02-28T14:16:00Z</lastmod>
+ </sitemap>
+ <sitemap>
+  <loc>http://dtantsur.github.io/categories/openstack.xml</loc>
+  <lastmod>2017-02-28T15:55:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://dtantsur.github.io/categories/software.xml</loc>
-  <lastmod>2016-01-25T13:19:00Z</lastmod>
+  <lastmod>2017-02-28T15:55:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://dtantsur.github.io/rss.xml</loc>
-  <lastmod>2016-01-25T13:19:00Z</lastmod>
+  <lastmod>2017-02-28T15:55:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://dtantsur.github.io/sitemap.xml</loc>
-  <lastmod>2016-04-25T20:12:00Z</lastmod>
+  <lastmod>2017-02-28T15:55:00Z</lastmod>
  </sitemap>
 </sitemapindex>
