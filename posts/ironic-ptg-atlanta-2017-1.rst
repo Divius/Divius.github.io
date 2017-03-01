@@ -13,6 +13,8 @@ Atlanta PTG Summary: Ironic (part 1)
 This is an extract from my personal notes and public etherpads from the
 OpenStack PTG 2017 in Atlanta. A lot of text ahead!
 
+The second part is `here <../posts/ironic-ptg-atlanta-2017-2.html>`_.
+
 .. TEASER_END: Read more
 
 Ongoing work and status updates
