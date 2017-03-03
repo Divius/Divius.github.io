@@ -121,23 +121,23 @@ TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"
 
 NAVIGATION_LINKS = {
     DEFAULT_LANG: (
-        ('/index.html', 'Home', 'icon-home'),
-        ('/archive.html', 'Archives', 'icon-folder-open-alt'),
-        ('/categories/index.html', 'Tags', 'icon-tags'),
-        ('/rss.xml', 'RSS', 'icon-rss'),
-        ('https://twitter.com/creepy_owlet', 'My Twitter', 'icon-twitter'),
-        ('https://instagram.com/creepy_owlet', 'My Instagram', 'icon-instagram'),
-        ('https://github.com/dtantsur', 'My Github', 'icon-github'),
-        ('', 'Talks', ''),
-        ('/talks/mitaka-inspector-status', 'Ironic Inspector Mitaka Status', ''),
-        ('/talks/whatsnew-ironic-mitaka', 'What\'s New in Ironic Mitaka', ''),
-        ('/talks/fosdem2016', 'FOSDEM16: Ironic Debugging', ''),
-        ('/talks/devconf2015', 'DevConf15: Ironic Overview', ''),
+        ('/index.html', 'Home'),
+        ('/archive.html', 'Archives'),
+        ('/categories/index.html', 'Tags'),
+        ('/rss.xml', 'RSS'),
+        ('https://twitter.com/creepy_owlet', 'My Twitter'),
+        ('https://instagram.com/creepy_owlet', 'My Instagram'),
+        ('https://github.com/dtantsur', 'My Github'),
+        ('', '~~~ Talks ~~~'),
+        ('/talks/mitaka-inspector-status', 'Ironic Inspector Mitaka Status'),
+        ('/talks/whatsnew-ironic-mitaka', 'What\'s New in Ironic Mitaka'),
+        ('/talks/fosdem2016', 'FOSDEM16: Ironic Debugging'),
+        ('/talks/devconf2015', 'DevConf15: Ironic Overview'),
     )
 }
 
 # Name of the theme to use.
-THEME = "zen"
+THEME = "lanyon"
 
 # Below this point, everything is optional
 
