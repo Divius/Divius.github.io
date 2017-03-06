@@ -151,7 +151,8 @@ NAVIGATION_LINKS = {
 }
 
 # Name of the theme to use.
-THEME = "custom"
+THEME = "bootstrap3"
+THEME_COLOR = "#FFFFFF"
 
 # Below this point, everything is optional
 
