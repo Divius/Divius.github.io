@@ -121,23 +121,37 @@ TRANSLATIONS_PATTERN = "{path}.{lang}.{ext}"
 
 NAVIGATION_LINKS = {
     DEFAULT_LANG: (
-        ('/index.html', 'Home'),
+        (
+            (
+                ('/categories/music.html', 'Music'),
+                ('/categories/openstack.html', 'OpenStack'),
+                ('/categories/software.html', 'Software'),
+            ),
+            'Tags'
+        ),
+        (
+            (
+                ('/talks/mitaka-inspector-status', 'Ironic Inspector Mitaka Status'),
+                ('/talks/whatsnew-ironic-mitaka', 'What\'s New in Ironic Mitaka'),
+                ('/talks/fosdem2016', 'FOSDEM16: Ironic Debugging'),
+                ('/talks/devconf2015', 'DevConf15: Ironic Overview'),
+            ),
+            'Talks'
+        ),
+        (
+            (
+                ('https://instagram.com/creepy_owlet', 'My Instagram'),
+                ('https://github.com/dtantsur', 'My Github'),
+            ),
+            'Social'
+        ),
         ('/archive.html', 'Archives'),
-        ('/categories/index.html', 'Tags'),
         ('/rss.xml', 'RSS'),
-        ('https://twitter.com/creepy_owlet', 'My Twitter'),
-        ('https://instagram.com/creepy_owlet', 'My Instagram'),
-        ('https://github.com/dtantsur', 'My Github'),
-        ('', '~~~ Talks ~~~'),
-        ('/talks/mitaka-inspector-status', 'Ironic Inspector Mitaka Status'),
-        ('/talks/whatsnew-ironic-mitaka', 'What\'s New in Ironic Mitaka'),
-        ('/talks/fosdem2016', 'FOSDEM16: Ironic Debugging'),
-        ('/talks/devconf2015', 'DevConf15: Ironic Overview'),
     )
 }
 
 # Name of the theme to use.
-THEME = "lanyon"
+THEME = "bootstrap3"
 
 # Below this point, everything is optional
 
@@ -609,7 +623,6 @@ LICENSE = """<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.
 # A small copyright notice for the page footer (in HTML).
 # (translatable)
 CONTENT_FOOTER = 'Contents &copy; {date} {author} {license} - Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a>'
-CONTENT_FOOTER += ' using <a href="https://themes.getnikola.com/#zen" rel="nofollow">Zen</a> theme.'
 
 # Things that will be passed to CONTENT_FOOTER.format().  This is done
 # for translatability, as dicts are not formattable.  Nikola will
@@ -791,20 +804,20 @@ COPY_SOURCES = False
 # This search form works for any site and looks good in the "site" theme where
 # it appears on the navigation bar:
 #
-SEARCH_FORM = """
-<!-- Custom search -->
-<form method="get" id="search" action="//duckduckgo.com/"
- class="navbar-form pull-left">
-<input type="hidden" name="sites" value="%s"/>
-<input type="hidden" name="k8" value="#444444"/>
-<input type="hidden" name="k9" value="#D51920"/>
-<input type="hidden" name="kt" value="h"/>
-<input type="text" name="q" maxlength="255"
- placeholder="Search&hellip;" class="span2" style="margin-top: 4px;"/>
-<input type="submit" value="DuckDuckGo Search" style="visibility: hidden;" />
-</form>
-<!-- End of custom search -->
-""" % SITE_URL
+# SEARCH_FORM = """
+# <!-- Custom search -->
+# <form method="get" id="search" action="//duckduckgo.com/"
+#  class="navbar-form pull-left">
+# <input type="hidden" name="sites" value="%s"/>
+# <input type="hidden" name="k8" value="#444444"/>
+# <input type="hidden" name="k9" value="#D51920"/>
+# <input type="hidden" name="kt" value="h"/>
+# <input type="text" name="q" maxlength="255"
+#  placeholder="Search&hellip;" class="span2" style="margin-top: 4px;"/>
+# <input type="submit" value="DuckDuckGo Search" style="visibility: hidden;" />
+# </form>
+# <!-- End of custom search -->
+# """ % SITE_URL
 #
 # If you prefer a Google search form, here's an example that should just work:
 # SEARCH_FORM = """
