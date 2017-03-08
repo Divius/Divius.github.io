@@ -23,7 +23,7 @@
  </url>
  <url>
   <loc>http://dtantsur.github.io/archive.html</loc>
-  <lastmod>2017-03-06T16:30:00Z</lastmod>
+  <lastmod>2017-03-08T13:53:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/</loc>
@@ -35,11 +35,11 @@
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/openstack.html</loc>
-  <lastmod>2017-03-06T16:30:00Z</lastmod>
+  <lastmod>2017-03-08T14:30:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/software.html</loc>
-  <lastmod>2017-03-06T16:30:00Z</lastmod>
+  <lastmod>2017-03-08T14:30:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/guitarpro-6-on-fedora-20-x86_64.html</loc>
@@ -55,7 +55,11 @@
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-3.html</loc>
-  <lastmod>2017-03-06T16:30:00Z</lastmod>
+  <lastmod>2017-03-08T13:53:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-4.html</loc>
+  <lastmod>2017-03-08T14:30:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/pulseaudio-external-sound-card.html</loc>
