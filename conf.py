@@ -131,10 +131,11 @@ NAVIGATION_LINKS = {
         ),
         (
             (
+                ('/talks/pike-ironic-deploy-deep-dive/',
+                 'Ironic Deploy Deep Dive (Pike Version)'),
                 ('/talks/mitaka-inspector-status', 'Ironic Inspector Mitaka Status'),
                 ('/talks/whatsnew-ironic-mitaka', 'What\'s New in Ironic Mitaka'),
                 ('/talks/fosdem2016', 'FOSDEM16: Ironic Debugging'),
-                ('/talks/devconf2015', 'DevConf15: Ironic Overview'),
             ),
             'Talks'
         ),

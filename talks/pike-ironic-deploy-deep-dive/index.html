@@ -1,0 +1,131 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Ironic Deploy Deep Dive (Pike Version)</title>
+                <meta name="author" content="Dmitry Tantsur (divius.inside@gmail.com)">
+
+		<link rel="stylesheet" href="../reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="../reveal.js/css/theme/dtantsur.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi) ? '../reveal.js/css/print/pdf.css' : '../reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+
+<section>
+    <h1 class="title">Ironic Deploy Deep Dive</h1>
+    <h2>The Pike Release Version</h2>
+    <br><br>
+    <p><small>Dmitry Tantsur (Principal Software Engineer, Red Hat)</small>
+    <br>
+    <small>
+        <a href="https://dtantsur.github.io/talks/pike-ironic-deploy-deep-dive/">
+            dtantsur.github.io/talks/pike-ironic-deploy-deep-dive</a>
+    </small></p>
+</section>
+
+<section>
+    <h1>Agenda</h1>
+    <ul>
+        <li>Scheduling on bare metal nodes</li>
+        <li>Initiating the deployment process</li>
+        <li>Ironic Conductor and the deploy interface</li>
+        <li>Managing power and boot devices</li>
+        <li>Connecting networks and VIFs</li>
+        <li>iSCSI-based deploy procedure</li>
+    </ul>
+    <p><small>Tear down is covered by another deep dive.</small></p>
+</section>
+
+<section>
+    <h1 class="title">Scheduling on bare metal</h1>
+</section>
+
+<section>
+    <h1>Scheduling on bare metal</h1>
+    <h2>Exposing resources - before Pike</h2>
+    <p>Historically, we've been exposing bare metal resources similar to the
+    way virtual resources are exposed:
+    <a href="https://github.com/openstack/nova/blob/3284851437e24250d46edba20789a2e5f1f435a0/nova/virt/ironic/driver.py#L261-L325">
+        nova/virt/ironic/driver.py</a>.
+    </p>
+    <p>For example, a node with 16 GiB of RAM and 4 CPUs was represented as a
+    hypervisor with 16 GiB of RAM and 4 CPUs.</p>
+    <p>When <strong>any</strong> instance is deployed on it, it's reported as
+    a hypervisor with 16 GiB RAM and 4 CPUs used.</p>
+</section>
+
+<section>
+    <h1>Scheduling on bare metal</h1>
+    <h2>Exact filters</h2>
+    <p>This approach is racy. If a users asks for 2 instances with 2 GiB of RAM
+    and one 1 CPU each, the scheduler can try placing both of them on the same
+    bare metal node. Only one of the attempts will succeed.</p>
+    <ul>
+        <li>One mitigation is to use <em>exact scheduling filters</em>.</li>
+        <li>Another is to have a lot of retries in the
+            <var>RetryFilter</var>. TripleO uses <strong>30</strong>.</li>
+    </ul>
+</section>
+
+<section>
+    <h1>Scheduling on bare metal</h1>
+    <h2>Exposing resources - Pike</h2>
+    <p>Now every node exposes several <em>resource classes</em> to the
+    scheduler:
+    <a href="https://github.com/openstack/nova/blob/6c3520ac5ba789dd40d51c0d20a30d0dc44a8c07/nova/virt/ironic/driver.py#L632-L671">
+        nova/virt/ironic/driver.py</a>.
+    </p>
+    <p>This includes traditional memory/disk/CPU resources, as well as
+    baremetal-specific <em>custom resource class</em>, fetches from a node's
+    <var>resource_class</var> field.</p>
+</section>
+
+<section>
+    <h1>Scheduling on bare metal</h1>
+    <h2>Exposing resources - After Pike</h2>
+    <p>At some point in time bare metal nodes will stop expose memory/disk/CPU
+    resources to the scheduler completely.</p>
+    <p>Flavors targeting bare metal will have to request a custom resource
+    class instead of them:
+    <a href="https://docs.openstack.org/project-install-guide/baremetal/draft/configure-nova-flavors.html#scheduling-based-on-resource-classes">
+        install-guide</a>.
+    </p>
+</section>
+
+			</div>
+		</div>
+
+		<script src="../reveal.js/lib/js/head.min.js"></script>
+		<script src="../reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				dependencies: [
+					{ src: '../reveal.js/plugin/markdown/marked.js' },
+					{ src: '../reveal.js/plugin/markdown/markdown.js' },
+					{ src: '../reveal.js/plugin/notes/notes.js', async: true },
+					{ src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
