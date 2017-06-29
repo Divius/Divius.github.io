@@ -108,6 +108,77 @@
     </p>
 </section>
 
+<section>
+    <h1>Scheduling on bare metal</h1>
+    <h2>Capabilities</h2>
+    <p><em>Capabilities</em> allow picking nodes based on non-standard
+    properties. Nowadays they are partly replaced by <em>custom resource
+    classes</em>, but can still be useful.</p>
+    <p>A flavor can have capabilities requested via its <var>extra_specs</var>.
+    They will be matched against capabilities as reported by the Ironic Nova
+    driver: <a href="https://github.com/openstack/nova/blob/6c3520ac5ba789dd40d51c0d20a30d0dc44a8c07/nova/virt/ironic/driver.py#L286-L299">
+        nova/virt/ironic/driver.py</a></p>
+</section>
+
+<section>
+    <h1 class="title">Initiating the deployment</h1>
+</section>
+
+<section>
+    <h1>Initiating the deployment</h1>
+    <h2>High-level overview</h2>
+    <p><a href="https://github.com/openstack/nova/blob/6c3520ac5ba789dd40d51c0d20a30d0dc44a8c07/nova/virt/ironic/driver.py#L856-L964">
+        nova/virt/ironic/driver.py</a></p>
+    <ol>
+        <li>Add <var>instance_info</var> to the node</li>
+        <li>Add <var>instance_uuid</var> to lock the node</li>
+        <li>Validate the final node information</li>
+        <li>Plug VIFs and start the firewall</li>
+        <li>Build and store a config drive</li>
+        <li>Issue a provisioning request</li>
+        <li>Wait for the inevitable success</li>
+    </ol>
+</section>
+
+<section>
+    <h1>Initiating the deployment</h1>
+    <h2>Instance information</h2>
+    <p><a href="https://github.com/openstack/nova/blob/6c3520ac5ba789dd40d51c0d20a30d0dc44a8c07/nova/virt/ironic/patcher.py">
+        nova/virt/ironic/patcher.py</a></p>
+    <ul>
+        <li>Image information: Glance source, disk, swap and ephemeral
+            partition sizes</li>
+        <li>Nova host ID (used when binding ports)</li>
+        <li>Flavor details: VCPUs, memory, disk (will probably go away
+            eventually)</li>
+        <li>Requested (and matched capabilities)</li>
+    </ul>
+</section>
+
+<section>
+    <h1>Initiating the deployment</h1>
+    <h2>Instance UUID</h2>
+    <p>The <var>instance_uuid</var> field is used to lock the chosen node.</p>
+    <p>Before this point, the node picked by the scheduler can still be used
+    by anything else. This is where potential races can happen.</p>
+    <p>The <var>instance_uuid</var> field can only be added or removed,
+    but it's not possible to replace an existing value.</p>
+    <p>So after it's successfully set to an instance UUID, Nova is safe
+    to proceed with deploying on it.</p>
+</section>
+
+<section>
+    <h1>Initiating the deployment</h1>
+    <h2>Plugging VIFs</h2>
+    <p>Ironic has to know VIF IDs to be able to talk to Neutron.</p>
+    <p>Previously, they were passed via <var>extra[vif_port_id]</var>, now
+    we have a separate API for that.</p>
+    <p>Nova requests every VIF to be plugged:
+    <a href="https://github.com/openstack/nova/blob/6c3520ac5ba789dd40d51c0d20a30d0dc44a8c07/nova/virt/ironic/driver.py#L1251-L1264">
+        nova/virt/ironic/driver.py</a>. Everything else is handled by
+    Ironic itself.</p>
+</section>
+
 			</div>
 		</div>
 
