@@ -53,6 +53,8 @@
 </section>
 
 <section>
+
+<section>
     <h1 class="title">Scheduling on bare metal</h1>
 </section>
 
@@ -120,6 +122,9 @@
         nova/virt/ironic/driver.py</a></p>
 </section>
 
+</section>
+<section>
+
 <section>
     <h1 class="title">Initiating the deployment</h1>
 </section>
@@ -177,6 +182,142 @@
     <a href="https://github.com/openstack/nova/blob/6c3520ac5ba789dd40d51c0d20a30d0dc44a8c07/nova/virt/ironic/driver.py#L1251-L1264">
         nova/virt/ironic/driver.py</a>. Everything else is handled by
     Ironic itself.</p>
+</section>
+
+<section>
+    <h1>Initiating the deployment</h1>
+    <h2>Provision state change</h2>
+    <p>The deployment is initiated by requesting provision state
+    <var>active</var> for the node.</p>
+    <p>The a looping call is established to wait for a provision state that
+    indicates either success (<var>active</var>) or a failure. It also accounts
+    for a potential deletion request in the middle of a deployment:
+    <a href="https://github.com/openstack/nova/blob/6c3520ac5ba789dd40d51c0d20a30d0dc44a8c07/nova/virt/ironic/driver.py#L401-L428">
+        nova/virt/ironic/driver.py</a></p>
+</section>
+
+</section>
+<section>
+
+<section>
+    <h1 class="title">Ironic deployment overview</h1>
+</section>
+
+<section>
+    <h1>Ironic deployment overview</h1>
+    <h2>Preparation</h2>
+    <ol>
+        <li>Plug VIFs</li>
+        <li>Cache images</li>
+        <li>Configure boot environment (PXE, iPXE, virtual media)</li>
+        <li>Connect the provisioning network to the node</li>
+        <li>Boot the ramdisk (IPA)</li>
+        <li>Wait for a callback from the ramdisk</li>
+    </ol>
+</section>
+
+<section>
+    <h1>Ironic deployment overview</h1>
+    <h2>Deployment - iSCSI method</h2>
+    <ol>
+        <li>Request IPA to expose the root disk as an iSCSI share</li>
+        <li>Mount the resulting iSCSI share to the conductor</li>
+        <li>In case of partition images - partition the target
+            device</li>
+        <li>Flash the instance image to the target device</li>
+        <li>Write the config drive, if provided</li>
+        <li>In case of partition images and local boot - install the
+            bootloader on the target device</li>
+        <li>Unmount the iSCSI share</li>
+    </ol>
+</section>
+
+<section>
+    <h1>Ironic deployment overview</h1>
+    <h2>Deployment - direct method</h2>
+    <ol>
+        <li>In case of partition images - request IPA to partition the target
+            device</li>
+        <li>Request IPA to flash the instance image (fetched from a Swift
+            temporary URL or an HTTP location) to the target device</li>
+        <li>Request IPA to write the config drive, if provided</li>
+        <li>In case of partition images and local boot - request IPA to install
+            the bootloader on the target device</li>
+    </ol>
+</section>
+
+<section>
+    <h1>Ironic deployment overview</h1>
+    <h2>Finishing</h2>
+    <ol>
+        <li>Request IPA to power off the machine</li>
+        <li>Disconnect the provisioning network and connect tenant
+            network(s)</li>
+        <li>Set the boot device as requested</li>
+        <li>Power on the machine</li>
+    </ol>
+</section>
+
+</section>
+<section>
+
+<section>
+    <h1 class="title">Ironic drivers overview</h1>
+</section>
+
+<section>
+    <h1>Ironic drivers overview</h1>
+    <h2>Driver interfaces</h2>
+    <p>Most of the deployment actions are done by drivers. The drivers, in turn,
+    consist of <em>interfaces</em>, each with a different role in hardware
+    management.</p>
+</section>
+
+<section>
+    <h1>Ironic drivers overview</h1>
+    <h2>Power and management</h2>
+    <p>The <em>power</em> interface handles powering nodes on and off</p>
+    <p>The <em>management</em> interface handles additional vendor-specific
+    actions, like getting or setting boot device.</p>
+    <p>These drivers are tied to the protocol to access the BMC</p>
+    <p>Examples include ipmitool, redfish, ilo.</p>
+</section>
+
+<section>
+    <h1>Ironic drivers overview</h1>
+    <h2>Boot and deploy</h2>
+    <p>The <em>boot</em> interface handles how either the deployment ramdisk or
+    the final instance get booted on the node. Examples include PXE/iPXE and
+    vendor-specific virtual media approaches.</p>
+    <p>The <em>deploy</em> interface orchestrates the deployment process,
+    including how exactly an image gets transferred to a node. Currently
+    supported are iSCSI-based and direct deploy methods.</p>
+</section>
+
+<section>
+    <h1>Ironic drivers overview</h1>
+    <h2>Network</h2>
+    <p>The <em>network</em> interface handles how networks are connected to
+    and disconnected from a node</p>
+    <p>Currently supported are the following implementations:
+    <ul>
+        <li><em>none</em> networking does nothing, and expects DHCP to be
+            configured externally.</li>
+        <li><em>flat</em> networking uses Neutron with one flat provision
+            network, also serving as a tenant network.</li>
+        <li><em>neutron</em> networking also uses Neutron, but it is able to
+            talk to switch-specific ML2 drivers to connect/disconnect different
+            networks to and from nodes.</li>
+    </ul>
+</section>
+
+</section>
+<section>
+
+<section>
+    <h1 class="title">Preparation for deployment</h1>
+</section>
+
 </section>
 
 			</div>
