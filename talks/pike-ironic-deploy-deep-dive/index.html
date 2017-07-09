@@ -42,16 +42,118 @@
 <section>
     <h1>Agenda</h1>
     <ul>
+        <li>Overview of Ironic drivers</li>
         <li>Scheduling on bare metal nodes</li>
         <li>Initiating the deployment process</li>
-        <li>Ironic Conductor and the deploy interface</li>
-        <li>Managing power and boot devices</li>
+        <li>The iSCSI deploy interface</li>
+        <li>Boot management and PXE boot</li>
         <li>Connecting networks and VIFs</li>
-        <li>iSCSI-based deploy procedure</li>
     </ul>
     <p><small>Tear down is covered by another deep dive.</small></p>
 </section>
 
+<section>
+
+<section>
+    <h1 class="title">Ironic drivers overview</h1>
+</section>
+
+<section>
+    <h1>Ironic drivers overview</h1>
+    <h2>Driver interfaces</h2>
+    <p>Most of the deployment actions are done by drivers. The drivers, in turn,
+    consist of <em>interfaces</em>, each with a different role in hardware
+    management.</p>
+</section>
+
+<section>
+    <h1>Ironic drivers overview</h1>
+    <h2>Power and management</h2>
+    <p>The <em>power</em> interface handles powering nodes on and off</p>
+    <p>The <em>management</em> interface handles additional vendor-specific
+    actions, like getting or setting boot device.</p>
+    <p>These drivers are tied to the protocol to access the BMC</p>
+    <p>Examples include ipmitool, redfish, ilo.</p>
+</section>
+
+<section>
+    <h1>Ironic drivers overview</h1>
+    <h2>Boot and deploy</h2>
+    <p>The <em>boot</em> interface handles how either the deployment ramdisk or
+    the final instance get booted on the node. Examples include PXE/iPXE and
+    vendor-specific virtual media approaches.</p>
+    <p>The <em>deploy</em> interface orchestrates the deployment process,
+    including how exactly an image gets transferred to a node. Currently
+    supported are iSCSI-based and direct deploy methods.</p>
+</section>
+
+<section>
+    <h1>Ironic drivers overview</h1>
+    <h2>Network</h2>
+    <p>The <em>network</em> interface handles how networks are connected to
+    and disconnected from a node</p>
+    <p>Currently supported are the following implementations:
+    <ul>
+        <li><em>none</em> networking does nothing, and expects DHCP to be
+            configured externally.</li>
+        <li><em>flat</em> networking uses Neutron with one flat provision
+            network, also serving as a tenant network.</li>
+        <li><em>neutron</em> networking also uses Neutron, but it is able to
+            talk to switch-specific ML2 drivers to connect/disconnect different
+            networks to and from nodes.</li>
+    </ul>
+</section>
+
+<section>
+    <h1>Ironic drivers overview</h1>
+    <h2>Classic drivers</h2>
+    <p>Before the Ocata release, the drivers were always monolithic. All
+    interfaces were hardcoded, and partly reflected in their names.</p>
+    <ul>
+        <li>The <var>pxe_ipmitool</var> driver uses <var>ipmitool</var>
+            <em>power</em> and <em>management</em>, <var>pxe</var> boot and
+            iSCSI-based <em>deploy</em> as performed by IPA.</li>
+        <li>The <var>agent_ipmitool</var> driver uses <var>ipmitool</var>
+            <em>power</em> and <em>management</em>, <var>pxe</var> boot and
+            direct <em>deploy</em> as performed by IPA.</li>
+        <li><small>We are not good at naming, are we?</small></li>
+    </ul>
+    <p><a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/ipmi.py#L51-L70">
+        ironic/drivers/ipmi.py</a></p>
+</section>
+
+<section>
+    <h1>Ironic drivers overview</h1>
+    <h2>Classic drivers drawbacks</h2>
+    <p>The problem is: as of Pike-3 we will have <strong>11</strong> hardware
+    interfaces and <strong>36</strong> drivers.</p>
+    <p>Every time we add a new implementation for any interface, we need more
+    drivers.</p>
+    <p>The crisis burst out when we introduced the <em>network</em> interface,
+    all implementations of which were compatible with all drivers.</p>
+    <p>Starting with Ocata, we support a new concept of <em>dynamic drivers
+    </em>.</p>
+</section>
+
+<section>
+    <h1>Ironic drivers overview</h1>
+    <h2>Hardware types</h2>
+    <p>A <em>hardware type</em> defines which interface implementations it is
+    compatible with, and which priority they have.</p>
+    <p>New fields were provided on nodes for each of the interface. E.g.
+    <var>boot_interface</var>, <var>power_interface</var>, etc.</p>
+    <p>A <em>dynamic driver</em> is built on fly, based on these fields,
+    interface implementations enabled in the configuration, and the defaults
+    from the node's <em>hardware type</em>.</p>
+    <p><a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/ipmi.py#L27-L48">
+        ironic/drivers/ipmi.py</a>
+    <a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/generic.py#L31-L66">
+        ironic/drivers/generic.py</a></p>
+    <p><a href="https://docs.openstack.org/project-install-guide/baremetal/draft/enrollment.html#defaults-for-hardware-interfaces">
+        install-guide on interfaces</a></p>
+</section>
+
+</section>
 <section>
 
 <section>
@@ -264,136 +366,186 @@
 <section>
 
 <section>
-    <h1 class="title">Ironic drivers overview</h1>
+    <h1 class="title">iSCSI-based deploy</h1>
 </section>
 
 <section>
-    <h1>Ironic drivers overview</h1>
-    <h2>Driver interfaces</h2>
-    <p>Most of the deployment actions are done by drivers. The drivers, in turn,
-    consist of <em>interfaces</em>, each with a different role in hardware
-    management.</p>
-</section>
-
-<section>
-    <h1>Ironic drivers overview</h1>
-    <h2>Power and management</h2>
-    <p>The <em>power</em> interface handles powering nodes on and off</p>
-    <p>The <em>management</em> interface handles additional vendor-specific
-    actions, like getting or setting boot device.</p>
-    <p>These drivers are tied to the protocol to access the BMC</p>
-    <p>Examples include ipmitool, redfish, ilo.</p>
-</section>
-
-<section>
-    <h1>Ironic drivers overview</h1>
-    <h2>Boot and deploy</h2>
-    <p>The <em>boot</em> interface handles how either the deployment ramdisk or
-    the final instance get booted on the node. Examples include PXE/iPXE and
-    vendor-specific virtual media approaches.</p>
-    <p>The <em>deploy</em> interface orchestrates the deployment process,
-    including how exactly an image gets transferred to a node. Currently
-    supported are iSCSI-based and direct deploy methods.</p>
-</section>
-
-<section>
-    <h1>Ironic drivers overview</h1>
-    <h2>Network</h2>
-    <p>The <em>network</em> interface handles how networks are connected to
-    and disconnected from a node</p>
-    <p>Currently supported are the following implementations:
-    <ul>
-        <li><em>none</em> networking does nothing, and expects DHCP to be
-            configured externally.</li>
-        <li><em>flat</em> networking uses Neutron with one flat provision
-            network, also serving as a tenant network.</li>
-        <li><em>neutron</em> networking also uses Neutron, but it is able to
-            talk to switch-specific ML2 drivers to connect/disconnect different
-            networks to and from nodes.</li>
-    </ul>
-</section>
-
-<section>
-    <h1>Ironic drivers overview</h1>
-    <h2>Classic drivers</h2>
-    <p>Before the Ocata release, the drivers were always monolithic. All
-    interfaces were hardcoded, and partly reflected in their names.</p>
-    <ul>
-        <li>The <var>pxe_ipmitool</var> driver uses <var>ipmitool</var>
-            <em>power</em> and <em>management</em>, <var>pxe</var> boot and
-            iSCSI-based <em>deploy</em> as performed by IPA.</li>
-        <li>The <var>agent_ipmitool</var> driver uses <var>ipmitool</var>
-            <em>power</em> and <em>management</em>, <var>pxe</var> boot and
-            direct <em>deploy</em> as performed by IPA.</li>
-        <li><small>We are not good at naming, are we?</small></li>
-    </ul>
-    <p><a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/ipmi.py#L51-L70">
-        ironic/drivers/ipmi.py</a></p>
-</section>
-
-<section>
-    <h1>Ironic drivers overview</h1>
-    <h2>Classic drivers drawbacks</h2>
-    <p>The problem is: as of Pike-3 we will have <strong>11</strong> hardware
-    interfaces and <strong>36</strong> drivers.</p>
-    <p>Every time we add a new implementation for any interface, we need more
-    drivers.</p>
-    <p>The crisis burst out when we introduced the <em>network</em> interface,
-    all implementations of which were compatible with all drivers.</p>
-    <p>Starting with Ocata, we support a new concept of <em>dynamic drivers
-    </em>.</p>
-</section>
-
-<section>
-    <h1>Ironic drivers overview</h1>
-    <h2>Hardware types</h2>
-    <p>A <em>hardware type</em> defines which interface implementations it is
-    compatible with, and which priority they have.</p>
-    <p>New fields were provided on nodes for each of the interface. E.g.
-    <var>boot_interface</var>, <var>power_interface</var>, etc.</p>
-    <p>A <em>dynamic driver</em> is built on fly, based on these fields,
-    interface implementations enabled in the configuration, and the defaults
-    from the node's <em>hardware type</em>.</p>
-    <p><a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/ipmi.py#L27-L48">
-        ironic/drivers/ipmi.py</a>
-    <a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/generic.py#L31-L66">
-        ironic/drivers/generic.py</a></p>
-    <p><a href="https://docs.openstack.org/project-install-guide/baremetal/draft/enrollment.html#defaults-for-hardware-interfaces">
-        install-guide on interfaces</a></p>
-</section>
-
-</section>
-<section>
-
-<section>
-    <h1 class="title">Preparation for deploy</h1>
-</section>
-
-<section>
-    <h1>Preparation for deploy</h1>
-    <h2>Overview (recap)</h2>
+    <h1>iSCSI-based deploy</h1>
+    <h2>Starting the deploy</h2>
     <ol>
-        <li>Plug VIFs</li>
-        <li>Cache images</li>
-        <li>Configure boot environment (PXE, iPXE, virtual media)</li>
-        <li>Connect the provisioning network to the node</li>
-        <li>Boot the ramdisk (IPA)</li>
-        <li>Wait for a callback from the ramdisk</li>
+        <li>The deploy starts when a conductor receives
+            <var>do_node_deploy </var> RPC request.</li>
+        <li>A few sanity checks are done then: <em>power</em> and
+            <em>deploy</em> interface validations, and check for maintenance
+            mode.</li>
+        <li>The node is moved to the <var>deploying</var> provision state,
+            and a new thread is lauched for the remaining actions.</li>
+        <li>There, the <var>prepare</var> and <var>deploy</var> methods of
+            the <em>deploy</em> interface are called.</li>
     </ol>
-</section>
-
-<section>
-    <h1>Preparation for deploy</h1>
-    <h2>Starting</h2>
-    <p>The deploy starts when a conductor receives <var>do_node_deploy</var>
-    RPC request. It does a few sanity checks, then spawns a new thread for
-    the remaining tasks.</p>
     <p><a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/conductor/manager.py#L549-L604">
         ironic/conductor/manager.py (1)</a></p>
     <p><a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/conductor/manager.py#L2745-L2788">
         ironic/conductor/manager.py (2)</a></p>
-    <p>The main logic resides in the <var>prepare</var> and <var>deploy</var>
-    calls of a node's <em>deploy</em> interface.</p>
+</section>
+
+<section>
+    <h1>iSCSI-based deploy</h1>
+    <h2>Preparation</h2>
+    <p>The <em>deploy</em> interface <var>prepare</var> method is called in
+    several cases: on deployment (or rebuilding), on <em>take over</em> and on
+    <em>adopting</em> a node.</p>
+    <p>In case of deployment, it
+    <ol>
+        <li>removes tenant networks from the node (if any)</li>
+        <li>adds the provisioning network (if needed)</li>
+        <li>orders the <em>boot</em> interface of the node to boot
+            the deployment ramdisk</li>
+    </ol>
+    <p><a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/modules/iscsi_deploy.py#L495-L505">
+        ironic/drivers/modules/iscsi_deploy.py</a>.</p>
+</section>
+
+<section>
+    <h1>iSCSI-based deploy</h1>
+    <h2>Starting the deploy</h2>
+    <ol>
+        <li>The actual deploy process is started with caching the instance
+            (user) image on the conductor. Ironic can download it from Glance,
+            as well as any HTTP(s) location.</li>
+        <li>The image is (usually) converted to the "raw" format first
+            to ensure it can be <var>dd</var>-ed to the target device.</li>
+        <li>The node is rebooted. In the <var>prepare</var> call we already
+            ensured that it will boot the deployment ramdisk.</li>
+        <li>At this point, the node's provision state changes from
+            <var>deploying</var> to <var>deploy wait</var>, and the conductor
+            idles, awaiting a callback from the ramdisk</li>
+    </ol>
+</section>
+
+<section>
+    <h1>iSCSI-based deploy</h1>
+    <h2>IPA start up and lookup</h2>
+    <p>The deployment (also cleaning and inspection) ramdisk for Ironic is
+    based on <em>Ironic Python Agent</em> (<em>IPA</em>) - Python service
+    providing an HTTP API for various provisioning tasks.</p>
+    <p>On start up, IPA initializes <em>hardware manager(s)</em> - plugins
+    handling hardware-specific aspects of provisoning. The default
+    <var>GenericHardwareManager</var> is used in most cases.</p>
+    <p>Then IPA gets the Ironic API URL from the kernel boot
+    arguments (supplied by the <em>boot</em> interface). It calls the
+    <em>lookup</em> API endpoint to figure out the current node UUID, and a few
+    optional configuration parameters.</p>
+</section>
+
+<section>
+    <h1>iSCSI-based deploy</h1>
+    <h2>IPA heart beats</h2>
+    <p>After a successful start up, IPA waits for requests, while periodically
+    polling the <em>heartbeat</em> API. Ironic assigns tasks to IPA in response
+    to these heart beats.</p>
+    <p>All IPA-based <em>deploy</em> interface implementations process
+    heart beats in a similar way, defined in the <var>HeartbeatMixin</var>
+    class:
+    <a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/modules/agent_base_vendor.py#L264-L329">
+        ironic/drivers/modules/agent_base_vendor.py</a>.</p>
+    <p>It detects the required actions by looking at the node's provision
+    state. If it's <var>deploy wait</var>, the <var>continue_deploy</var>
+    method is called. This method differs between different <em>deploy</em>
+    interface implementations.</p>
+</section>
+
+<section>
+    <h1>iSCSI-based deploy</h1>
+    <h2>Finding root disk</h2>
+    <ol>
+        <li>Ironic requests IPA to publish the target disk via iSCSI, providing
+            the complete node information:
+            <a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/modules/iscsi_deploy.py#L306-L320">
+                ironic/drivers/modules/iscsi_deploy.py</a>.</li>
+        <li>The IPA <em>iscsi</em> extension starts with asking the current
+            <em>hardware manager</em> to pick the target device.
+        <li>If <em>root device hints</em> were provided on a node, they are used:
+            <a href="https://github.com/openstack/ironic-python-agent/blob/30e0da15ea7efe57fea84a56ac34b857ceb80cde/ironic_python_agent/hardware.py#L675-L704">
+                ironic_python_agent/hardware.py</a>,
+            <a href="https://github.com/openstack/ironic-lib/blob/52440836bdbde05580f60caf81aafc5f5a537af5/ironic_lib/utils.py#L328-L417">
+                ironic_lib/utils.py</a>.</li>
+        <li>Otherwise, the smallest disk that is larger than 4 GiB is used:
+            <a href="https://github.com/openstack/ironic-python-agent/blob/30e0da15ea7efe57fea84a56ac34b857ceb80cde/ironic_python_agent/utils.py#L290-L307">
+                ironic_python_agent/utils.py</a>.</li>
+    </ol>
+</section>
+
+<section>
+    <h1>iSCSI-based deploy</h1>
+    <h2>Accessing root disk</h2>
+    <ol start="5">
+        <li>The chosen device is published using either <var>tgtd</var> or
+            <var>LIO</var>. For CentOS/RHEL, <var>LIO</var> is used:
+            <a href="https://github.com/openstack/ironic-python-agent/blob/30e0da15ea7efe57fea84a56ac34b857ceb80cde/ironic_python_agent/extensions/iscsi.py#L82-L105">
+                ironic_python_agent/extensions/iscsi.py</a>.</li>
+        <li>On receiving success result from IPA, the conductor mounts the
+            resulting iSCSI share locally:
+            <a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/modules/deploy_utils.py#L134-L242">
+                ironic/drivers/modules/deploy_utils.py</a>.</li>
+        <li>Then Ironic proceeds with writing the image. It is done differently
+            for partition and whole-disk images.</li>
+    </ol>
+</section>
+
+<section>
+    <h1>iSCSI-based deploy</h1>
+    <h2>Whole-disk images</h2>
+    <p>In this case, Ironic only needs to copy the image and create a config
+    drive:
+    <a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/modules/deploy_utils.py#L416-L420">
+        ironic/drivers/modules/deploy_utils.py</a>.</p>
+    <ol start="8">
+        <li>Image is written by using <var>dd</var>, converting it to the raw
+            format, if it was not done by the conductor:
+            <a href="https://github.com/openstack/ironic-lib/blob/52440836bdbde05580f60caf81aafc5f5a537af5/ironic_lib/disk_utils.py#L307-L318">
+                ironic_lib/disk_utils.py</a>.</li>
+        <li>Then the conductor checks for a present config drive partition, and
+            creates one, if missing:
+            <a href="https://github.com/openstack/ironic-lib/blob/52440836bdbde05580f60caf81aafc5f5a537af5/ironic_lib/disk_utils.py#L722-L817">
+                ironic_lib/disk_utils.py</a>.</li>
+        <li>Finally, the config drive is <var>dd</var>-ed to the resulting
+            partition.</li>
+    </ol>
+</section>
+
+<section>
+    <h1>iSCSI-based deploy</h1>
+    <h2>Partition images [1]</h2>
+    <p>In this case, Ironic also needs to create a partition table:
+    <a href="https://github.com/openstack/ironic-lib/blob/52440836bdbde05580f60caf81aafc5f5a537af5/ironic_lib/disk_utils.py#L444-L573">
+        ironic_lib/disk_utils.py</a>.</p>
+    <ol start="8">
+        <li>All metadata on the target disk is destroyed:
+            <a href="https://github.com/openstack/ironic-lib/blob/52440836bdbde05580f60caf81aafc5f5a537af5/ironic_lib/disk_utils.py#L350-L381">
+                ironic_lib/disk_utils.py</a>.</li>
+        <li>A partition table of the requested type (MBR or GPT) is created.
+            The default for UEFI is GPT, otherwise MBR is used by default:
+            <a href="https://github.com/openstack/ironic-lib/blob/52440836bdbde05580f60caf81aafc5f5a537af5/ironic_lib/disk_utils.py#L212-L228">
+                ironic_lib/disk_utils.py</a>.</li>
+    </ol>
+</section>
+
+<section>
+    <h1>iSCSI-based deploy</h1>
+    <h2>Partition images [2]</h2>
+    <ol start="10">
+        <li>Then the root, swap, ephemeral and config drive partitions are
+            created. The root partition goes last to allow it to be extended
+            later (e.g. by <em>cloud-init</em>):
+            <a href="https://github.com/openstack/ironic-lib/blob/52440836bdbde05580f60caf81aafc5f5a537af5/ironic_lib/disk_utils.py#L230-L268">
+                ironic_lib/disk_utils.py</a>.</li>
+        <li>Finally, the swap, ephemeral (optionally) and EFI (optionally)
+            partitions are formatted; the root and config drive partitions
+            are populated:
+            <a href="https://github.com/openstack/ironic-lib/blob/52440836bdbde05580f60caf81aafc5f5a537af5/ironic_lib/disk_utils.py#L523-L557">
+                ironic_lib/disk_utils.py</a>.</li>
+    </ol>
 </section>
 
 </section>
