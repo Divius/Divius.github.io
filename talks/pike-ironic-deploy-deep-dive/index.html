@@ -69,7 +69,7 @@
     <p>For example, a node with 16 GiB of RAM and 4 CPUs was represented as a
     hypervisor with 16 GiB of RAM and 4 CPUs.</p>
     <p>When <strong>any</strong> instance is deployed on it, it's reported as
-    a hypervisor with 16 GiB RAM and 4 CPUs used.</p>
+    a hypervisor with 16 GiB RAM and 4 CPUs <strong>used</strong>.</p>
 </section>
 
 <section>
@@ -81,7 +81,9 @@
     <ul>
         <li>One mitigation is to use <em>exact scheduling filters</em>.</li>
         <li>Another is to have a lot of retries in the
-            <var>RetryFilter</var>. TripleO uses <strong>30</strong>.</li>
+            <var>RetryFilter</var>. TripleO uses <strong>30</strong>.
+            It works, but has a strong negative impact when an actual
+            failure happens.</li>
     </ul>
 </section>
 
@@ -311,11 +313,87 @@
     </ul>
 </section>
 
+<section>
+    <h1>Ironic drivers overview</h1>
+    <h2>Classic drivers</h2>
+    <p>Before the Ocata release, the drivers were always monolithic. All
+    interfaces were hardcoded, and partly reflected in their names.</p>
+    <ul>
+        <li>The <var>pxe_ipmitool</var> driver uses <var>ipmitool</var>
+            <em>power</em> and <em>management</em>, <var>pxe</var> boot and
+            iSCSI-based <em>deploy</em> as performed by IPA.</li>
+        <li>The <var>agent_ipmitool</var> driver uses <var>ipmitool</var>
+            <em>power</em> and <em>management</em>, <var>pxe</var> boot and
+            direct <em>deploy</em> as performed by IPA.</li>
+        <li><small>We are not good at naming, are we?</small></li>
+    </ul>
+    <p><a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/ipmi.py#L51-L70">
+        ironic/drivers/ipmi.py</a></p>
+</section>
+
+<section>
+    <h1>Ironic drivers overview</h1>
+    <h2>Classic drivers drawbacks</h2>
+    <p>The problem is: as of Pike-3 we will have <strong>11</strong> hardware
+    interfaces and <strong>36</strong> drivers.</p>
+    <p>Every time we add a new implementation for any interface, we need more
+    drivers.</p>
+    <p>The crisis burst out when we introduced the <em>network</em> interface,
+    all implementations of which were compatible with all drivers.</p>
+    <p>Starting with Ocata, we support a new concept of <em>dynamic drivers
+    </em>.</p>
+</section>
+
+<section>
+    <h1>Ironic drivers overview</h1>
+    <h2>Hardware types</h2>
+    <p>A <em>hardware type</em> defines which interface implementations it is
+    compatible with, and which priority they have.</p>
+    <p>New fields were provided on nodes for each of the interface. E.g.
+    <var>boot_interface</var>, <var>power_interface</var>, etc.</p>
+    <p>A <em>dynamic driver</em> is built on fly, based on these fields,
+    interface implementations enabled in the configuration, and the defaults
+    from the node's <em>hardware type</em>.</p>
+    <p><a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/ipmi.py#L27-L48">
+        ironic/drivers/ipmi.py</a>
+    <a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/generic.py#L31-L66">
+        ironic/drivers/generic.py</a></p>
+    <p><a href="https://docs.openstack.org/project-install-guide/baremetal/draft/enrollment.html#defaults-for-hardware-interfaces">
+        install-guide on interfaces</a></p>
+</section>
+
 </section>
 <section>
 
 <section>
-    <h1 class="title">Preparation for deployment</h1>
+    <h1 class="title">Preparation for deploy</h1>
+</section>
+
+<section>
+    <h1>Preparation for deploy</h1>
+    <h2>Overview (recap)</h2>
+    <ol>
+        <li>Plug VIFs</li>
+        <li>Cache images</li>
+        <li>Configure boot environment (PXE, iPXE, virtual media)</li>
+        <li>Connect the provisioning network to the node</li>
+        <li>Boot the ramdisk (IPA)</li>
+        <li>Wait for a callback from the ramdisk</li>
+    </ol>
+</section>
+
+<section>
+    <h1>Preparation for deploy</h1>
+    <h2>Starting</h2>
+    <p>The deploy starts when a conductor receives <var>do_node_deploy</var>
+    RPC request. It does a few sanity checks, then spawns a new thread for
+    the remaining tasks.</p>
+    <p><a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/conductor/manager.py#L549-L604">
+        ironic/conductor/manager.py (1)</a></p>
+    <p><a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/conductor/manager.py#L2745-L2788">
+        ironic/conductor/manager.py (2)</a></p>
+    <p>The main logic resides in the <var>prepare</var> and <var>deploy</var>
+    calls of a node's <em>deploy</em> interface.</p>
 </section>
 
 </section>
@@ -331,6 +409,8 @@
 			// - https://github.com/hakimel/reveal.js#configuration
 			// - https://github.com/hakimel/reveal.js#dependencies
 			Reveal.initialize({
+                                history: true,
+                                transitionSpeed: 'fast',
 				dependencies: [
 					{ src: '../reveal.js/plugin/markdown/marked.js' },
 					{ src: '../reveal.js/plugin/markdown/markdown.js' },
