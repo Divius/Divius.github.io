@@ -1,4 +1,5 @@
 @import url("../../lib/font/overpass/overpass.css");
+@import url("../../lib/font/overpass/overpass-mono.css");
 /**
  * A simple theme for reveal.js presentations, similar
  * to the default theme. The accent color is darkblue.
@@ -16,7 +17,6 @@ body {
 .reveal {
   font-family: "Overpass", sans-serif;
   font-size: 36px;
-  font-weight: normal;
   color: rgb(76, 87, 94); }
 
 .reveal .slides {
@@ -36,6 +36,17 @@ body {
 
 .reveal pre code {
   max-height: 500px; }
+
+.reveal em {
+  font-weight: 600; }
+
+.reveal var {
+  font-style: normal;
+  font-family: "Overpass-Mono", "Overpass", monospace; }
+
+.reveal small {
+  font-size: 80%; }
+
 
 /*********************************************
  * HEADERS
