@@ -142,7 +142,7 @@
     compatible with, and which priority they have.</p>
     <p>New fields were provided on nodes for each of the interface. E.g.
     <var>boot_interface</var>, <var>power_interface</var>, etc.</p>
-    <p>A <em>dynamic driver</em> is built on fly, based on these fields,
+    <p>A <em>dynamic driver</em> is built on the fly, based on these fields,
     interface implementations enabled in the configuration, and the defaults
     from the node's <em>hardware type</em>.</p>
     <p><a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/ipmi.py#L27-L48">
@@ -205,8 +205,8 @@
 <section>
     <h1>Scheduling on bare metal</h1>
     <h2>Exposing resources - After Pike</h2>
-    <p>At some point in time bare metal nodes will stop expose memory/disk/CPU
-    resources to the scheduler completely.</p>
+    <p>At some point in time bare metal nodes will stop exposing
+    memory/disk/CPU resources to the scheduler completely.</p>
     <p>Flavors targeting bare metal will have to request a custom resource
     class instead of them:
     <a href="https://docs.openstack.org/project-install-guide/baremetal/draft/configure-nova-flavors.html#scheduling-based-on-resource-classes">
@@ -293,7 +293,7 @@
     <h2>Provision state change</h2>
     <p>The deployment is initiated by requesting provision state
     <var>active</var> for the node.</p>
-    <p>The a looping call is established to wait for a provision state that
+    <p>A looping call is established to wait for a provision state that
     indicates either success (<var>active</var>) or a failure. It also accounts
     for a potential deletion request in the middle of a deployment:
     <a href="https://github.com/openstack/nova/blob/6c3520ac5ba789dd40d51c0d20a30d0dc44a8c07/nova/virt/ironic/driver.py#L401-L428">
@@ -629,7 +629,7 @@
             running iPXE, Neutron sends it the iPXE ROM
             (<var>undionly.kpxe</var> for BIOS, <var>ipxe.efi</var> for
             UEFI).</li>
-        <li>When the node runs the iPXE ROM, it is instucted to fetch the iPXE
+        <li>When the node runs the iPXE ROM, it is instructed to fetch the iPXE
             script <var>boot.ipxe</var> from the conductor's HTTP server. This
             file is auto-generated and is the same for all nodes:
             <a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/modules/boot.ipxe">
@@ -687,6 +687,46 @@
     <p>Nothing is required for attaching the tenant network.</p>
 </section>
 
+<section>
+    <h1>Networking</h1>
+    <h2>Advanced networking [1]</h2>
+    <p>When Ironic is used with <em>neutron</em> networking, it can support any
+    kinds of networks. Different networks are used for provisioning (and
+    cleaning) and tenant traffic.</p>
+    <p>A compatible ML2 plugin is required in Neutron to be able to configure
+    switches accordingly.</p>
+    <p>The <em>networking-generic-switch</em> project can be used for many
+    kinds of hardware that accept SSH connections.</p>
+</section>
+
+<section>
+    <h1>Networking</h1>
+    <h2>Advanced networking [2]</h2>
+    <p>On attaching the provisioning network, Ironic creates ports on it:
+    <a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/modules/network/neutron.py#L63-L82">
+        ironic/drivers/modules/network/neutron.py</a>.</p>
+    <p>This boils down to iterating over Ironic ports that have PXE enabled,
+    and passing MAC address and local link information to Neutron:
+    <a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/common/neutron.py#L190-L236">
+        ironic/common/neutron.py</a>.</p>
+</section>
+
+<section>
+    <h1>Networking</h1>
+    <h2>Advanced networking [3]</h2>
+    <p>After deployment, ports are plugged into tenant networks:
+    <a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/modules/network/neutron.py#L158-L170">
+        ironic/drivers/modules/network/neutron.py</a>.</p>
+    <p>For each Neutron port, <var>vnic_type</var> is set to
+    <var>baremetal</var>, and the local link information is passed:
+    <a href="https://github.com/openstack/ironic/blob/c1044b8d512a3c04d05689056a835bd7bf0b72d5/ironic/drivers/modules/network/common.py#L170-L210">
+        ironic/drivers/modules/network/common.py</a>.</p>
+</section>
+
+</section>
+
+<section>
+    <h1 class="title">Questions?</h1>
 </section>
 
 			</div>
