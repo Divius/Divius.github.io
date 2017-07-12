@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Ironic Cleaning Deep Dive (Pike Version)</title>
+                <meta name="author" content="Dmitry Tantsur (divius.inside@gmail.com)">
+
+		<link rel="stylesheet" href="../reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="../reveal.js/css/theme/dtantsur.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi) ? '../reveal.js/css/print/pdf.css' : '../reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+
+<section>
+    <h1 class="title">Ironic Cleaning Deep Dive</h1>
+    <h2>The Pike Release Version</h2>
+    <br><br>
+    <p><small>Dmitry Tantsur (Principal Software Engineer, Red Hat)</small>
+    <br>
+    <small>
+        <a href="https://dtantsur.github.io/talks/pike-ironic-cleaning-deep-dive/">
+            dtantsur.github.io/talks/pike-ironic-cleaning-deep-dive</a>
+    </small></p>
+</section>
+
+<section>
+    <h1>Agenda</h1>
+    <ul>
+        <li>Cleaning process</li>
+        <li>Clean steps exposed by drivers</li>
+        <li>Clean steps provided by hardware managers</li>
+        <li>RAID support</li>
+    </ul>
+</section>
+
+<section>
+
+<section>
+    <h1 class="title">Cleaning process</h1>
+</section>
+
+<section>
+    <h1>Cleaning process</h1>
+    <h2>Ironic state machine</h2>
+    <p>Ironic provision states are organized into a formal state machine:
+    <a href="https://docs.openstack.org/ironic/latest/_images/states.svg">
+        states diagram</a>.</p>
+    <p>Nodes enter <em>cleaning</em> on the way from <var>manageable</var> or
+    <var>deleting</var> to <var>available</var>.</p>
+    <p>There is also a way to initiate <em>manual</em> cleaning via API.</p>
+</section>
+
+</section>
+
+<section>
+    <h1 class="title">Questions?</h1>
+</section>
+
+			</div>
+		</div>
+
+		<script src="../reveal.js/lib/js/head.min.js"></script>
+		<script src="../reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+                                history: true,
+                                transitionSpeed: 'fast',
+				dependencies: [
+					{ src: '../reveal.js/plugin/markdown/marked.js' },
+					{ src: '../reveal.js/plugin/markdown/markdown.js' },
+					{ src: '../reveal.js/plugin/notes/notes.js', async: true },
+					{ src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>

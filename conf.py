@@ -131,6 +131,8 @@ NAVIGATION_LINKS = {
         ),
         (
             (
+                ('/talks/pike-ironic-cleaning-deep-dive/',
+                 'Ironic Cleaning Deep Dive (Pike Version)'),
                 ('/talks/pike-ironic-deploy-deep-dive/',
                  'Ironic Deploy Deep Dive (Pike Version)'),
                 ('/talks/mitaka-inspector-status', 'Ironic Inspector Mitaka Status'),
