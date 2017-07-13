@@ -43,8 +43,7 @@
     <h1>Agenda</h1>
     <ul>
         <li>Cleaning process</li>
-        <li>Clean steps exposed by drivers</li>
-        <li>Clean steps provided by hardware managers</li>
+        <li>Clean steps</li>
         <li>RAID support</li>
     </ul>
 </section>
@@ -53,6 +52,14 @@
 
 <section>
     <h1 class="title">Cleaning process</h1>
+</section>
+
+<section>
+    <h1>Cleaning process</h1>
+    <h2>Overview</h2>
+    <p>Cleaning is a process of preparation a node for carrying tenant
+    loads.</p>
+    <p>It is run every time before nodes get available for deployment.</p>
 </section>
 
 <section>
@@ -66,7 +73,73 @@
     <p>There is also a way to initiate <em>manual</em> cleaning via API.</p>
 </section>
 
+<section>
+    <h1>Cleaning process</h1>
+    <h2>Overview</h2>
+    <ol>
+        <li>Order the <em>boot</em> interface to configure booting the IPA
+            ramdisk.</li>
+        <li>Create port(s) on the cleaning network.</li>
+        <li>Power on the machine to boot IPA.</li>
+        <li>On the first heartbeat, collect the clean steps and store them on
+            the node.</li>
+        <li>Take the first step, execute it.</li>
+        <li>Reboot, if needed. Wait for IPA heartbeat again.</li>
+        <li>Repeat, until all steps are done.</li>
+        <li>Remove ports from the cleaning network.</li>
+    </ol>
 </section>
+
+<section>
+    <h1>Cleaning process</h1>
+    <h2>Boot and networking</h2>
+    <p>The <em>boot</em> interface <var>prepare_ramdisk</var> is used again,
+    the same as with deployment.</p>
+    <p>However, during cleaning there are no Neutron ports created in advance
+    by Nova, so Ironic has to create them even in <em>flat</em> case:
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/drivers/modules/network/flat.py#L118-L129">
+        ironic/drivers/modules/network.flat.py</a>,
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/common/neutron.py#L199-L245">
+        ironic/common/neutron.py</a>.</p>
+    <p>Nearly the same procedure is used for <em>neutron</em> networking:
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/drivers/modules/network/neutron.py#L108-L121">
+        ironic/drivers/modules/network/neutron.py</a>.</p>
+</section>
+
+<section>
+    <h1>Cleaning process</h1>
+    <h2>Running cleaning</h2>
+    <p>As with deployment, clean steps are run in response to IPA heart beats:
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/drivers/modules/agent_base_vendor.py#L305-L318">
+        ironic/drivers/modules/agent_base_vendor.py</a>.</p>
+    <p>Then Ironic fetches the next clean step, and runs it:
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/conductor/manager.py#L832-L877">
+        ironic/conductor/manager.py [1]</a>,
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/conductor/manager.py#L957-L1043">
+        ironic/conductor/manager.py [2]</a>.</p>
+    <p>Here we either run out of further steps, or encounter an asynchronous
+    step, and move back to <var>clean wait</var>.</p>
+</section>
+
+</section>
+
+<section>
+    <h1 class="title">Clean steps</h1>
+</section>
+
+<section>
+    <h1>Clean steps</h1>
+    <h2>Overview</h2>
+    <p>Clean steps are actions to run during cleaning. They can be provided by
+    <em>power</em>, <em>management</em>, <em>deploy</em> and <em>raid</em>
+    interfaces.</p>
+    <p>Clean steps have priority and "abortable" flag. For manual cleaning,
+    clean steps can also have arguments.</p>
+    <p>With IPA-based deploy, clean steps can also be provided by IPA
+    <em>hardware managers</em>.</p>
+</section>
+
+<!-- insert a slide on hardware managers -->
 
 <section>
     <h1 class="title">Questions?</h1>
