@@ -44,7 +44,7 @@
     <ul>
         <li>Cleaning process</li>
         <li>Clean steps</li>
-        <li>RAID support</li>
+        <li>Manual cleaning and RAID</li>
     </ul>
 </section>
 
@@ -59,6 +59,8 @@
     <h2>Overview</h2>
     <p>Cleaning is a process of preparation a node for carrying tenant
     loads.</p>
+    <p>Common examples are wiping hard drives, updating firmware, resetting
+    BIOS variables, etc.</p>
     <p>It is run every time before nodes get available for deployment.</p>
 </section>
 
@@ -122,6 +124,7 @@
 </section>
 
 </section>
+<section>
 
 <section>
     <h1 class="title">Clean steps</h1>
@@ -137,9 +140,79 @@
     clean steps can also have arguments.</p>
     <p>With IPA-based deploy, clean steps can also be provided by IPA
     <em>hardware managers</em>.</p>
+    <p>Priority defines the order the steps are run. Priority 0 means the step
+    will only work with <em>manual cleaning</em> explained later.</p>
 </section>
 
-<!-- insert a slide on hardware managers -->
+<section>
+    <h1>Clean steps</h1>
+    <h2>Collecting steps</h2>
+    <p>By default, clean steps are collected from interface methods, marked by
+    a special decorator:
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/drivers/base.py#L1196-L1206">
+        ironic/drivers/base.py [1]</a>,
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/drivers/base.py#L232-L243">
+        ironic/drivers/base.py [2]</a>.</p>
+    <p>More advanced interfaces (e.g. IPA-based <em>deploy</em>) can override
+    <var>get_clean_steps</var>.</p>
+    <p>The IPA-based <em>deploy</em> interfaces also load clean steps from the
+    ramdisk. For this to be possible, Ironic starts the ramdisk unconditionally
+    before starting cleaning.</p>
+</section>
+
+<section>
+    <h1>Clean steps</h1>
+    <h2>IPA steps</h2>
+    <p>The clean steps are cached after the first heart beat, to not block
+    <var>get_clean_steps</var> later:
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/drivers/modules/agent_base_vendor.py#L348-L390">
+        ironic/drivers/modules/agent_base_vendor.py</a>.</p>
+    <p>On the IPA side, each hardware manager that is enabled exposes its clean
+    steps:
+    <a href="https://github.com/openstack/ironic-python-agent/blob/da95c4a8915a8f3efe5cabdc01274d12f7b57a9e/ironic_python_agent/hardware.py#L946-L962">
+        ironic_python_agent/hardware.py</a>,
+    <a href="https://github.com/openstack/ironic-python-agent/blob/da95c4a8915a8f3efe5cabdc01274d12f7b57a9e/ironic_python_agent/extensions/clean.py#L27-L51">
+        ironic_python_agent/extensions/clean.py</a>.</p>
+    <p>Then Ironic can run any of them via another IPA API call:
+    <a href="https://github.com/openstack/ironic-python-agent/blob/da95c4a8915a8f3efe5cabdc01274d12f7b57a9e/ironic_python_agent/extensions/clean.py#L53-L97">
+        ironic_python_agent/extensions/clean.py</a>.</p>
+</section>
+
+</section>
+<section>
+
+<section>
+    <h1 class="title">Manual cleaning</h1>
+</section>
+
+<section>
+    <h1>Manual cleaning</h1>
+    <h2>Overview</h2>
+    <p><em>Manual cleaning</em> is a way to run driver-specific actions on
+    <var>manageable</var> nodes. The mechanism is the same as with automated
+    cleaning described previously.</p>
+    <p>It is not limited to actually <em>cleaning</em> nodes. For example, RAID
+    is implemented through it.</p>
+    <p>Manual cleaning is started by invoking <var>clean</var> provisioning
+    action and providing a list of clean steps to run and their arguments.</p>
+</section>
+
+<section>
+    <h1>Manual cleaning</h1>
+    <h2>RAID</h2>
+    <p>Ironic can build RAID on nodes in advance (when nodes are in
+    <var>manageable</var> state).</p>
+    <p>The <em>raid</em> interface validates and processes the requested RAID
+    layout:
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/drivers/raid_config_schema.json">
+        ironic/drivers/raid_config_schema.json</a>.</p>
+    <p>Then the actual configuration happens on <em>manual cleaning</em>, for
+    example for <var>drac</var>:
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/drivers/modules/drac/raid.py#L670-L750">
+        ironic/drivers/modules/drac/raid.py</a>.</p>
+</section>
+
+</section>
 
 <section>
     <h1 class="title">Questions?</h1>
