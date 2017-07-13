@@ -1,0 +1,243 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Ironic Cleaning Deep Dive (Pike Version)</title>
+                <meta name="author" content="Dmitry Tantsur (divius.inside@gmail.com)">
+
+		<link rel="stylesheet" href="../reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="../reveal.js/css/theme/dtantsur.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi) ? '../reveal.js/css/print/pdf.css' : '../reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+
+<section>
+    <h1 class="title">Ironic Cleaning Deep Dive</h1>
+    <h2>The Pike Release Version</h2>
+    <br><br>
+    <p><small>Dmitry Tantsur (Principal Software Engineer, Red Hat)</small>
+    <br>
+    <small>
+        <a href="https://dtantsur.github.io/talks/pike-ironic-cleaning-deep-dive/">
+            dtantsur.github.io/talks/pike-ironic-cleaning-deep-dive</a>
+    </small></p>
+</section>
+
+<section>
+    <h1>Agenda</h1>
+    <ul>
+        <li>Cleaning process</li>
+        <li>Clean steps</li>
+        <li>Manual cleaning and RAID</li>
+    </ul>
+</section>
+
+<section>
+
+<section>
+    <h1 class="title">Cleaning process</h1>
+</section>
+
+<section>
+    <h1>Cleaning process</h1>
+    <h2>Overview</h2>
+    <p>Cleaning is a process of preparation a node for carrying tenant
+    loads.</p>
+    <p>Common examples are wiping hard drives, updating firmware, resetting
+    BIOS variables, etc.</p>
+    <p>It is run every time before nodes get available for deployment.</p>
+</section>
+
+<section>
+    <h1>Cleaning process</h1>
+    <h2>Ironic state machine</h2>
+    <p>Ironic provision states are organized into a formal state machine:
+    <a href="https://docs.openstack.org/ironic/latest/_images/states.svg">
+        states diagram</a>.</p>
+    <p>Nodes enter <em>cleaning</em> on the way from <var>manageable</var> or
+    <var>deleting</var> to <var>available</var>.</p>
+    <p>There is also a way to initiate <em>manual</em> cleaning via API.</p>
+</section>
+
+<section>
+    <h1>Cleaning process</h1>
+    <h2>Overview</h2>
+    <ol>
+        <li>Order the <em>boot</em> interface to configure booting the IPA
+            ramdisk.</li>
+        <li>Create port(s) on the cleaning network.</li>
+        <li>Power on the machine to boot IPA.</li>
+        <li>On the first heartbeat, collect the clean steps and store them on
+            the node.</li>
+        <li>Take the first step, execute it.</li>
+        <li>Reboot, if needed. Wait for IPA heartbeat again.</li>
+        <li>Repeat, until all steps are done.</li>
+        <li>Remove ports from the cleaning network.</li>
+    </ol>
+</section>
+
+<section>
+    <h1>Cleaning process</h1>
+    <h2>Boot and networking</h2>
+    <p>The <em>boot</em> interface <var>prepare_ramdisk</var> is used again,
+    the same as with deployment.</p>
+    <p>However, during cleaning there are no Neutron ports created in advance
+    by Nova, so Ironic has to create them even in <em>flat</em> case:
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/drivers/modules/network/flat.py#L118-L129">
+        ironic/drivers/modules/network.flat.py</a>,
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/common/neutron.py#L199-L245">
+        ironic/common/neutron.py</a>.</p>
+    <p>Nearly the same procedure is used for <em>neutron</em> networking:
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/drivers/modules/network/neutron.py#L108-L121">
+        ironic/drivers/modules/network/neutron.py</a>.</p>
+</section>
+
+<section>
+    <h1>Cleaning process</h1>
+    <h2>Running cleaning</h2>
+    <p>As with deployment, clean steps are run in response to IPA heart beats:
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/drivers/modules/agent_base_vendor.py#L305-L318">
+        ironic/drivers/modules/agent_base_vendor.py</a>.</p>
+    <p>Then Ironic fetches the next clean step, and runs it:
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/conductor/manager.py#L832-L877">
+        ironic/conductor/manager.py [1]</a>,
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/conductor/manager.py#L957-L1043">
+        ironic/conductor/manager.py [2]</a>.</p>
+    <p>Here we either run out of further steps, or encounter an asynchronous
+    step, and move back to <var>clean wait</var>.</p>
+</section>
+
+</section>
+<section>
+
+<section>
+    <h1 class="title">Clean steps</h1>
+</section>
+
+<section>
+    <h1>Clean steps</h1>
+    <h2>Overview</h2>
+    <p>Clean steps are actions to run during cleaning. They can be provided by
+    <em>power</em>, <em>management</em>, <em>deploy</em> and <em>raid</em>
+    interfaces.</p>
+    <p>Clean steps have priority and "abortable" flag. For manual cleaning,
+    clean steps can also have arguments.</p>
+    <p>With IPA-based deploy, clean steps can also be provided by IPA
+    <em>hardware managers</em>.</p>
+    <p>Priority defines the order the steps are run. Priority 0 means the step
+    will only work with <em>manual cleaning</em> explained later.</p>
+</section>
+
+<section>
+    <h1>Clean steps</h1>
+    <h2>Collecting steps</h2>
+    <p>By default, clean steps are collected from interface methods, marked by
+    a special decorator:
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/drivers/base.py#L1196-L1206">
+        ironic/drivers/base.py [1]</a>,
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/drivers/base.py#L232-L243">
+        ironic/drivers/base.py [2]</a>.</p>
+    <p>More advanced interfaces (e.g. IPA-based <em>deploy</em>) can override
+    <var>get_clean_steps</var>.</p>
+    <p>The IPA-based <em>deploy</em> interfaces also load clean steps from the
+    ramdisk. For this to be possible, Ironic starts the ramdisk unconditionally
+    before starting cleaning.</p>
+</section>
+
+<section>
+    <h1>Clean steps</h1>
+    <h2>IPA steps</h2>
+    <p>The clean steps are cached after the first heart beat, to not block
+    <var>get_clean_steps</var> later:
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/drivers/modules/agent_base_vendor.py#L348-L390">
+        ironic/drivers/modules/agent_base_vendor.py</a>.</p>
+    <p>On the IPA side, each hardware manager that is enabled exposes its clean
+    steps:
+    <a href="https://github.com/openstack/ironic-python-agent/blob/da95c4a8915a8f3efe5cabdc01274d12f7b57a9e/ironic_python_agent/hardware.py#L946-L962">
+        ironic_python_agent/hardware.py</a>,
+    <a href="https://github.com/openstack/ironic-python-agent/blob/da95c4a8915a8f3efe5cabdc01274d12f7b57a9e/ironic_python_agent/extensions/clean.py#L27-L51">
+        ironic_python_agent/extensions/clean.py</a>.</p>
+    <p>Then Ironic can run any of them via another IPA API call:
+    <a href="https://github.com/openstack/ironic-python-agent/blob/da95c4a8915a8f3efe5cabdc01274d12f7b57a9e/ironic_python_agent/extensions/clean.py#L53-L97">
+        ironic_python_agent/extensions/clean.py</a>.</p>
+</section>
+
+</section>
+<section>
+
+<section>
+    <h1 class="title">Manual cleaning</h1>
+</section>
+
+<section>
+    <h1>Manual cleaning</h1>
+    <h2>Overview</h2>
+    <p><em>Manual cleaning</em> is a way to run driver-specific actions on
+    <var>manageable</var> nodes. The mechanism is the same as with automated
+    cleaning described previously.</p>
+    <p>It is not limited to actually <em>cleaning</em> nodes. For example, RAID
+    is implemented through it.</p>
+    <p>Manual cleaning is started by invoking <var>clean</var> provisioning
+    action and providing a list of clean steps to run and their arguments.</p>
+</section>
+
+<section>
+    <h1>Manual cleaning</h1>
+    <h2>RAID</h2>
+    <p>Ironic can build RAID on nodes in advance (when nodes are in
+    <var>manageable</var> state).</p>
+    <p>The <em>raid</em> interface validates and processes the requested RAID
+    layout:
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/drivers/raid_config_schema.json">
+        ironic/drivers/raid_config_schema.json</a>.</p>
+    <p>Then the actual configuration happens on <em>manual cleaning</em>, for
+    example for <var>drac</var>:
+    <a href="https://github.com/openstack/ironic/blob/39c87797163c60801bec547f134fe6fa10c288a9/ironic/drivers/modules/drac/raid.py#L670-L750">
+        ironic/drivers/modules/drac/raid.py</a>.</p>
+</section>
+
+</section>
+
+<section>
+    <h1 class="title">Questions?</h1>
+</section>
+
+			</div>
+		</div>
+
+		<script src="../reveal.js/lib/js/head.min.js"></script>
+		<script src="../reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+                                history: true,
+                                transitionSpeed: 'fast',
+				dependencies: [
+					{ src: '../reveal.js/plugin/markdown/marked.js' },
+					{ src: '../reveal.js/plugin/markdown/markdown.js' },
+					{ src: '../reveal.js/plugin/notes/notes.js', async: true },
+					{ src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>

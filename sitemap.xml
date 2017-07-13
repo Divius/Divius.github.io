@@ -19,7 +19,7 @@
  </url>
  <url>
   <loc>http://dtantsur.github.io/archive.html</loc>
-  <lastmod>2017-06-29T13:24:00Z</lastmod>
+  <lastmod>2017-07-12T08:36:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/</loc>
@@ -27,31 +27,31 @@
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/openstack.html</loc>
-  <lastmod>2017-06-29T13:24:00Z</lastmod>
+  <lastmod>2017-07-12T08:36:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/software.html</loc>
-  <lastmod>2017-06-29T13:24:00Z</lastmod>
+  <lastmod>2017-07-12T08:36:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-1.html</loc>
-  <lastmod>2017-06-29T13:24:00Z</lastmod>
+  <lastmod>2017-07-12T08:36:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-2.html</loc>
-  <lastmod>2017-06-29T13:24:00Z</lastmod>
+  <lastmod>2017-07-12T08:36:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-3.html</loc>
-  <lastmod>2017-06-29T13:24:00Z</lastmod>
+  <lastmod>2017-07-12T08:36:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-4.html</loc>
-  <lastmod>2017-06-29T13:24:00Z</lastmod>
+  <lastmod>2017-07-12T08:36:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/pulseaudio-external-sound-card.html</loc>
-  <lastmod>2017-06-29T13:24:00Z</lastmod>
+  <lastmod>2017-07-12T08:36:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/talks/devconf2015/</loc>
@@ -68,6 +68,10 @@
  <url>
   <loc>http://dtantsur.github.io/talks/mitaka-inspector-status/</loc>
   <lastmod>2017-07-10T17:53:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://dtantsur.github.io/talks/pike-ironic-cleaning-deep-dive/</loc>
+  <lastmod>2017-07-12T08:36:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/talks/pike-ironic-deploy-deep-dive/</loc>
