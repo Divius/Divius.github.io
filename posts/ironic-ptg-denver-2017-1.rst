@@ -13,6 +13,8 @@ Denver PTG Summary: Ironic (part 1)
 This is an extract from my personal notes and `public etherpads`_ from the
 OpenStack PTG 2017 in Denver. A lot of text ahead!
 
+This part covers Pike recap and retrospective, status updates and CI work.
+
 .. TEASER_END: Read more
 
 Status of Pike priorities
@@ -143,8 +145,125 @@ between all proposed architectures. The use cases we would like to cover:
 
     The same as a single-site cloud plus using Cells v2.
 
+Deploy steps
+^^^^^^^^^^^^
+
+We agreed to continue this effort, even though the ansible deploy driver solves
+some of its use cases. The crucial point is how to pass the requested deploy
+steps parameters from a user to ironic. For a non-standalone case it means
+passing them through nova.
+
+In a discussion in the nova room we converged to an idea of introducing new
+CRUD API for *deploy templates* (the exact name to be defined) on the ironic
+side. Each such template will have a unique name and will correspond to a
+*deploy step* and a set of arguments for it. On the nova side, a *trait* can
+be requested with a name matching (in some sense) the name of a deploy
+template. It will be passed to ironic, and ironic will apply the action,
+specified in the template, during deployment.
+
+The exact implementation and API will be defined in a spec, **johnthetubaguy**
+is writing it.
+
+Networking features
+^^^^^^^^^^^^^^^^^^^
+
+Routed network support is close to completion, we need to finish a patch for
+networking-baremetal.
+
+The neutron event processing work is on a spec stage, but does not look
+controversial for now.
+
+We also have patches up for deprecating DHCP providers and for making our DHCP
+code less dnsmasq-specific.
+
+ironic-inspector HA
+^^^^^^^^^^^^^^^^^^^
+
+Preparation work is under way. We are making our PXE boot management
+pluggable, with a new implementation on review that manages a *dnsmasq*
+process directly, instead of changing *iptables*.
+
+We seem to agree that rolling upgrades are not a priority for
+ironic-inspector, as it's never hit via end users either directly or through
+another service. It's a purely admin-only API, and admins can plan for a
+potential outage.
+
+There is a proposal to support ironic boot interfaces instead of a home-grown
+implementation for boot management. The discussion of it launched a more
+global discussion about ironic-inspector future, that continued the next day.
+
+Just Do It
+^^^^^^^^^^
+
+The following former priorities have all or the most of patches up for review,
+and just require some attention:
+
+* Node tags
+
+* IPA API versioning
+
+* Rescue mode
+
+* Supported power states API
+
+* E-Tags in API
+
 .. _public etherpads: https://etherpad.openstack.org/p/ironic-queens-ptg
 .. _Removing the classic drivers: http://specs.openstack.org/openstack/ironic-specs/specs/approved/classic-drivers-future.html
+
+OpenStack goals status
+----------------------
+
+We have not completed either of the two goals for the Pike cycle, and now we
+have two more goals to complete. All four goals are relatively close to
+completion.
+
+Python 3
+~~~~~~~~
+
+We have a non-voting integration job on ironic and a voting functional test
+job on ironic-inspector. The missing steps are:
+
+* make the python 3 job voting on ironic
+* implement a job with IPA running on python 3 (blocked by pyudev weirdness)
+* create an integration job with python 3 for ironic-inspector (mostly blocked
+  by swift, will have reduced coverage; an alternative is to try RadosGW)
+
+Switching to uWSGI
+~~~~~~~~~~~~~~~~~~
+
+Ironic standalone tests are running with mod_wsgi and voting, we only need to
+switch to uWSGI.
+
+For ironic-inspector it's much more complicated: it does not have a separate
+API service for now at all. It's unclear if we'll able to just launch the
+current service as it is behind a WSGI container, as we actively use green
+threads. We have to probably wait until the HA work is done.
+
+Splitting away the tempest plugin
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We have a script to extract git history for a subtree. We need to create a
+separate git repository somewhere, so that we do not submit 60-80 related
+patches to zuul. Then this repository will be imported by the infra team, and
+we'll proceed with the migration.
+
+On the previous (ATL) PTG we decided to have ironic and ironic-inspector
+plugins co-located. This will be less confusing for external users, as many of
+them to not understand the difference clearly, but it will also complicate the
+migration.
+
+We will need to plan the actual migration in advance, and freeze the version
+in-tree for some time.
+
+Policy in the code
+~~~~~~~~~~~~~~~~~~
+
+The ironic part is essentially done, we just need to change the way we
+document policy: https://review.openstack.org/#/c/502519/.
+
+No policy support exists in ironic-inspector, and it's unclear if this goal
+assumes adding it. There is a desire to do so anyway.
 
 Future development of our CI
 ----------------------------
