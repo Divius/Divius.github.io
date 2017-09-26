@@ -52,8 +52,10 @@ the services running.
 The driver composition reform
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Finished, with hardware types created for all supported hardware. `Removing
-the classic drivers`_ is planned for Rocky with deprecation in Queens.
+Finished, with hardware types created for all supported hardware, and the
+classic drivers pending deprecation in Queens.
+
+`Removing the classic drivers`_ is planned for Rocky.
 
 Standalone jobs (jobs without nova)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
