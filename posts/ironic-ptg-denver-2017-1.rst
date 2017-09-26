@@ -243,7 +243,7 @@ threads. We have to probably wait until the HA work is done.
 Splitting away the tempest plugin
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-We have a script to extract git history for a subtree. We need to create a
+We have a script to extract git history for a sub-tree. We need to create a
 separate git repository somewhere, so that we do not submit 60-80 related
 patches to zuul. Then this repository will be imported by the infra team, and
 we'll proceed with the migration.
@@ -267,3 +267,118 @@ assumes adding it. There is a desire to do so anyway.
 
 Future development of our CI
 ----------------------------
+
+Standalone tests
+~~~~~~~~~~~~~~~~
+
+We have standalone tests voting, but we're not fully using their potential.
+In the end, we want to reduce the number of **non**-standalone jobs to:
+
+#. a whole disk image job,
+#. a partition images job,
+#. a boot-from-volume job,
+#. a multi-node job with advanced networking (can be merged with one of the
+   first two),
+#. two grenade jobs: full and partial.
+
+The following tests can likely be part of the standalone job:
+
+* tests for all combinations of disk types and deploy methods,
+* tests covering all community-supported drivers (snmp, redfish),
+* tests on different boot options (local vs network boot),
+* tests on root device hints (we plan to cover serial number, wwn and size
+  with operators),
+* node adoption.
+
+Take over testing
+~~~~~~~~~~~~~~~~~
+
+The take over feature is very important for our HA model, but is completely
+untested. We discussed the two most important test cases:
+
+#. conductor failure during deployment with node in ``deploy wait``,
+#. conductor failure for an active node using network boot.
+
+We discussed two ways of implementing the test: using a multi-node job with two
+conductors or using only one conductor. The latter requires a trick: after
+killing the conductor, change its host name, so that it looks like a new
+conductor. In either case, we can combine both tests into one run:
+
+#. start deploying two nodes with netboot:
+
+   #. ``driver=manual-management deploy_interface=iscsi``,
+   #. ``driver=manual-management deploy_interface=direct``,
+
+   The remaining steps will be repeated for both nodes.
+
+#. Wait for nodes ``provision_state`` becomes ``deploy wait``.
+#. Kill the conductor.
+#. Manually clean up the files from the TFTP and HTTP directories and the
+   master image cache.
+#. Change the conductor host name in ``ironic.conf``.
+#. Wait for directories to be populated again.
+
+   .. note:: We should aim to remove this step eventually.
+
+#. ``virsh start`` the nodes to continue their deployment.
+#. Wait for nodes to become ``active``.
+
+Here is where the second test starts:
+
+#. Repeat steps 3 - 6.
+#. ``virsh reboot`` the nodes.
+#. Check SSH connection to the rebooted instances.
+
+In the future, we would also like to have negative tests on failed take over
+for nodes in ``deploying``. We should also have similar tests for cleaning.
+
+Pike retrospective
+------------------
+
+We've had a short retrospective. Positive items:
+
+* Virtual midcycle
+* Weekly bug liaison (action: start doing it again),
+* Weekly priorities
+* Landed some big features
+* Acknowledge that vendors need more attention
+* Did not drive our PTL away :)
+
+Not so positive:
+
+* Loss of people
+* Gate breakages (action: better hand off of current mitigation actions
+  between timezones, report on IRC and the whiteboard what you've done and
+  what's left)
+* Took too many priorities (action: take less, make the community understand
+  that priorities != full backlog)
+* Still not enough attention to vendors (action: accept one patch per vendor
+  as part of weekly priorities; the same for subteams)
+* Soft feature freeze
+* Need more folks reviewing (action: **jlvillal** considers picking up the
+  weekly review call)
+* Releasing and cutting stable/pike was a mess (discussed in `Release cycle`_)
+* No alignment between OpenStack releases and vendor hardware releases.
+
+Release cycle
+-------------
+
+We had really hard time releasing Pike. Grenade was branched before us,
+essentially messing up our upgrade testing. We had to cut out stable/pike at a
+random point, and then backport quite a few features, after repairing the CI.
+
+When discussing that, we noted that we committed to releasing often and early,
+but we'd never done it, at least not for ironic itself. Having regular
+releases can help us avoiding getting overloaded in the end of the cycle.
+We've decided:
+
+* Keep master as close to a releasable state as possible, including not
+  exposing incomplete features to users and keeping release notes polished.
+* Release regularly, especially when we feel that something is ready to got
+  out. Let us aim for releasing roughly once a month.
+* Let us cut stable/pike at the same time as the other projects. We will use
+  the last released version as a basis for it.
+* We are going back to feature freeze at the same time as the other projects,
+  two weeks before the branching at milestone 3. This will allow us to finish
+  anything requiring finishing, particularly rolling upgrade preparation,
+  documentation and release notes.
