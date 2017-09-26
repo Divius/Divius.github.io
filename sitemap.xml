@@ -7,59 +7,63 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>http://dtantsur.github.io/</loc>
-  <lastmod>2017-09-18T16:53:00Z</lastmod>
+  <lastmod>2017-09-21T17:16:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/2015/</loc>
-  <lastmod>2017-06-29T13:24:00Z</lastmod>
+  <lastmod>2017-09-21T17:16:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/2017/</loc>
-  <lastmod>2017-06-29T13:24:00Z</lastmod>
+  <lastmod>2017-09-21T17:16:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/archive.html</loc>
-  <lastmod>2017-09-18T16:56:00Z</lastmod>
+  <lastmod>2017-09-21T17:23:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/</loc>
-  <lastmod>2017-06-29T13:24:00Z</lastmod>
+  <lastmod>2017-09-21T17:16:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/openstack.html</loc>
-  <lastmod>2017-09-18T16:56:00Z</lastmod>
+  <lastmod>2017-09-26T13:45:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/software.html</loc>
-  <lastmod>2017-09-18T16:56:00Z</lastmod>
+  <lastmod>2017-09-26T13:45:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-1.html</loc>
-  <lastmod>2017-09-18T16:56:00Z</lastmod>
+  <lastmod>2017-09-21T17:23:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-2.html</loc>
-  <lastmod>2017-09-18T16:56:00Z</lastmod>
+  <lastmod>2017-09-21T17:23:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-3.html</loc>
-  <lastmod>2017-09-18T16:56:00Z</lastmod>
+  <lastmod>2017-09-21T17:23:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-4.html</loc>
-  <lastmod>2017-09-18T16:56:00Z</lastmod>
+  <lastmod>2017-09-21T17:23:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://dtantsur.github.io/posts/ironic-ptg-denver-2017-1.html</loc>
+  <lastmod>2017-09-26T13:45:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/pulseaudio-external-sound-card.html</loc>
-  <lastmod>2017-09-18T16:56:00Z</lastmod>
+  <lastmod>2017-09-21T17:23:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/talks/devconf2015/</loc>
-  <lastmod>2017-06-29T13:24:00Z</lastmod>
+  <lastmod>2017-09-21T17:16:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/talks/fosdem2016/</loc>
-  <lastmod>2017-06-29T13:24:00Z</lastmod>
+  <lastmod>2017-09-21T17:16:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/talks/fosdem2016/lib/reveal-plugins/notes/notes.html</loc>
@@ -67,19 +71,19 @@
  </url>
  <url>
   <loc>http://dtantsur.github.io/talks/mitaka-inspector-status/</loc>
-  <lastmod>2017-07-10T17:53:00Z</lastmod>
+  <lastmod>2017-09-21T17:16:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/talks/pike-ironic-cleaning-deep-dive/</loc>
-  <lastmod>2017-07-12T08:36:00Z</lastmod>
+  <lastmod>2017-09-21T17:16:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/talks/pike-ironic-deploy-deep-dive/</loc>
-  <lastmod>2017-07-13T10:44:00Z</lastmod>
+  <lastmod>2017-09-21T17:16:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/talks/reveal.js/</loc>
-  <lastmod>2017-06-29T13:24:00Z</lastmod>
+  <lastmod>2017-09-21T17:16:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/talks/reveal.js/demo.html</loc>
@@ -147,7 +151,7 @@
  </url>
  <url>
   <loc>http://dtantsur.github.io/talks/whatsnew-ironic-mitaka/</loc>
-  <lastmod>2017-06-29T13:24:00Z</lastmod>
+  <lastmod>2017-09-21T17:16:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/talks/whatsnew-ironic-mitaka/lib/reveal-plugins/notes/notes.html</loc>
