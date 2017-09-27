@@ -15,6 +15,8 @@ OpenStack PTG 2017 in Denver. A lot of text ahead!
 
 This part covers Pike recap and retrospective, status updates and CI work.
 
+:doc:`Next part <ironic-ptg-denver-2017-2>`.
+
 .. TEASER_END: Read more
 
 Status of Pike priorities
