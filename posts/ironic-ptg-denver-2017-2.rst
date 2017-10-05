@@ -1,6 +1,6 @@
 .. title: Denver PTG Summary: Ironic (part 2)
 .. slug: ironic-ptg-denver-2017-2
-.. date: 2017-09-27 15:42:52 UTC+02:00
+.. date: 2017-10-05 17:42:52 UTC+02:00
 .. tags: software, openstack
 .. category: 
 .. link: 
@@ -131,3 +131,147 @@ leave it there.
 For the second issue, we don't have a clean solution now. It can be worked
 around by changing ``node.vendor_interface`` on flight. **pas-ha** will
 document it.
+
+Future of bare metal scheduling
+-------------------------------
+
+We have discussed the present and the future of scheduling bare metal
+instances using nova. The discussion has started in the nova room and
+continued in our room afterwards and on Friday.
+
+Node availability
+~~~~~~~~~~~~~~~~~
+
+First, we discussed marking a node as unavailable for nova. Currently, when a
+node is cleaning or otherwise unavailable, we set its resource classes count
+to zero. This is, of course, hacky, and we want to get rid of it. I was
+thinking about a new virt driver method to express availability, like
+
+.. code-block:: python
+
+    def is_operational(self, hostname):
+        "Returns whether the host can be used for deployment."""
+
+However, it was pointed out that ironic would probably be the only user of
+such feature. Instead, it was proposed to use ``RESERVED`` field when
+reporting resource classes. Indeed, cleaning can be treated as a temporary
+reservation of the node by ironic for its internal business. We will return
+``RESERVED=0`` when node is active or available, and ``RESERVED=TOTAL``
+otherwise.
+
+Advanced configuration
+~~~~~~~~~~~~~~~~~~~~~~
+
+Then we discussed means of passing from nova to ironic such information as
+BIOS configuration or requested RAID layout. We agreed (again) that we don't
+want nova to just pipe JSON blobs from a user to ironic. Instead, we will use
+*traits* on the nova side and a new entity tentatively called *deploy
+templates* on the ironic side.
+
+A user will request a *deploy template* to be applied on a node by requesting
+an appropriate trait. All matches traits will be passed from nova to ironic in
+a similar way to how capabilities are passed now. Then ironic will fetch
+*deploy templates* corresponding to traits and apply them.
+
+The exact form of a *deploy template* is to be defined. A *deploy template*
+will probably contain a *deploy step* name and its arguments. Thus, this work
+will require the *deploy steps* work to be revived and finished.
+
+**johnthetubaguy** will write specs on both topics.
+
+Ownership of bare metal nodes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We want to allow nodes to be optionally owned by a particular tena^Wproject.
+We discussed how to make the nova side work, with ironic still being the source
+of truth for who owns which node. We decided that we can probably make it work
+with *traits* as well.
+
+Quantitative scheduling
+~~~~~~~~~~~~~~~~~~~~~~~
+
+Next, by request of some of the community members, we have discussed bringing
+back the ability to use quantitative scheduling with bare metal instances.
+We ended up with the same outcome as previously. Starting with Pike, bare
+metal scheduling has to be done in terms of *custom resource classes* and
+*traits* (ah, that magical traits!), and quantitative scheduling is not
+coming back.
+
+Inspection and resource classes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+After the switch to resource classes inspection is much less useful.
+Previously the information it provided was enough for scheduling. Now we don't
+care too much about CPU/memory/disk properties, but we do care about the
+resource class. Essentially, inspection is only useful for discovering ports
+and capabilities.
+
+In-band inspection (using ironic-inspector) has a good work-around though: its
+*introspection rules* (mini-DSL to run on the discovered data) can be used to
+set the resource class based on logic provided by an operator. These rules are
+part of the ironic-inspector API, and thus out-of-band inspection does not
+benefit from them.
+
+A potential solution is to move introspection rules API to ironic itself. That
+would require agreeing on a common inventory format for both in-band and
+out-of-band inspection. This is likely to be the `IPA inventory format`.
+Then we'll have to change the *inspect* interface. Currently we have one call
+that does the whole inspection process, we need a call that returns
+an inventory. Then ironic itself will run introspection rules, create ports
+and update properties and capabilities.
+
+A big problem here is that the discovery process, implemented purely within
+ironic-inspector, also heavily relies on introspection rules. We cannot
+remove/deprecate the introspection rules API in ironic-inspector until this is
+solved. The two API will have to co-exist for the time being. We should
+probably put the mechanism behind introspection rules to ironic-lib.
+
+**sambetts** plans to summarize a potential solution on the ML.
+
+We also discussed potentially having the default resource class to use for new
+nodes, if none is provided. That would simplify things for some consumers,
+like TripleO. Another option is to generate a resource class based on some
+template. We can even implement both:
+
+.. code-block:: ini
+
+    default_hardware_type = baremetal
+
+results in ``baremetal`` resource class for new nodes, while
+
+.. code-block:: ini
+
+    inspected_hardware_type = bm-{memory_mb}-{cpus}-{cpu_arch}
+
+results in a templated resource class to be set for inspected nodes that do
+not have a resource class already set.
+
+.. _IPA inventory format: https://docs.openstack.org/ironic-python-agent/latest/admin/how_it_works.html#hardware-inventory
+
+Future ironic-inspector architecture
+------------------------------------
+
+The discussion in `Inspection and resource classes`_ brought us to an idea of
+slowly merging most of ironic-inspector into ironic. Ironic will benefit by
+receiving introspection rules and optional inventory storage, while
+ironic-inspector will benefit from using the boot interface and from the
+existing HA architecture. In the end, the only part remaining in a separate
+project will be PXE handling for introspecting of nodes without ports and
+for auto-discovery.
+
+It's not clear how that will look. We could not discuss it in-depth, as a core
+contributor (**milan**) was not able to come to the PTG. However, we have a
+rough plan for the next steps:
+
+#. Implement optional support for using boot interfaces in the ``Inspector``
+   *inspect* interface: https://review.openstack.org/305864.
+#. Implement optional support for using network interfaces in the ``Inspector``
+   *inspect* interface: https://review.openstack.org/320003.
+#. Move introspection rules to ironic itself as discussed in `Inspection
+   and resource classes`_.
+#. Move the whole data processing to ironic and stop using ironic-inspector
+   when a boot interface has all required information.
+
+The first item is planned for Queens, the second can fit as well. The timeline
+for the other items is unclear. A separate call will be scheduled soon to
+discuss this.
