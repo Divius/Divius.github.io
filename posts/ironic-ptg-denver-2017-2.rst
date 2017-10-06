@@ -1,6 +1,6 @@
 .. title: Denver PTG Summary: Ironic (part 2)
 .. slug: ironic-ptg-denver-2017-2
-.. date: 2017-10-05 17:42:52 UTC+02:00
+.. date: 2017-10-06 16:12:52 UTC+02:00
 .. tags: software, openstack
 .. category: 
 .. link: 
@@ -370,3 +370,88 @@ We did not agree to implement any (or some) of these options. Instead,
 **pas-ha** will look into possible policies adjustments to allow a non-admin
 user to provision and unprovision instances. A definition of success is to be
 able to switch nova to a non-admin user.
+
+Bare metal instance HA
+----------------------
+
+This session was dedicated to the proposal of implementing ``nova migrate``
+for bare metal instances: https://review.openstack.org/#/c/449155/. This spec
+is against nova, and no ironic changes are expected.
+
+The idea is to enable moving an instance from one ironic node to another,
+assuming that any valuable data is stored only on remote volumes. We agreed
+that in the cloud case local disks should not be treated as a reliable
+persistent storage.
+
+We discussed using ``nova migrate`` vs ``nova evacuate`` and decided that the
+former probably will work better, as we won't mark a nove compute handling the
+source node as down (it will bring down many more nodes). The only caveat is
+that the users should not set any destination for the migration API call,
+allowing nova to pick the destination itself.
+
+Two more potential issues were spotted that need clarifying in the spec:
+
+* How to update hash ring? The compute services for ironic are organized in a
+  hash ring, but once a node is provisioned, it is attached to a compute
+  service. Probably just a database update is enough.
+
+* How exactly to replug VIFs.
+
+A bonus point for implementing this feature will be support for resizing bare
+metal instances, as migration is implemented as resizing without changing the
+flavor.
+
+**hshiina** will update and clarify the spec.
+
+Ansible deploy method
+---------------------
+
+This was a short session. The proposed ``ansible`` deploy interface already
+exists in ironic-staging-drivers and have a voting CI job. We are more or less
+in agreement that we need it to satisfy cases requiring extensive
+customizations.
+
+**pas-ha** presented a benchmark, showing that this method is only slightly
+slower than the ``direct`` deploy method:
+http://pshchelo.github.io/ansible-deploy-perf.html. A major optimization
+would be calling ansible only once, when deploying several nodes, but
+the current ironic architecture does not quite allow that.
+
+Console log
+-----------
+
+We already have a support for serial console, so it feels natural to also
+implement console log. Not everything, however, is obvious in the
+implementation.
+
+First, we discussed the amount of data to store. The current proposal captures
+the log indefinitely, which is not perfect. It looks like we can document
+enabling *logrotate* to handle this problem outside of ironic. A mailing list
+thread can be started to learn what people are using. In any case, we should
+return only the last N KiB to nova, where N is to be defined.
+
+Next, we discussed when exactly to start the logging. Logging during
+cleaning/provisioning may be helpful, but can potentially expose sensitive
+information to end users. We agreed to start logging on starting a provisioned
+instance.
+
+**tiendc** will update the spec with the outcome of this discussion.
+
+Graphical console
+-----------------
+
+This has been discussed several times already. We confirmed our plan to
+introduce a new hardware interface - ``graphical_console_interface``.
+**pas-ha** will update the existing spec, as well as the implementation for
+the *idrac* hardware type.
+
+Queens priorities
+-----------------
+
+This time we decided to take less priorities for the cycle, and make it clear
+to the community that the priorities list is **not** our complete backlog.
+That means, we will accept work that is not on the priorities list, so not
+everything has to be fitted in it.
+
+The list was finalized as a spec after the PTG:
+http://specs.openstack.org/openstack/ironic-specs/priorities/queens-priorities.html.
