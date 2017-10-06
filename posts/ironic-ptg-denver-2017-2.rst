@@ -265,13 +265,108 @@ rough plan for the next steps:
 
 #. Implement optional support for using boot interfaces in the ``Inspector``
    *inspect* interface: https://review.openstack.org/305864.
+
+   When discussing its technical details, we agreed that instead of having a
+   configuration option in ironic to force using a boot interface, we better
+   introduce a configuration option in ironic-inspector to completely disable
+   its boot management.
+
 #. Implement optional support for using network interfaces in the ``Inspector``
    *inspect* interface: https://review.openstack.org/320003.
+
 #. Move introspection rules to ironic itself as discussed in `Inspection
    and resource classes`_.
+
 #. Move the whole data processing to ironic and stop using ironic-inspector
    when a boot interface has all required information.
 
 The first item is planned for Queens, the second can fit as well. The timeline
 for the other items is unclear. A separate call will be scheduled soon to
 discuss this.
+
+BIOS configuration
+------------------
+
+This feature has been discussed several times already. This time we came up
+with a more or less solid plan to implement it in Queens.
+
+* We have confirmed the current plan to use clean steps for starting the
+  configuration, similar how RAID already works. There will be two new clean
+  steps: ``bios.apply_configuration`` and ``bios.factory_reset``.
+
+* We discussed having a new BIOS interface versus introducing new methods on
+  the management interface. We agreed that we want to allow mix-and-match of
+  interfaces, e.g. using Redfish power with a vendor BIOS interface.
+
+* We also discussed the name of the new interface. While the name "BIOS" is
+  not ideal, as some systems use UEFI and some don't even have a BIOS, we
+  could not come up with a better proposal.
+
+* We will apply only very minimum validation to requested parameters.
+
+Eventually, we will want to expose this feature as a deploy step as well.
+
+A point of contention was how to display available BIOS configuration to a
+user. Vendor representatives told us that available configurable parameters
+may vary from node to node even within the same generation, so doing it
+per-driver is not an option. We decided to go with the following approach:
+
+* Introduce a new API endpoint to return cached available parameters. The
+  response will contain the standard ``updated_at`` field, informing a user
+  when the cache was last updated.
+
+* The cache will be updated every time the configuration is changed via
+  the clean steps mentioned above.
+
+* The cache will also be updated on moving a node from ``enroll`` to
+  ``manageable`` provision states.
+
+API for single request deploy
+-----------------------------
+
+This idea has been in the air for really long time. Currently, a deployment
+via the ironic API involves:
+
+* locking a node by setting ``instance_uuid``,
+* attaching VIFs via the VIF API,
+* updating ``instance_info`` with a few fields,
+* requesting provision state ``active``, providing a configdrive.
+
+In addition to being not user-friendly, this complex procedure makes it harder
+to configure policies in a way to allow a user to only deploy/undeploy nodes
+and nothing else.
+
+Essentially, three ideas where considered:
+
+#. Introduce a completely new API endpoint. This may complicate our already
+   quite complex API.
+
+#. Make working with the exising node more restful. For example, allow a PUT
+   request against a node updating both ``instance_uuid`` and
+   ``instance_info``, and changing ``provision_state`` to ``active``.
+
+   It was noted, however, that directly changing ``provision_state`` is
+   confusing, as the result will not match it (the value of ``provision_state``
+   will become ``deploying``, not ``active``). This can be fixed by setting
+   ``target_provision_state`` instead.
+
+#. Introduce a new *deployment* object and CRUD API associated with it. A UUID
+   of this object will replace ``instance_uuid``, while its body will contain
+   what we have in ``instance_info`` now. A deploy request would look like::
+
+    POST /v1/deployments {'node_uuid': '...', 'root_gb': '...', 'config_drive': '...'}
+
+   A request to undeploy will be just::
+
+    DELETE /v1/deployments/<DEPLOY UUID>
+
+   Finally, and update of this object will cause a reprovision::
+
+    PUT /v1/deployments/<DEPLOY UUID> {'config_drive': '...'}
+
+   This is also a restful option, which is also the hardest to implement.
+
+We did not agree to implement any (or some) of these options. Instead,
+**pas-ha** will look into possible policies adjustments to allow a non-admin
+user to provision and unprovision instances. A definition of success is to be
+able to switch nova to a non-admin user.
