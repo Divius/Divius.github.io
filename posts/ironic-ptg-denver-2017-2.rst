@@ -155,9 +155,12 @@ thinking about a new virt driver method to express availability, like
 However, it was pointed out that ironic would probably be the only user of
 such feature. Instead, it was proposed to use ``RESERVED`` field when
 reporting resource classes. Indeed, cleaning can be treated as a temporary
-reservation of the node by ironic for its internal business. We will return
-``RESERVED=0`` when node is active or available, and ``RESERVED=TOTAL``
-otherwise.
+reservation of the node by ironic for its internal business.
+
+We will return ``RESERVED=0`` when node is active or available. Otherwise,
+``RESERVED`` will equal to the total amount of reported resources (``1``
+in case of a custom resource class). This will ensure that no resources are
+available for scheduling without messing with the reported inventory.
 
 Advanced configuration
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -200,7 +203,7 @@ coming back.
 Inspection and resource classes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-After the switch to resource classes inspection is much less useful.
+After the switch to resource classes, inspection is much less useful.
 Previously the information it provided was enough for scheduling. Now we don't
 care too much about CPU/memory/disk properties, but we do care about the
 resource class. Essentially, inspection is only useful for discovering ports
