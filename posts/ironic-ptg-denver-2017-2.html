@@ -150,17 +150,17 @@ microversion negotiation in <em>ironicclient</em>. Currently it's only possible 
 request one version during client creation. What we want to end up with is to
 request the <strong>minimum</strong> version in <a class="reference external" href="https://docs.openstack.org/python-ironicclient/latest/api/ironicclient.client.html">get_client</a>, and then provide an ability
 to specify a version in each call. For example,</p>
-<pre class="code python"><a name="rest_code_9a9e75830f1d4ace9d2735515ec0829f-1"></a><span class="n">ir_client</span> <span class="o">=</span> <span class="n">ironicclient</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
-<a name="rest_code_9a9e75830f1d4ace9d2735515ec0829f-2"></a>                                    <span class="n">os_ironic_api_version</span><span class="o">=</span><span class="s2">"1.28"</span><span class="p">)</span>
-<a name="rest_code_9a9e75830f1d4ace9d2735515ec0829f-3"></a><span class="n">nodes</span> <span class="o">=</span> <span class="n">ir_client</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>  <span class="c1"># using 1.28</span>
-<a name="rest_code_9a9e75830f1d4ace9d2735515ec0829f-4"></a><span class="n">ports</span> <span class="o">=</span> <span class="n">ir_client</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">os_ironic_api_version</span><span class="o">=</span><span class="s2">"1.34"</span><span class="p">)</span>  <span class="c1"># overriding</span>
+<pre class="code python"><a name="rest_code_39529aaed63e4106b225a091329e9e98-1"></a><span class="n">ir_client</span> <span class="o">=</span> <span class="n">ironicclient</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
+<a name="rest_code_39529aaed63e4106b225a091329e9e98-2"></a>                                    <span class="n">os_ironic_api_version</span><span class="o">=</span><span class="s2">"1.28"</span><span class="p">)</span>
+<a name="rest_code_39529aaed63e4106b225a091329e9e98-3"></a><span class="n">nodes</span> <span class="o">=</span> <span class="n">ir_client</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>  <span class="c1"># using 1.28</span>
+<a name="rest_code_39529aaed63e4106b225a091329e9e98-4"></a><span class="n">ports</span> <span class="o">=</span> <span class="n">ir_client</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">os_ironic_api_version</span><span class="o">=</span><span class="s2">"1.34"</span><span class="p">)</span>  <span class="c1"># overriding</span>
 </pre>
 <p>Another idea was to allow specifying several versions in <a class="reference external" href="https://docs.openstack.org/python-ironicclient/latest/api/ironicclient.client.html">get_client</a>. The
 highest available version will be chosen and used for all calls:</p>
-<pre class="code python"><a name="rest_code_b5896c7f68b046b581734a6e765492ff-1"></a><span class="n">ir_client</span> <span class="o">=</span> <span class="n">ironicclient</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
-<a name="rest_code_b5896c7f68b046b581734a6e765492ff-2"></a>                                    <span class="n">os_ironic_api_version</span><span class="o">=</span><span class="p">[</span><span class="s2">"1.28"</span><span class="p">,</span> <span class="s2">"1.34"</span><span class="p">])</span>
-<a name="rest_code_b5896c7f68b046b581734a6e765492ff-3"></a><span class="k">if</span> <span class="n">ir_client</span><span class="o">.</span><span class="n">negotiated_api_version</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">34</span><span class="p">):</span>
-<a name="rest_code_b5896c7f68b046b581734a6e765492ff-4"></a>    <span class="c1"># do something</span>
+<pre class="code python"><a name="rest_code_3046cb2b71914ce7b6c70c07aa25cfa2-1"></a><span class="n">ir_client</span> <span class="o">=</span> <span class="n">ironicclient</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
+<a name="rest_code_3046cb2b71914ce7b6c70c07aa25cfa2-2"></a>                                    <span class="n">os_ironic_api_version</span><span class="o">=</span><span class="p">[</span><span class="s2">"1.28"</span><span class="p">,</span> <span class="s2">"1.34"</span><span class="p">])</span>
+<a name="rest_code_3046cb2b71914ce7b6c70c07aa25cfa2-3"></a><span class="k">if</span> <span class="n">ir_client</span><span class="o">.</span><span class="n">negotiated_api_version</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">34</span><span class="p">):</span>
+<a name="rest_code_3046cb2b71914ce7b6c70c07aa25cfa2-4"></a>    <span class="c1"># do something</span>
 </pre>
 <p>Nothing prevents us from implementing both, but the former seems to be what
 the API SIG recommends (unofficially, <strong>dtantsur</strong> to follow up with a formal
@@ -238,15 +238,17 @@ continued in our room afterwards and on Friday.</p>
 node is cleaning or otherwise unavailable, we set its resource classes count
 to zero. This is, of course, hacky, and we want to get rid of it. I was
 thinking about a new virt driver method to express availability, like</p>
-<pre class="code python"><a name="rest_code_1ab72fac5f4b4346a4181d69c7a4b979-1"></a><span class="k">def</span> <span class="nf">is_operational</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">):</span>
-<a name="rest_code_1ab72fac5f4b4346a4181d69c7a4b979-2"></a>    <span class="s2">"Returns whether the host can be used for deployment."""</span>
+<pre class="code python"><a name="rest_code_03a84febc1994f15a2bb2a7c26dd21b0-1"></a><span class="k">def</span> <span class="nf">is_operational</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">):</span>
+<a name="rest_code_03a84febc1994f15a2bb2a7c26dd21b0-2"></a>    <span class="s2">"Returns whether the host can be used for deployment."""</span>
 </pre>
 <p>However, it was pointed out that ironic would probably be the only user of
 such feature. Instead, it was proposed to use <tt class="docutils literal">RESERVED</tt> field when
 reporting resource classes. Indeed, cleaning can be treated as a temporary
-reservation of the node by ironic for its internal business. We will return
-<tt class="docutils literal">RESERVED=0</tt> when node is active or available, and <tt class="docutils literal">RESERVED=TOTAL</tt>
-otherwise.</p>
+reservation of the node by ironic for its internal business.</p>
+<p>We will return <tt class="docutils literal">RESERVED=0</tt> when node is active or available. Otherwise,
+<tt class="docutils literal">RESERVED</tt> will equal to the total amount of reported resources (<tt class="docutils literal">1</tt>
+in case of a custom resource class). This will ensure that no resources are
+available for scheduling without messing with the reported inventory.</p>
 </div>
 <div class="section" id="advanced-configuration">
 <h3>Advanced configuration</h3>
@@ -282,7 +284,7 @@ coming back.</p>
 </div>
 <div class="section" id="inspection-and-resource-classes">
 <h3>Inspection and resource classes</h3>
-<p>After the switch to resource classes inspection is much less useful.
+<p>After the switch to resource classes, inspection is much less useful.
 Previously the information it provided was enough for scheduling. Now we don't
 care too much about CPU/memory/disk properties, but we do care about the
 resource class. Essentially, inspection is only useful for discovering ports
@@ -309,10 +311,10 @@ probably put the mechanism behind introspection rules to ironic-lib.</p>
 nodes, if none is provided. That would simplify things for some consumers,
 like TripleO. Another option is to generate a resource class based on some
 template. We can even implement both:</p>
-<pre class="code ini"><a name="rest_code_810eaef28e214725a7802161219fc870-1"></a><span class="na">default_hardware_type</span> <span class="o">=</span> <span class="s">baremetal</span>
+<pre class="code ini"><a name="rest_code_5c5451e46e734dabbd39586bef2d66b4-1"></a><span class="na">default_hardware_type</span> <span class="o">=</span> <span class="s">baremetal</span>
 </pre>
 <p>results in <tt class="docutils literal">baremetal</tt> resource class for new nodes, while</p>
-<pre class="code ini"><a name="rest_code_0b10a56564ef40c8beee6001a19d6226-1"></a><span class="na">inspected_hardware_type</span> <span class="o">=</span> <span class="s">bm-{memory_mb}-{cpus}-{cpu_arch}</span>
+<pre class="code ini"><a name="rest_code_e208d90275114b5ca7896cbedd7219cd-1"></a><span class="na">inspected_hardware_type</span> <span class="o">=</span> <span class="s">bm-{memory_mb}-{cpus}-{cpu_arch}</span>
 </pre>
 <p>results in a templated resource class to be set for inspected nodes that do
 not have a resource class already set.</p>
