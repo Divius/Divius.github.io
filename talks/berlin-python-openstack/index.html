@@ -23,12 +23,12 @@
 		</script>
                 <style>
                     .reveal pre code { font-size: 75%; }
+                    .reveal blockquote { font-style: italic; }
                 </style>
 	</head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
-
 
 <section>
     <h1 class="title">OpenStack and Python</h1>
@@ -45,17 +45,12 @@
     <h1>Agenda</h1>
     <ul>
         <li>What is OpenStack?</li>
-        <li>Managing Python:
+        <li>Tools and libraries:
             <ul>
                 <li><strong>pbr</strong> - setup.py made better</li>
+                <li><strong>tox</strong> - managing virtual environments</li>
                 <li><strong>reno</strong> - when ChangeLog.md is too messy</li>
                 <li><strong>stevedore</strong> - power of entry points</li>
-            </ul>
-        </li>
-        <li>Testing Python:
-            <ul>
-                <li><strong>tox</strong> - managing virtual environments</li>
-                <li><strong>zuul</strong> - managing CI pipelines</li>
             </ul>
         </li>
         <li>Our approach to
@@ -89,6 +84,18 @@
     <p>Provides complete and consistent API, as well as web UI.</p>
 </section>
 <section>
+    <h1>What is OpenStack?</h1>
+    <p>An example of routine tasks achievable via API/UI:</p>
+    <blockquote>
+        Create two small virtual servers with Ubuntu 16.04 and one large bare
+        metal server with CentOS 7. Connect the Ubuntu machines with a private
+        network with network address 192.168.42.0/24, route it to the internet,
+        expose port 80 of the Ubuntu machines through a load balancer. Connect
+        all machines with another private network with network address
+        10.0.10.0/24. Put my SSH public key on all machines.
+    </blockquote>
+</section>
+<section>
     <h1>OpenStack in numbers</h1>
     <ul>
         <li>&gt; 50 teams contributing to &gt; 600 repositories</li>
@@ -116,10 +123,10 @@
 <section>
 
 <section>
-    <h1 class="title">Managing Python</h1>
+    <h1 class="title">Tools: pbr</h1>
 </section>
 <section>
-    <h1>pbr - setup.py made better</h1>
+    <h1>Tools: pbr</h1>
     <p>Why?</p>
     <p><em>setup.py</em> is bad:</p>
     <ul>
@@ -132,7 +139,7 @@
         within your <em>setup.py</em>!</small></p>
 </section>
 <section>
-    <h1>pbr - setup.py made better</h1>
+    <h1>Tools: pbr</h1>
     <p><strong>pbr</strong> means <em>Python Build Reasonableness</em>.</p>
     <p>Addon on top of <strong>setuptools</strong></p>
     <ul>
@@ -150,10 +157,10 @@ setuptools.setup(
         required version of <strong>pbr</strong>.</small></p>
 </section>
 <section>
-    <h1>pbr - setup.py made better</h1>
+    <h1>Tools: pbr</h1>
     <p>The real magic happens in <em>setup.cfg</em>:</p>
     <pre><code>[metadata]
-name = my-super-project
+name = coolcats
 summary = I wrote this project because I'm good at writing
 description-file =
     README.md
@@ -167,19 +174,192 @@ classifier =
     </code></pre>
 </section>
 <section>
-    <h1>pbr - setup.py made better</h1>
+    <h1>Tools: pbr</h1>
     <p>Handles packages (detects modules recursively!), scripts and data
     files:</p>
     <pre><code>[files]
 packages =
-    pyfoo
+    coolcats
 
 scripts =
-    scripts/run-foo
+    scripts/find-a-cat
 
 data_files =
     share/pyfoo/ = images/funny-cats/*
 </code></pre>
+</section>
+<section>
+    <h1>Tools: pbr</h1>
+    <p>Generates versions based on git tags:</p>
+    <pre><code>$ python setup.py --version
+9.2.1.dev124
+</code></pre>
+    <p>Generates nice <em>AUTHORS</em> and <em>CHANGES</em> from git.</p>
+    <p>Generated <em>MANIFEST</em> based on files added to git.</p>
+</section>
+<section>
+    <h1>Tools: pbr</h1>
+    <p>Downsides:</p>
+    <ul>
+        <li>Requires git</li>
+        <li>Opinionated about versions</li>
+    </ul>
+</section>
+
+</section>
+
+<section>
+
+<section>
+    <h1 class="title">Tools: tox</h1>
+</section>
+<section>
+    <h1>Tools: tox</h1>
+    <p>Why?</p>
+    <p>Managing virtual environments in a repeatable way is annoying:</p>
+    <pre><code>$ virtualenv venv
+$ venv/bin/pip install -r requirements.txt
+$ venv/bin/pip install -e .
+$ venv/bin/python -m unittest discover coolcats.tests  # for example
+</code></pre>
+    <p>Now repeat for every supported Python version...</p>
+</section>
+<section>
+    <h1>Tools: tox</h1>
+    <p><strong>tox</strong> simplifies routine task on managing virtual
+    environments and running stuff in them.</p>
+    <p>Run unit tests on Python 2.7:</p>
+    <pre><code>$ tox -epy27</code></pre>
+    <p>Run unit tests on the default Python 3:</p>
+    <pre><code>$ tox -epy3</code></pre>
+    <p>Build a generic environment and run some commands there:</p>
+    <pre><code>$ tox -evenv -- python -m some.package</code></pre>
+</section>
+<section>
+    <h1>Tools: tox</h1>
+    <p>Configuration in <em>tox.ini</em>:</p>
+    <pre><code>[tox]
+envlist = py3,py27
+
+[testenv]
+usedevelop = True
+deps =
+    -r{toxinidir}/requirements.txt
+commands =
+    python -m unittest discover coolcats.tests
+setenv =
+    PYTHONDONTWRITEBYTECODE=1
+</code></pre>
+</section>
+<section>
+    <h1>Tools: tox</h1>
+    <p>Custom environments doing anything:</p>
+    <pre><code>[testenv:pep8]
+basepython = python2.7
+deps =
+    flake8
+    doc8
+commands =
+    flake8 coolcats
+    doc8 README.rst doc/source
+
+[testenv:venv]
+commands = {posargs}
+</code></pre>
+</section>
+
+</section>
+
+<section>
+
+<section>
+    <h1 class="title">Tools: reno</h1>
+</section>
+<section>
+    <h1>Tools: reno</h1>
+    <p>Why?</p>
+    <p><strong>pbr</strong> can generate a <em>ChangeLog</em>.</p>
+    <p>But user/operator facing release notes is a different thing: you need to
+    highlight important things and hide techinical details.</p>
+    <p>Writing release notes by project maintainers does not scale.</p>
+    <p>Appending them to a single file is messy on merges and backports.</p>
+</section>
+<section>
+    <h1>Tools: reno</h1>
+    <p><strong>reno</strong> allows a commit author to create a simple
+    <em>yaml</em> file with associated release notes for their change:</p>
+    <pre><code>---
+features:
+  - |
+    Introduces support for downloading funny cats pictures.
+upgrade:
+  - |
+    Make sure to enable downloading funny cats pictures or
+    we'll set your hard drive on fire.
+deprecations:
+  - |
+    Not watching funny cats is lame and deprecated.
+</code></pre>
+</section>
+<section>
+    <h1>Tools: reno</h1>
+    <p>When building release notes, the <strong>reno</strong> tool:</p>
+    <ul>
+        <li>takes all commits from a requested git branch,</li>
+        <li>extracts release note files,</li>
+        <li>splits them over git tags,</li>
+        <li>combines them in one yaml,</li>
+        <li>converts it to <em>rst</em> using per-project templates,</li>
+        <li>passed the <em>rst</em> to <strong>sphinx</strong>.</li>
+    </ul>
+    <p>Example: <a href="https://docs.openstack.org/releasenotes/ironic/">
+        https://docs.openstack.org/releasenotes/ironic/</a></p>
+</section>
+
+</section>
+
+<section>
+
+<section>
+    <h1 class="title">Entry points and stevedore</h1>
+</section>
+<section>
+    <h1>Entry points</h1>
+    <p>Entry points are great, let's have MORE of them!</p>
+    <p>This is a great, but often overlooked, feature of
+    <strong>setuptools</strong>.</p>
+    <p>Essentially, a collection of dictionaries, mapping short names to Python
+    objects.</p>
+    <p>Entry points of the same group from different Python projects are merged
+    by <strong>setuptools</strong>, which make this feature perfect for
+    plugins!</p>
+</section>
+<section>
+    <h1>Entry points and pbr</h1>
+    <p><strong>pbr</strong> supports entry points in <em>setup.cfg</em>:</p>
+    <pre><code>console_scripts =
+    make-cat-photo = coolcats.cli:my_cat_photo
+    post-cat-photo = coolcats.cli:my_cat_photo
+
+coolcats.cats =
+    small-and-cute = coolcats.cats:SmallAndCute
+    fat-and-awesome = coolcats.cats:FatAndAwesome
+</code></pre>
+    <p>The standard <code>console_scripts</code> group simplify creating
+    scripts a lot.
+</section>
+<section>
+    <h1>Stevedore</h1>
+    <p><strong>stevedore</strong> is a library simplifying interaction with
+    entry points. Provides convenient classes for common patterns:</p>
+    <ul>
+        <li><em>driver</em> - pick one named entity from a choice of several,
+            for example, database drivers</li>
+        <li><em>hooks</em> - list of entities under one name</li>
+        <li><em>extensions</em> - collection of named entities</li>
+    </ul>
+    <p>Each type can be enabled automatically (when a package with it is
+    installed) or explicitly (e.g. via configuration).</p>
 </section>
 
 </section>
