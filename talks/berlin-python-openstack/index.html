@@ -45,20 +45,23 @@
     <h1>Agenda</h1>
     <ul>
         <li>What is OpenStack?</li>
-        <li>Tools and libraries:
+        <li>Tools:
             <ul>
                 <li><strong>pbr</strong> - setup.py made better</li>
                 <li><strong>tox</strong> - managing virtual environments</li>
                 <li><strong>reno</strong> - when ChangeLog.md is too messy</li>
+            </ul>
+        </li>
+        <li>Libraries:
+            <ul>
                 <li><strong>stevedore</strong> - power of entry points</li>
+                <li><strong>oslo.config</strong> - configuration options</li>
             </ul>
         </li>
         <li>Our approach to
             <ul>
                 <li>requirements</li>
-                <li>automating releases</li>
-                <li>configuration options</li>
-                <li>logging</li>
+                <li>releases</li>
             </ul>
         </li>
     </ul>
@@ -360,6 +363,271 @@ coolcats.cats =
     </ul>
     <p>Each type can be enabled automatically (when a package with it is
     installed) or explicitly (e.g. via configuration).</p>
+</section>
+
+</section>
+
+<section>
+
+<section>
+    <h1 class="title">Libraries: oslo.config</h1>
+</section>
+<section>
+    <h1>Configuration options</h1>
+    <p>Why bother when we have standard <em>configparser</em>?</p>
+    <ul>
+        <li>No way to define a schema</li>
+        <li>Limited support for types</li>
+        <li>No way to generate documentation</li>
+    </ul>
+</section>
+<section>
+    <h1>oslo.config library</h1>
+    <p>Options schema defined in Python:</p>
+    <pre><code class="python">opts = [
+    cfg.StrOpt('host_ip',
+        default='0.0.0.0',
+        help=_('The IP address on which ironic-api listens.')),
+    cfg.PortOpt('port',
+        default=6385,
+        help=_('The TCP port on which ironic-api listens.')),
+    cfg.IntOpt('max_limit',
+        default=1000,
+        help=_('The maximum number of items returned in a single '
+               'response from a collection resource.')),
+]
+</code></pre>
+    <p><small>Real example from one of our projects.</small></p>
+</section>
+<section>
+    <h1>oslo.config library</h1>
+    <p>Options accessed as <code>CONF.group.name</code>:</p>
+    <pre><code class="python">from oslo_config.cfg import CONF
+
+host_port = "{}.{}".format(CONF.api.host_ip,
+                           CONF.api.port)
+</code></pre>
+    <p><small>Using a global <code>CONF</code> object is ugly, but simplifies
+        things.</small></p>
+</section>
+<section>
+    <h1>oslo.config library</h1>
+    <ul>
+        <li>Many built-in types, including lists, IP addresses and ports.</li>
+        <li>Validation of loaded options.</li>
+        <li>Option loading from files and command line.</li>
+        <li>Support for deprecating options and renaming with deprecation.</li>
+    </ul>
+</section>
+<section>
+    <h1>oslo.config library</h1>
+    <p>Bonus: generating example configurations:</p>
+    <pre><code>[api]
+
+# The IP address on which ironic-api listens. (string value)
+#host_ip = 0.0.0.0
+
+# The TCP port on which ironic-api listens. (port value)
+# Minimum value: 0
+# Maximum value: 65535
+#port = 6385
+
+# The maximum number of items returned in a single response
+# from a collection resource. (integer value)
+#max_limit = 1000
+</code></pre>
+</section>
+<section>
+    <h1>oslo.config library</h1>
+    <p>Bonus: generating documentation</p>
+    <p><a href="https://docs.openstack.org/ironic/latest/configuration/config.html#api">
+        https://docs.openstack.org/ironic/latest/configuration/config.html#api</a>.</p>
+</section>
+
+</section>
+
+<section>
+
+<section>
+    <h1 class="title">Our approach to requirements</h1>
+</section>
+<section>
+    <h1>Requirements are easy</h1>
+    <p>Just populate a <em>requirements.txt</em>, <strong>pbr</strong> will
+    catch it automatically:</p>
+    <pre><code>stevedore&gt;=1.20.0
+requests&gt;=2.14.2
+six&gt;=1.10.0
+</code></pre>
+    <p>That's all, right?</p>
+</section>
+<section>
+    <h1>Requirements are easy</h1>
+    <p>Major* versions tend to break things.</p>
+    <p><small>* if you're breaking things in non-major versions, please
+        STOP.</small></p>
+    <p>Still easy, insert an upper cap:</p>
+    <pre><code>stevedore&gt;=1.20.0,&lt;2.0.0
+requests&gt;=2.14.2,&lt;3.0.0
+six&gt;=1.10.0,&lt;2.0.0
+</code></pre>
+    <p>That's all now, right? RIGHT?</p>
+</section>
+<section>
+    <h1>Requirements are easy</h1>
+    <p>Your fellow project may want a newer or older major version:</p>
+    <pre><code>stevedore&gt;=1.20.0,&lt;2.0.0
+requests&gt;=1.0.0,&lt;2.0.0
+six&gt;=1.10.0,&lt;2.0.0
+</code></pre>
+    <p>What if somebody tries to install both projects at the same time?</p>
+</section>
+<section data-background="grumpy-cat.jpg" style="color: black">
+    <h1>Requirements are NOT easy at all</h1>
+</section>
+<section>
+    <h1>Requirements in OpenStack</h1>
+    <p>Centralized requirements handling:</p>
+    <ul>
+        <li>There is a separate repository with all requirements from all
+            projects.</li>
+        <li>A bot periodically updates versions in <em>requirements.txt</em>
+            in other repositories.</li>
+    </ul>
+    <p>This gets us:</p>
+    <ul>
+        <li>versions that never conflict,</li>
+        <li>a central place to review new requirements,</li>
+        <li>running CI jobs on any updates.</li>
+    </ul>
+</section>
+<section>
+    <h1>Stable branches handling</h1>
+    <p>Requirements on stable branches* should not change much.</p>
+    <p><small>* git branches and release series produced from them that only
+        receive important bug fixes</small></p>
+    <p>Upper caps to the rescue?</p>
+    <pre><code>stevedore&gt;=1.20.0,&lt;1.21.0
+requests&gt;=2.14.2,&lt;2.15.0
+six&gt;=1.10.0,&lt;1.11.0
+</code></pre>
+</section>
+<section>
+    <h1>Stable branches handling</h1>
+    <p>Upper caps to the rescue?</p>
+    <pre><code>stevedore&gt;=1.20.0,&lt;1.21.0
+requests&gt;=2.14.2,&lt;2.15.0
+six&gt;=1.10.0,&lt;1.11.0
+</code></pre>
+    <p>What if e.g. <code>requests 2.15.1</code> is a critical bug fix?</p>
+    <p>What if a non-OpenStack project on the same machine requires
+    <code>requests&gt;=2.16</code>?</p>
+</section>
+<section>
+    <h1>Stable branches handling</h1>
+    <p>After years of struggling we decided to mostly stop using upper caps,
+    except for known major breaking changes.</p>
+    <p>We let downstream consumers to decide on appropriate versions.</p>
+    <br>
+    <p>But what to do with the CI?</p>
+</section>
+<section>
+    <h1>Requirements and CI</h1>
+    <p>We still don't want new versions of random projects to break our CI.</p>
+    <p><strong>Especially</strong> on stable branches.</p>
+    <p>We also want to have a recommendation for downstream consumers on which
+    versions we known to work.</p>
+    <p>Solution: upper constraints.</p>
+</section>
+<section>
+    <h1>Upper contraints</h1>
+    <p>Poll: who knows what <code>-c</code> flag for <code>pip install</code>
+    does?</p>
+</section>
+<section>
+    <h1>Upper contraints</h1>
+    <p>Upper contraints complement requirements with stricter limits:</p>
+    <pre><code>stevedore===1.28.0
+requests===2.18.4
+six===1.11.0
+</code></pre>
+    <p>Upper contraints are not synced to projects and are not enforced outside
+    of the CI.</p>
+</section>
+<section>
+    <h1>Upper contraints</h1>
+    <p>On the <em>master</em> (current development) branch a bot periodically
+    proposes updates to upper constraints, which then go through the CI.</p>
+    <p>On stable branches upper constraints are only updated automatically for
+    other stable OpenStack component releases.</p>
+    <p>For other releases upper constraints on stable branches can only be
+    updated manually.</p>
+</section>
+
+</section>
+
+<section>
+
+<section>
+    <h1 class="title">Our approach to releases</h1>
+</section>
+<section>
+    <h1>Releases</h1>
+    <p>Typical release of a Python project:</p>
+    <pre><code>$ git tag -s 1.0.0
+$ git push origin 1.0.0
+$ python setup.py sdist upload
+</code></pre>
+    <p>Problem solved?</p>
+</section>
+<section>
+    <h1>Releases</h1>
+    <p>Problems with manual releases:</p>
+    <ul>
+        <li>Generating tarball in a potentially "dirty" environment</li>
+        <li>Managing credentials for PyPI</li>
+        <li>No peer reviews for releases</li>
+    </ul>
+</section>
+<section>
+    <h1>Releases</h1>
+    <p>Releases through CI:</p>
+    <ul>
+        <li>Create and push a tag</li>
+        <li>A CI job validates it</li>
+        <li>Another CI job builds a tarball and stores it</li>
+        <li>The third CI job publishes it to PyPI</li>
+        <li>Bonus: we have a CI job to do a release announcement :-)</li>
+    </ul>
+    <p>What about peer review and validation before tagging?</p>
+</section>
+<section>
+    <h1>Releases</h1>
+    <p>Repository for review requests:</p>
+    <pre><code class="yaml">---
+team: nova
+type: service
+release-notes: https://docs.openstack.org/releasenotes/nova/unreleased.html
+releases:
+  - version: 17.0.0.0b1
+    projects:
+      - repo: openstack/nova
+        hash: af4703cb38580a8cb9c9b293dd4b1637f2734cad
+</code></pre>
+</section>
+<section>
+    <h1>Releases</h1>
+    <p>Allows running CI jobs on release requests!</p>
+    <p>On merging a new release request:</p>
+    <ul>
+        <li>Create a git tag and push it</li>
+        <li>Continue with the same actions</li>
+    </ul>
+    <p>Bonus: stable branches are created the same way:</p>
+    <pre><code class="yaml"> branches:
+  - location: 16.0.0.0rc1
+    name: stable/pike
+</code></pre>
 </section>
 
 </section>
