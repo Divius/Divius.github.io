@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Unit testing Python</title>
+                <meta name="author" content="Dmitry Tantsur (divius.inside@gmail.com)">
+
+		<link rel="stylesheet" href="../reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="../reveal.js/css/theme/dtantsur.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi) ? '../reveal.js/css/print/pdf.css' : '../reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+                <style>
+                    .reveal pre code { font-size: 75%; }
+                    .reveal blockquote { font-style: italic; }
+                </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+<section>
+    <h1 class="title">Unit testing Python</h1>
+    <br><br>
+    <p><small>Dmitry Tantsur (Principal Software Engineer, Red Hat)</small></p>
+    <p><small>Slides:
+        <a href="https://dtantsur.github.io/talks/berlin-python-unittest/">
+            dtantsur.github.io/talks/berlin-python-unittest</a>
+    </small></p>
+    <p><small>Code:
+        <a href="https://github.com/dtantsur/berlin-python-unittest">
+            github.com/dtantsur/berlin-python-unittest</a>
+    </small></p>
+</section>
+
+<section>
+    <h1>Agenda</h1>
+    <ul>
+        <li>Automated testing: how and why?</li>
+        <li>Writing and running Python tests:
+            <ul>
+                <li>The unittest package</li>
+                <li>Discovering tests</li>
+                <li>Additional runners</li>
+            </ul>
+        </li>
+        <li>Mocking:
+            <ul>
+                <li>Mock and MagicMock</li>
+                <li>Patching objects</li>
+                <li>Spec and autospec</li>
+            </ul>
+        </li>
+        <li>Extras:
+            <ul>
+                <li>Measing coverage</li>
+                <li>Creating and using fixtures</li>
+            </ul>
+        </li>
+    </ul>
+</section>
+
+<section>
+
+<section>
+    <h1 class="title">Automated testing</h1>
+    <h2>How and why?</h2>
+</section>
+
+<section>
+    <h1>Automated testing</h1>
+</section>
+
+</section>
+
+<section>
+    <h1 class="title">Questions?</h1>
+</section>
+
+			</div>
+		</div>
+
+		<script src="../reveal.js/lib/js/head.min.js"></script>
+		<script src="../reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+                                history: true,
+                                transitionSpeed: 'fast',
+				dependencies: [
+					{ src: '../reveal.js/plugin/markdown/marked.js' },
+					{ src: '../reveal.js/plugin/markdown/markdown.js' },
+					{ src: '../reveal.js/plugin/notes/notes.js', async: true },
+					{ src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
