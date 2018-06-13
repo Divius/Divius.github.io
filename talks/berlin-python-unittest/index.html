@@ -254,6 +254,127 @@ Ran 4 tests in 0.000s
 OK</code></pre>
 </section>
 
+<section>
+    <h1>Unit test framework</h1>
+    <h2>Case study: quadratic equation</h2>
+    <p>And this is how it fails:</p>
+    <pre><code class="bash" style="font-size: 40%">$ python3 -m unittest discover my_utils
+F...
+======================================================================
+FAIL: test_different_roots (tests.test_roots.RootsTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/dtantsur/Projects/berlin-python-unittest/my_utils/tests/test_roots.py", line 11, in test_different_roots
+    self.assertEqual(roots(1, -3, 2), (1.0, 2.0))
+AssertionError: Tuples differ: (1.0, 1.0) != (1.0, 2.0)
+
+First differing element 1:
+1.0
+2.0
+
+- (1.0, 1.0)
+?       ^
+
++ (1.0, 2.0)
+?       ^
+
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.002s
+
+FAILED (failures=1)
+    </code></pre>
+</section>
+
+<section>
+    <h1>Unit test framework</h1>
+    <h2>Quadratic equation: imports</h2>
+    <var class="file">my_utils/tests/test_roots.py</var>
+    <pre><code class="python">import unittest
+from my_utils.roots import roots</code></pre>
+    <p>Importing the standard unittest package and our code that we plan on
+    testing.</p>
+</section>
+
+<section>
+    <h1>Unit test framework</h1>
+    <h2>Quadratic equation: test case</h2>
+    <var class="file">my_utils/tests/test_roots.py</var>
+    <pre><code class="python">class RootsTest(unittest.TestCase):
+    def test_same_root(self):
+        # ...
+
+    def test_different_roots(self):
+        # ...
+
+    # ...</code></pre>
+    <ul>
+        <li>A test case is a logical group of tests</li>
+        <li>Each test is a method starting with test_</li>
+        <li>Each tests one aspect of the tested entity</li>
+    </ul>
+</section>
+
+<section>
+    <h1>Unit test framework</h1>
+    <h2>Quadratic equation: equality</h2>
+    <var class="file">my_utils/tests/test_roots.py</var>
+    <pre><code class="python">def test_same_root(self):
+    self.assertEqual(roots(1, -4, 4), (2.0, 2.0))
+
+def test_different_roots(self):
+    self.assertEqual(roots(1, -3, 2), (1.0, 2.0))</code></pre>
+    <ol>
+        <li>Calculate the value using the function under test</li>
+        <li>Compare it with the known correct result</li>
+    </ol>
+    <p>Using convenience methods self.assert&lt;***&gt;</p>
+</section>
+
+<section>
+    <h1>Unit test framework</h1>
+    <h2>Quadratic equation: errors</h2>
+    <var class="file">my_utils/tests/test_roots.py</var>
+    <pre><code class="python">def test_negative_a(self):
+    self.assertRaises(ValueError, roots, 0, -3, 2)
+
+def test_negative_discriminant(self):
+    self.assertRaises(ValueError, roots, 1, 1, 1)</code></pre>
+    <ul>
+        <li>Use assertRaises to check that a callable raises an exception
+            on invalid input</li>
+        <li>Note that we do not call it ourselves!</li>
+    </ul>
+</section>
+
+<section>
+    <h1>Unit test framework</h1>
+    <h2>Quadratic equation: errors</h2>
+    <var class="file">my_utils/tests/test_roots.py</var>
+    <pre><code class="python">def test_negative_a(self):
+    self.assertRaisesRegex(ValueError, 'a cannot be zero',
+                           roots, 0, -3, 2)
+
+def test_negative_discriminant(self):
+    self.assertRaisesRegex(ValueError, 'discriminant below zero',
+                           roots, 1, 1, 1)</code></pre>
+    <ul>
+        <li>Use assertRaisesRegex to validate the error message</li>
+        <li>Useful to distinguish between different cases of the same error</li>
+    </ul>
+</section>
+
+<section>
+    <h1>Unit test framework</h1>
+    <h2>Available checks</h2>
+    <p>assertEqual, assertNotEqual, assertIs, assertIsNot, assertTrue,
+    assertFalse, assertIsInstance, assertNotIsInstance, assertIn, assertNotIn,
+    assertGreater, assertGreaterEqual, assertLess, assertLessEqual,
+    assertRegex, assertNotRegex, assertRaises, assertRaisesRegex</p>
+    <p>... and probably more</p>
+    <p>... and even more in 3rd party libraries</p>
+</section>
+
 </section><!-- Unit test framework -->
 
 <section>
