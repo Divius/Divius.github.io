@@ -24,6 +24,14 @@
                 <style>
                     .reveal pre code { font-size: 75%; }
                     .reveal blockquote { font-style: italic; }
+                    .reveal var.file {
+                        font-size: 75%;
+                        border-top: solid rgb(63, 63, 63);
+                        border-left: solid rgb(63, 63, 63);
+                        border-right: solid rgb(63, 63, 63);
+                        padding-left: 15px;
+                        padding-right: 15px;
+                    }
                 </style>
 	</head>
 	<body>
@@ -52,7 +60,7 @@
             <ul>
                 <li>The unittest package</li>
                 <li>Discovering tests</li>
-                <li>Additional runners</li>
+                <li>Assertion methods</li>
             </ul>
         </li>
         <li>Mocking:
@@ -64,7 +72,8 @@
         </li>
         <li>Extras:
             <ul>
-                <li>Measing coverage</li>
+                <li>Additional runners</li>
+                <li>Measuring coverage</li>
                 <li>Creating and using fixtures</li>
             </ul>
         </li>
@@ -143,6 +152,109 @@
 </section>
 
 </section><!-- Automated testing -->
+
+<section><!-- Unit test framework -->
+
+<section>
+    <h1 class="title">Unit test framework</h1>
+</section>
+
+<section>
+    <h1>Unit test framework</h1>
+    <ul>
+        <li>Included in the standard library</li>
+        <li>Heavily extended in Python 3</li>
+        <li>Plenty 3rd party addons</li>
+    </ul>
+</section>
+
+<section>
+    <h1>Unit test framework</h1>
+    <h2>Case study: quadratic equation</h2>
+    <p>Package layout:</p>
+    <pre><code class="bash">$ find my_utils
+my_utils
+my_utils/roots.py
+my_utils/__init__.py
+my_utils/tests
+my_utils/tests/__init__.py
+my_utils/tests/test_roots.py</code></pre>
+</section>
+
+<section>
+    <h1>Unit test framework</h1>
+    <h2>Case study: quadratic equation</h2>
+    <var class="file">my_utils/roots.py</var>
+    <pre><code class="python">import math
+
+def roots(a, b, c):
+    if not a:
+        raise ValueError("a cannot be zero")
+
+    discriminant = b ** 2 - 4 * a * c
+    if discriminant &lt; 0:
+        raise ValueError("discriminant below zero")
+
+    return ((- b - math.sqrt(discriminant)) / 2 / a,
+            (- b + math.sqrt(discriminant)) / 2 / a)
+</code></pre>
+</section>
+
+<section>
+    <h1>Writing unit tests</h1>
+    <ul>
+        <li>Split the testing into independent checks</li>
+        <li>Group individual checks into cases</li>
+        <li>Don't forget negative tests</li>
+    </ul>
+</section>
+
+<section>
+    <h1>Unit test framework</h1>
+    <h2>Case study: quadratic equation</h2>
+    <var class="file">my_utils/tests/test_roots.py</var>
+    <pre><code class="python">import unittest
+from my_utils.roots import roots
+
+class RootsTest(unittest.TestCase):
+    def test_same_root(self):
+        self.assertEqual(roots(1, -4, 4), (2.0, 2.0))
+
+    def test_different_roots(self):
+        self.assertEqual(roots(1, -3, 2), (1.0, 2.0))
+
+    def test_negative_a(self):
+        self.assertRaises(ValueError, roots, 0, -3, 2)
+
+    def test_negative_discriminant(self):
+        self.assertRaises(ValueError, roots, 1, 1, 1)</code></pre>
+</section>
+
+<section>
+    <h1>Unit test framework</h1>
+    <h2>Case study: quadratic equation</h2>
+    <p>Running only one test file:</p>
+    <pre><code class="bash">$ python3 -m unittest my_utils.tests.test_roots
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK</code></pre>
+</section>
+
+<section>
+    <h1>Unit test framework</h1>
+    <h2>Case study: quadratic equation</h2>
+    <p>Detecting and running all tests:</p>
+    <pre><code class="bash">$ python3 -m unittest discover my_utils
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK</code></pre>
+</section>
+
+</section><!-- Unit test framework -->
 
 <section>
     <h1 class="title">Questions?</h1>
