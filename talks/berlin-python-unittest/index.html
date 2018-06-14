@@ -629,6 +629,262 @@ class MainTest(unittest.TestCase):
 
 <section>
     <h1 class="title">Questions?</h1>
+    <h2>Next: advanced topics</h2>
+</section>
+
+<section> <!-- Spec and autospec -->
+
+<section>
+    <h1 class="title">Spec and autospec</h1>
+</section>
+
+<section>
+    <h1>Spec and autospec</h1>
+    <h2>Problem statement</h2>
+    <p>Mock objects can simulate anything.</p>
+    <p>How to make them simulate a specific object or function?</p>
+</section>
+
+<section>
+    <h1>Spec and autospec</h1>
+    <h2>Mock specs</h2>
+    <p>A Mock object accepts a <em>spec</em> - a simulated object.</p>
+    <var class="file">mock_spec_demo.py</var>
+    <pre><code class="python">from unittest import mock
+class A:
+    def x(self, y):
+        return y ** 2
+
+m = mock.Mock(spec=A)
+print(m.x)
+print(m.y)</code></pre>
+</section>
+
+<section>
+    <h1>Spec and autospec</h1>
+    <h2>Mock specs</h2>
+    <pre><code>$ python3 mock_spec_demo.py
+&lt;Mock name='mock.x' id='140567812205928'&gt;
+Traceback (most recent call last):
+  File "mock_spec_demo.py", line 11, in &lt;module&gt;
+    print(m.y)
+  File "/usr/lib64/python3.6/unittest/mock.py", line 582, in __getattr__
+    raise AttributeError("Mock object has no attribute %r" % name)
+AttributeError: Mock object has no attribute 'y'</code></pre>
+</section>
+
+<section>
+    <h1>Spec and autospec</h1>
+    <h2>patch autospec</h2>
+    <p>The autospec argument of the patch function can even check function
+    signatures:.</p>
+    <var class="file">mock_autospec_demo.py</var>
+    <pre><code class="python">class A:
+    def x(self, y):
+        return y ** 2
+
+@mock.patch.object(A, 'x', autospec=True)
+def test(mock_x):
+    a = A()
+    print(a.x(42))
+    print(a.x(z=42))
+
+test()</code></pre>
+</section>
+
+<section>
+    <h1>Spec and autospec</h1>
+    <h2>Mock specs</h2>
+    <pre><code>$ python3 mock_autospec_demo.py
+&lt;MagicMock name='x()' id='140700038039648'&gt;
+Traceback (most recent call last):
+  File "mock_autospec_demo.py", line 16, in &lt;module&gt;
+    test()
+  File "/usr/lib64/python3.6/unittest/mock.py", line 1179, in patched
+    return func(*args, **keywargs)
+  File "mock_autospec_demo.py", line 13, in test
+    print(a.x(z=42))
+  File "&lt;string&gt;", line 2, in x
+  File "/usr/lib64/python3.6/unittest/mock.py", line 171, in checksig
+    sig.bind(*args, **kwargs)
+  File "/usr/lib64/python3.6/inspect.py", line 2969, in bind
+    return args[0]._bind(args[1:], kwargs)
+  File "/usr/lib64/python3.6/inspect.py", line 2884, in _bind
+    raise TypeError(msg) from None
+TypeError: missing a required argument: 'y'</code></pre>
+</section>
+
+<section>
+    <h1>Spec and autospec</h1>
+    <h2>Case study: quadratic equation</h2>
+    <pre><code class="python">@mock.patch('builtins.print', autospec=True)
+class MainTest(unittest.TestCase):
+
+    @mock.patch('sys.argv', [None, '1', '-3', '2'])
+    def test_correct(self, mock_print):
+        roots.main()
+        mock_print.assert_called_once_with((1.0, 2.0))
+
+    @mock.patch('sys.exit', autospec=True)
+    @mock.patch('sys.argv', [None, '1', '-3'])
+    def test_missing_argument(self, mock_exit, mock_print):
+        mock_exit.side_effect = RuntimeError
+        self.assertRaises(RuntimeError, roots.main)
+        mock_exit.assert_called_once_with(
+            '3 arguments required')
+        mock_print.assert_not_called()</code></pre>
+</section>
+
+</section> <!-- Spec and autospec -->
+
+<section> <!-- Additional runners -->
+
+<section>
+    <h1 class="title">Additional runners</h1>
+</section>
+
+<section>
+    <h1>Additional runners</h1>
+    <p>Running with python3 -m unittest is quite convenient.</p>
+    <p>But there are more feature-rich runners for Python unit tests.</p>
+</section>
+
+<section>
+    <h1>Additional runners</h1>
+    <h2>Nose</h2>
+    <p><a href="https://nose.readthedocs.io/">nose.readthedocs.io</a></p>
+    <ul>
+        <li>A lot of plugins for integration with other tools</li>
+        <li>Select specific tests to run</li>
+        <li>Additional options controlling output</li>
+    </ul>
+</section>
+
+<section>
+    <h1>Additional runners</h1>
+    <h2>Nose</h2>
+    <pre><code>$ nosetests-3
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.013s
+
+OK</code></pre>
+</section>
+
+<section>
+    <h1>Additional runners</h1>
+    <h2>stestr</h2>
+    <p><a href="https://stestr.readthedocs.io/">stestr.readthedocs.io</a></p>
+    <ul>
+        <li>Select specific tests to run via regular expressions</li>
+        <li>Machine-parseable output in subunit format</li>
+        <li>Emphasis on parallel execution and streaming results</li>
+        <li>Execution time reporting</li>
+    </ul>
+</section>
+
+<section>
+    <h1>Additional runners</h1>
+    <h2>stestr</h2>
+    <pre><code style="font-size: 50%">$ stestr-3 --test-path my_utils/tests/ run
+{2} my_utils.tests.test_roots.RootsTest.test_correct [0.000341s] ... ok
+{3} my_utils.tests.test_roots.RootsTest.test_negative_a [0.000647s] ... ok
+{0} my_utils.tests.test_roots.MainTest.test_correct [0.011246s] ... ok
+{0} my_utils.tests.test_roots.MainTest.test_missing_argument [0.004206s] ... ok
+{1} my_utils.tests.test_roots.RootsTest.test_negative_discriminant [0.000660s] ... ok
+
+======
+Totals
+======
+Ran: 5 tests in 0.4467 sec.
+ - Passed: 5
+ - Skipped: 0
+ - Expected Fail: 0
+ - Unexpected Success: 0
+ - Failed: 0
+Sum of execute time for each test: 0.0171 sec.
+
+==============
+Worker Balance
+==============
+ - Worker 0 (2 tests) =&gt; 0:00:00.015929
+ - Worker 1 (1 tests) =&gt; 0:00:00.000660
+ - Worker 2 (1 tests) =&gt; 0:00:00.000341
+ - Worker 3 (1 tests) =&gt; 0:00:00.000647</code></pre>
+</section>
+
+</section> <!-- Additional runners -->
+
+<section> <!-- Coverage -->
+
+<section>
+    <h1 class="title">Coverage</h1>
+</section>
+
+<section>
+    <h1>Coverage</h1>
+    <h2>Problem statement</h2>
+    <p>I want to know how much of my code is covered by unit tests.</p>
+    <p>The answer is the coverage utility
+    <a href="https://coverage.readthedocs.io/">coverage.readthedocs.io</a>.</p>
+</section>
+
+<section>
+    <h1>Coverage</h1>
+    <h2>Collect coverage</h2>
+    <pre><code>$ coverage3 run -m unittest discover my_utils
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.012s
+
+OK</code></pre>
+</section>
+
+<section>
+    <h1>Coverage</h1>
+    <h2>Report coverage</h2>
+    <pre><code>$ coverage3 report
+Name                           Stmts   Miss  Cover
+--------------------------------------------------
+my_utils/__init__.py               0      0   100%
+my_utils/roots.py                 21      3    86%
+my_utils/tests/__init__.py         0      0   100%
+my_utils/tests/test_roots.py      21      0   100%
+--------------------------------------------------
+TOTAL                             42      3    93%</code></pre>
+</section>
+
+<section>
+    <h1>Coverage</h1>
+    <h2>Rich report</h2>
+    <p>Collect also branch information:</p>
+    <pre><code>$ coverage3 run --branch -m unittest discover my_utils
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.012s
+
+OK</code></pre>
+</section>
+
+<section>
+    <h1>Coverage</h1>
+    <h2>Rich report</h2>
+    <p>Show what is not covered:</p>
+    <pre><code style="font-size: 50%">$ coverage3 report -m
+Name                           Stmts   Miss Branch BrPart  Cover   Missing
+--------------------------------------------------------------------------
+my_utils/__init__.py               0      0      0      0   100%
+my_utils/roots.py                 21      3      8      2    83%   24-25, 30, 22-&gt;24, 29-&gt;30
+my_utils/tests/__init__.py         0      0      0      0   100%
+my_utils/tests/test_roots.py      21      0      2      0   100%
+--------------------------------------------------------------------------
+TOTAL                             42      3     10      2    90%</code></pre>
+</section>
+
+</section> <!-- Coverage -->
+
+<section>
+    <h1 class="title">Questions?</h1>
 </section>
 
 			</div>
