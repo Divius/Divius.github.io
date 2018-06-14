@@ -396,6 +396,19 @@ def test_negative_discriminant(self):
     <p>And even more in 3rd party libraries</p>
 </section>
 
+<section>
+    <h1>Unit test framework</h1>
+    <h2>Preparing for tests</h2>
+    <pre><code class="python">class RootsTest(unittest.TestCase):
+
+    def setUp(self):
+        # Gets run before every test
+
+    def tearDown(self):
+        # Gets run after every test</code></pre>
+    <p>Also use addCleanup to clean up after tests.</p>
+</section>
+
 </section><!-- Unit test framework -->
 
 <section><!-- Mocking and patching -->
