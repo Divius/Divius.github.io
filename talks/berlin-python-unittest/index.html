@@ -67,11 +67,11 @@
             <ul>
                 <li>Mock and MagicMock</li>
                 <li>Patching objects</li>
-                <li>Spec and autospec</li>
             </ul>
         </li>
         <li>Extras:
             <ul>
+                <li>Spec and autospec</li>
                 <li>Additional runners</li>
                 <li>Measuring coverage</li>
                 <li>Creating and using fixtures</li>
@@ -151,6 +151,29 @@
     <p><small>Black box</small></p>
 </section>
 
+<section>
+    <h1>Automated testing</h1>
+    <h2>Why unit test?</h2>
+    <ul>
+        <li>Sanity-check during development</li>
+        <li>Help newcomers keep things working</li>
+        <li>Document design decision</li>
+        <li>Sign of the maturity of the project</li>
+    </ul>
+</section>
+
+<section>
+    <h1>Automated testing</h1>
+    <h2>Why unit test?</h2>
+    <p>Unit tests do not:
+    <ul>
+        <li>Guarantee that your code works</li>
+        <li>Replace integration testing</li>
+        <li>Replace developer's guide</li>
+        <li>Have to cover literally everything</li>
+    </ul>
+</section>
+
 </section><!-- Automated testing -->
 
 <section><!-- Unit test framework -->
@@ -214,20 +237,20 @@ def roots(a, b, c):
     <h2>Case study: quadratic equation</h2>
     <var class="file">my_utils/tests/test_roots.py</var>
     <pre><code class="python">import unittest
-from my_utils.roots import roots
+from my_utils import roots
 
 class RootsTest(unittest.TestCase):
-    def test_same_root(self):
-        self.assertEqual(roots(1, -4, 4), (2.0, 2.0))
-
-    def test_different_roots(self):
-        self.assertEqual(roots(1, -3, 2), (1.0, 2.0))
+    def test_correct(self):
+        self.assertEqual(roots.roots(1, -3, 2),
+                         (1.0, 2.0))
 
     def test_negative_a(self):
-        self.assertRaises(ValueError, roots, 0, -3, 2)
+        self.assertRaises(ValueError,
+                          roots.roots, 0, -3, 2)
 
     def test_negative_discriminant(self):
-        self.assertRaises(ValueError, roots, 1, 1, 1)</code></pre>
+        self.assertRaises(ValueError,
+                          roots.roots, 1, 1, 1)</code></pre>
 </section>
 
 <section>
@@ -235,9 +258,9 @@ class RootsTest(unittest.TestCase):
     <h2>Case study: quadratic equation</h2>
     <p>Running only one test file:</p>
     <pre><code class="bash">$ python3 -m unittest my_utils.tests.test_roots
-....
+...
 ----------------------------------------------------------------------
-Ran 4 tests in 0.000s
+Ran 3 tests in 0.000s
 
 OK</code></pre>
 </section>
@@ -247,9 +270,9 @@ OK</code></pre>
     <h2>Case study: quadratic equation</h2>
     <p>Detecting and running all tests:</p>
     <pre><code class="bash">$ python3 -m unittest discover my_utils
-....
+...
 ----------------------------------------------------------------------
-Ran 4 tests in 0.000s
+Ran 3 tests in 0.000s
 
 OK</code></pre>
 </section>
@@ -259,12 +282,12 @@ OK</code></pre>
     <h2>Case study: quadratic equation</h2>
     <p>And this is how it fails:</p>
     <pre><code class="bash" style="font-size: 40%">$ python3 -m unittest discover my_utils
-F...
+F..
 ======================================================================
-FAIL: test_different_roots (tests.test_roots.RootsTest)
+FAIL: test_correct (tests.test_roots.RootsTest)
 ----------------------------------------------------------------------
 Traceback (most recent call last):
-  File "/home/dtantsur/Projects/berlin-python-unittest/my_utils/tests/test_roots.py", line 11, in test_different_roots
+  File "/home/dtantsur/Projects/berlin-python-unittest/my_utils/tests/test_roots.py", line 10, in test_correct
     self.assertEqual(roots(1, -3, 2), (1.0, 2.0))
 AssertionError: Tuples differ: (1.0, 1.0) != (1.0, 2.0)
 
@@ -280,7 +303,7 @@ First differing element 1:
 
 
 ----------------------------------------------------------------------
-Ran 4 tests in 0.002s
+Ran 3 tests in 0.002s
 
 FAILED (failures=1)
     </code></pre>
@@ -301,10 +324,10 @@ from my_utils.roots import roots</code></pre>
     <h2>Quadratic equation: test case</h2>
     <var class="file">my_utils/tests/test_roots.py</var>
     <pre><code class="python">class RootsTest(unittest.TestCase):
-    def test_same_root(self):
+    def test_correct(self):
         # ...
 
-    def test_different_roots(self):
+    def test_negative_a(self):
         # ...
 
     # ...</code></pre>
@@ -319,11 +342,9 @@ from my_utils.roots import roots</code></pre>
     <h1>Unit test framework</h1>
     <h2>Quadratic equation: equality</h2>
     <var class="file">my_utils/tests/test_roots.py</var>
-    <pre><code class="python">def test_same_root(self):
-    self.assertEqual(roots(1, -4, 4), (2.0, 2.0))
-
-def test_different_roots(self):
-    self.assertEqual(roots(1, -3, 2), (1.0, 2.0))</code></pre>
+    <pre><code class="python">def test_correct(self):
+    self.assertEqual(roots.roots(1, -3, 2),
+                     (1.0, 2.0))</code></pre>
     <ol>
         <li>Calculate the value using the function under test</li>
         <li>Compare it with the known correct result</li>
@@ -336,10 +357,12 @@ def test_different_roots(self):
     <h2>Quadratic equation: errors</h2>
     <var class="file">my_utils/tests/test_roots.py</var>
     <pre><code class="python">def test_negative_a(self):
-    self.assertRaises(ValueError, roots, 0, -3, 2)
+    self.assertRaises(ValueError,
+                      roots.roots, 0, -3, 2)
 
 def test_negative_discriminant(self):
-    self.assertRaises(ValueError, roots, 1, 1, 1)</code></pre>
+    self.assertRaises(ValueError,
+                      roots.roots, 1, 1, 1)</code></pre>
     <ul>
         <li>Use assertRaises to check that a callable raises an exception
             on invalid input</li>
@@ -353,11 +376,11 @@ def test_negative_discriminant(self):
     <var class="file">my_utils/tests/test_roots.py</var>
     <pre><code class="python">def test_negative_a(self):
     self.assertRaisesRegex(ValueError, 'a cannot be zero',
-                           roots, 0, -3, 2)
+                           roots.roots, 0, -3, 2)
 
 def test_negative_discriminant(self):
     self.assertRaisesRegex(ValueError, 'discriminant below zero',
-                           roots, 1, 1, 1)</code></pre>
+                           roots.roots, 1, 1, 1)</code></pre>
     <ul>
         <li>Use assertRaisesRegex to validate the error message</li>
         <li>Useful to distinguish between different cases of the same error</li>
@@ -370,12 +393,239 @@ def test_negative_discriminant(self):
     <p>assertEqual, assertNotEqual, assertIs, assertIsNot, assertTrue,
     assertFalse, assertIsInstance, assertNotIsInstance, assertIn, assertNotIn,
     assertGreater, assertGreaterEqual, assertLess, assertLessEqual,
-    assertRegex, assertNotRegex, assertRaises, assertRaisesRegex</p>
-    <p>... and probably more</p>
-    <p>... and even more in 3rd party libraries</p>
+    assertRegex, assertNotRegex, assertRaises, assertRaisesRegex, ...</p>
+    <p>And even more in 3rd party libraries</p>
 </section>
 
 </section><!-- Unit test framework -->
+
+<section><!-- Mocking and patching -->
+
+<section>
+    <h1 class="title">Mocking</h1>
+    <h2>Handling integration points</h2>
+</section>
+
+<section>
+    <h1>Mocking</h1>
+    <h2>Problem statement</h2>
+    <p>How to test code that relies on (a lot of) other code?</p>
+    <p>How to test code that relies on something not available in a regular
+    testing environment?</p>
+</section>
+
+<section>
+    <h1>Mocking</h1>
+    <h2>The mock library</h2>
+    <p>Python has the mock library:</p>
+    <ul>
+        <li>unittest.mock in Python 3 standard library</li>
+        <li>just mock on PyPI for Python 2 and 3</li>
+    </ul>
+</section>
+
+<section>
+    <h1>Mocking</h1>
+    <h2>Case study: quadratic equation</h2>
+    <var class="file">my_utils/roots.py</var>
+    <pre><code class="python">import sys
+
+def main():
+    try:
+        a = int(sys.argv[1])
+        b = int(sys.argv[2])
+        c = int(sys.argv[3])
+    except IndexError:
+        sys.exit('3 arguments required')
+    except ValueError:
+        sys.exit('all arguments must be integers')
+    print(roots(a, b, c))
+
+if __name__ == '__main__':
+    main()</code></pre>
+</section>
+
+<section>
+    <h1>Mocking</h1>
+    <h2>Case study: quadratic equation</h2>
+    <pre><code class="bash">$ python3 -m my_utils.roots
+3 arguments required
+
+$ python3 -m my_utils.roots a b c
+all arguments must be integers
+
+$ python3 -m my_utils.roots 1 4 4
+(-2.0, -2.0)</code></pre>
+</section>
+
+<section>
+    <h1>Mocking</h1>
+    <h2>Case study: quadratic equation</h2>
+    <p>Problems:</p>
+    <ul>
+        <li>provide values for sys.argv</li>
+        <li>test how sys.exit is called</li>
+        <li>test how print is called</li>
+    </ul>
+</section>
+
+<section>
+    <h1>Mocking</h1>
+    <h2>patch function</h2>
+    <p>The unittest.mock.patch function allows to replace an object temporary
+    while a test is running and restore it back.</p>
+    <p>Can be used in many forms, we will only consider some of them.</p>
+</section>
+
+<section>
+    <h1>Mocking</h1>
+    <h2>Case study: quadratic equation</h2>
+    <var class="file">my_utils/tests/test_roots.py</var>
+    <pre><code>from unittest import mock
+
+class MainTest(unittest.TestCase):
+
+    @mock.patch('sys.argv', [None, '1', '-3', '2'])
+    def test_correct(self):
+        roots.main()</code></pre>
+    <p>Using patch as decorator to automate patching object and restoring
+    it after the test.</p>
+</section>
+
+<section>
+    <h1>Mocking</h1>
+    <h2>Case study: quadratic equation</h2>
+    <p>Rough equivalent:
+    <pre><code>class MainTest(unittest.TestCase):
+
+    def test_correct(self):
+        import sys
+        old_argv = sys.argv
+        sys.argv = [None, '1', '-3', '2']
+        try:
+            roots.main()  # our actual test
+        finally:
+            sys.argv = old_argv</code></pre>
+</section>
+
+<section>
+    <h1>Mocking</h1>
+    <h2>patch function</h2>
+    <p>This test does not verify that main function does anything.</p>
+    <p>To verify that printing is done correctly, we need to replace
+    the print function with something that will track calls.</p>
+</section>
+
+<section>
+    <h1>Mocking</h1>
+    <h2>Mock objects</h2>
+    <p>Magic objects that allow any operations on them and record them for
+    future verification.</p>
+    <pre><code class="python">m = mock.Mock()
+r = m.abc(42, cat='meow')
+assert isinstance(m.abc, mock.Mock)
+assert isinstance(r, mock.Mock)
+
+m.abc.assert_called_once_with(42, cat='meow')
+assert r is m.abc.return_value</code></pre>
+</section>
+
+<section>
+    <h1>Mocking</h1>
+    <h2>Case study: quadratic equation</h2>
+    <pre><code class="python">class MainTest(unittest.TestCase):
+
+    @mock.patch('sys.argv', [None, '1', '-3', '2'])
+    @mock.patch('builtins.print')
+    def test_correct(self, mock_print):
+        roots.main()
+        mock_print.assert_called_once_with((1.0, 2.0))</code></pre>
+</section>
+
+<section>
+    <h1>Mocking</h1>
+    <h2>Case study: quadratic equation</h2>
+    <p>If we make a mistake, the test will tell us:</p>
+    <pre><code class="bash" style="font-size: 40%">$ python3 -m unittest discover my_utils
+F...
+======================================================================
+FAIL: test_correct (tests.test_roots.MainTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/usr/lib64/python3.6/unittest/mock.py", line 1179, in patched
+    return func(*args, **keywargs)
+  File "/home/dtantsur/Projects/berlin-python-unittest/my_utils/tests/test_roots.py", line 27, in test_correct
+    mock_print.assert_called_once_with((2.0, 2.0))
+  File "/usr/lib64/python3.6/unittest/mock.py", line 825, in assert_called_once_with
+    return self.assert_called_with(*args, **kwargs)
+  File "/usr/lib64/python3.6/unittest/mock.py", line 814, in assert_called_with
+    raise AssertionError(_error_message()) from cause
+AssertionError: Expected call: print((2.0, 2.0))
+Actual call: print((1.0, 2.0))
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.002s
+
+FAILED (failures=1)</code></pre>
+</section>
+
+<section>
+    <h1>Mocking</h1>
+    <h2>Case study: quadratic equation</h2>
+    <p>Handling sys.exit:</p>
+    <ul>
+        <li>We need to replace it with Mock</li>
+        <li>But we also make sure to stop function from executing after calling
+            it</li>
+    </ul>
+    <p>We can make it raise an exception!</p>
+</section>
+
+<section>
+    <h1>Mocking</h1>
+    <h2>Case study: quadratic equation</h2>
+    <pre><code class="python">@mock.patch('builtins.print')
+class MainTest(unittest.TestCase):
+
+    @mock.patch('sys.argv', [None, '1', '-3', '2'])
+    def test_correct(self, mock_print):
+        roots.main()
+        mock_print.assert_called_once_with((1.0, 2.0))
+
+    @mock.patch('sys.exit')
+    @mock.patch('sys.argv', [None, '1', '-3'])
+    def test_missing_argument(self, mock_exit, mock_print):
+        mock_exit.side_effect = RuntimeError
+        self.assertRaises(RuntimeError, roots.main)
+        mock_exit.assert_called_once_with(
+            '3 arguments required')
+        mock_print.assert_not_called()</code></pre>
+</section>
+
+<section>
+    <h1>Mocking</h1>
+    <h2>Summary</h2>
+    <p>mock.patch:</p>
+    <ul>
+        <li>Can be used on methods and classes</li>
+        <li>Can replace an object with a given object or with a new mock</li>
+        <li>Passes the newly created mock to test methods</li>
+    </ul>
+</section>
+
+<section>
+    <h1>Mocking</h1>
+    <h2>Summary</h2>
+    <p>Mock:</p>
+    <ul>
+        <li>Any attribute is also a Mock</li>
+        <li>Can be called, result is a Mock</li>
+        <li>Can raise exceptions</li>
+        <li>Can return specified values (via setting return_value)</li>
+    </ul>
+</section>
+
+</section><!-- Mocking and patching -->
 
 <section>
     <h1 class="title">Questions?</h1>
