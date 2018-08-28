@@ -19,7 +19,7 @@
  </url>
  <url>
   <loc>http://dtantsur.github.io/archive.html</loc>
-  <lastmod>2018-01-10T15:44:00Z</lastmod>
+  <lastmod>2018-08-28T11:34:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/</loc>
@@ -27,39 +27,39 @@
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/openstack.html</loc>
-  <lastmod>2018-01-10T15:44:00Z</lastmod>
+  <lastmod>2018-08-28T11:34:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/software.html</loc>
-  <lastmod>2018-01-10T15:44:00Z</lastmod>
+  <lastmod>2018-08-28T11:34:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-1.html</loc>
-  <lastmod>2018-01-10T15:44:00Z</lastmod>
+  <lastmod>2018-08-28T11:34:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-2.html</loc>
-  <lastmod>2018-01-10T15:44:00Z</lastmod>
+  <lastmod>2018-08-28T11:34:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-3.html</loc>
-  <lastmod>2018-01-10T15:44:00Z</lastmod>
+  <lastmod>2018-08-28T11:34:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-4.html</loc>
-  <lastmod>2018-01-10T15:44:00Z</lastmod>
+  <lastmod>2018-08-28T11:34:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/ironic-ptg-denver-2017-1.html</loc>
-  <lastmod>2018-01-10T15:44:00Z</lastmod>
+  <lastmod>2018-08-28T11:34:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/ironic-ptg-denver-2017-2.html</loc>
-  <lastmod>2018-01-10T15:44:00Z</lastmod>
+  <lastmod>2018-08-28T11:34:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/pulseaudio-external-sound-card.html</loc>
-  <lastmod>2018-01-10T15:44:00Z</lastmod>
+  <lastmod>2018-08-28T11:34:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/talks/berlin-python-openstack/</loc>
@@ -67,7 +67,11 @@
  </url>
  <url>
   <loc>http://dtantsur.github.io/talks/berlin-python-unittest/</loc>
-  <lastmod>2018-06-14T15:49:00Z</lastmod>
+  <lastmod>2018-06-14T17:10:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://dtantsur.github.io/talks/berlin-rust-openstack/</loc>
+  <lastmod>2018-08-28T11:34:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/talks/devconf2015/</loc>

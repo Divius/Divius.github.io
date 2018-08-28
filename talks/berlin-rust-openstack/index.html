@@ -1,0 +1,217 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>rust-openstack</title>
+                <meta name="author" content="Dmitry Tantsur (divius.inside@gmail.com)">
+
+		<link rel="stylesheet" href="../reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="../reveal.js/css/theme/dtantsur.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi) ? '../reveal.js/css/print/pdf.css' : '../reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+                <style>
+                    .reveal pre code { font-size: 75%; }
+                    .reveal blockquote { font-style: italic; }
+                    .reveal var.file {
+                        font-size: 75%;
+                        border-top: solid rgb(63, 63, 63);
+                        border-left: solid rgb(63, 63, 63);
+                        border-right: solid rgb(63, 63, 63);
+                        padding-left: 15px;
+                        padding-right: 15px;
+                    }
+                </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+<section>
+    <h1 class="title">rust-openstack</h1>
+    <br><br>
+    <p><small>Dmitry Tantsur (Principal Software Engineer, Red Hat)</small></p>
+    <p><small>Slides:
+        <a href="https://dtantsur.github.io/talks/berlin-rust-openstack/">
+            dtantsur.github.io/talks/berlin-rust-openstack</a>
+    </small></p>
+</section>
+
+<section>
+    <h1>OpenStack</h1>
+    <p>Free software providing implementing IaaS.</p>
+    <p>Written mostly in Python, actively reusing other FOSS components.</p>
+    <p>Consists of many loosely coupled services.</p>
+    <p>Each provides (mostly) RESTful HTTP API.</p>
+</section>
+
+<section>
+    <h1>rust-openstack</h1>
+    <p><em>rust-openstack</em> is SDK for OpenStack API.</p>
+    <p>Provides high-level abstractions for talking to OpenStack.</p>
+    <p>Wraps HTTP endpoints and JSON objects in a meaninful way.</p>
+</section>
+
+<section>
+    <h1>How it started</h1>
+    <p>A simple recipe:</p>
+    <ol>
+        <li>I know OpenStack (I do it for living)</li>
+        <li>I care about API design (member of API SIG)</li>
+        <li>I need to practice Rust</li>
+    </ol>
+</section>
+
+<section>
+    <h1>Key technologies</h1>
+    <ul>
+        <li><em>reqwest</em> - for HTTP(s) access</li>
+        <li><em>serde</em> - for handling JSON</li>
+    </ul>
+    <br>
+    <p>Must-have for standard library:</p>
+    <ul>
+        <li><em>log</em> - logging facility</li>
+        <li><em>fallible-iterator</em></li>
+    </ul>
+</section>
+
+<section>
+    <h1>Wins</h1>
+    <p>Static typing allows to fix my knowledge of how OpenStack API
+        actually works in code.</p>
+    <p><em>reqwest</em> feature set.</p>
+    <p><em>#[derive(Serialize, Deserialize)]</em> and field
+        attributes.</p>
+    <p>Macros for generating typical code. Currently 7 of them, around 270 loc
+    totally.</p>
+</section>
+
+<section>
+    <h1>Struggles</h1>
+    <h2>Library choice</h2>
+    <p><em>serde</em> vs <em>rustc-serialize</em> is confusing.</p>
+    <p>Started with <em>hyper</em>, had to switch away when it became too
+    low-level and asynchronous.</p>
+    <p><em>tokyo</em>/<em>futures</em> too hard to use.</p>
+</section>
+
+<section>
+    <h1>Struggles</h1>
+    <h2>Futures</h2>
+    <p>In Python <em>Twisted</em> a future is an object similar to
+    <em>Result</em>. You can store it or pass around.</p>
+    <p>in Rust <em>Future</em> is a trait. Ended up with extensive use of trait
+    objects to avoid dealing with very long generics. From <em>hyper</em>:</p>
+    <pre><code class="rust">Box&lt;Future&lt;Item=Response&lt;Body&gt;, Error=::Error&gt; + Send&gt;</code></pre>
+</section>
+
+<section>
+    <h1>Struggles</h1>
+    <h2>Missing in standard library</h2>
+    <ul>
+        <li><em>log</em> macros and basics.</li>
+        <li>Types of subnets (<em>ipnet</em>).</li>
+        <li>Iterators that can fail (<em>fallible-iterator</em>).</li>
+        <li><em>Serialize/Deserialize</em> traits.</li>
+    </ul>
+</section>
+
+<section>
+    <h1>Struggles</h1>
+    <h2>JSON to static types</h2>
+    <p>Some API use <em>null</em> for missing value, some - empty string. Even
+    for non-string fields.</p>
+    <p>Some API distinguish between <em>null</em> and absent field.</p>
+    <p>Some field differ a lot depending on API version.</p>
+    <p>Some fields are mandatory when reading but not when writing.</p>
+    <p>Some fields cannot be changed after creating. Some of them are
+    mandatory when creating.</p>
+    <p>Some fields have different type when reading and writing.</p>
+</section>
+
+<section>
+    <h1>Struggles</h1>
+    <h2>serde and JSON API</h2>
+    <p>No way to vary presence and/or type of a field, except for using
+    <em>enum</em>s.</p>
+    <p>No way to (de)serialize based on version, except for using
+    <em>enum</em>s for fields.</p>
+    <p>Currently 7 (de)serialization helpers.</p>
+</section>
+
+<section>
+    <h1>Example</h1>
+<pre><code class="rust">#[serde(deserialize_with = "common::protocol::empty_as_none",
+        default, skip_serializing_if = "Option::is_none")]
+pub dns_name: Option&lt;String&gt;,
+
+#[serde(default, skip_serializing_if = "Vec::is_empty")]
+pub fixed_ips: Vec&lt;FixedIp&gt;,
+
+#[serde(skip_serializing)]
+pub id: String,
+
+#[serde(skip_serializing_if = "MacAddress::is_nil",
+        serialize_with = "common::protocol::ser_mac")]
+pub mac_address: MacAddress,</code></pre>
+    <p><small>Also: <em>serde</em> rocks!</small></p>
+</section>
+
+<section>
+    <h1>Macros</h1>
+    <p>Used to generate a lot of boilerplate code, mostly property-style
+    accessors from top-level objects to low-level protocol structures.</p>
+    <p>Hard to debug when something goes really wrong.</p>
+    <p>Hygienic macros cannot be used when you need to insert some code into
+    the middle of other code.</p>
+    <p>Also annoying that one cannot generate function names like <em>fn
+        set_$name(..)</em></p>
+</section>
+
+<section>
+    <h1>Summary</h1>
+    <p>Writing Rust is lot of fun!</p>
+    <p>High-quality libraries available, standard library is great, but lacks
+    a few things.</p>
+    <p>Macros are great, let's have more and more powerful :)</p>
+</section>
+
+<section>
+    <h1 class="title">Questions?</h1>
+</section>
+
+			</div>
+		</div>
+
+		<script src="../reveal.js/lib/js/head.min.js"></script>
+		<script src="../reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+                                history: true,
+                                transitionSpeed: 'fast',
+				dependencies: [
+					{ src: '../reveal.js/plugin/markdown/marked.js' },
+					{ src: '../reveal.js/plugin/markdown/markdown.js' },
+					{ src: '../reveal.js/plugin/notes/notes.js', async: true },
+					{ src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
