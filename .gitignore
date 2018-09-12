@@ -4,3 +4,4 @@ cache/
 *.pyc
 *.swp
 .doit.*
+state_data.json
