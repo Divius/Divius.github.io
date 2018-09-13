@@ -70,15 +70,15 @@
         <li>Measuring coverage</li>
         <li>Additional runners:
             <ul>
-                <li>Nose</li>
+                <li>PyTest</li>
                 <li>stestr</li>
                 <li>tox</li>
             </ul>
         </li>
         <li>Handly libraries:
             <ul>
-                <li>fixtures</li>
                 <li>requests-mock</li>
+                <li>fixtures</li>
             </ul>
         </li>
     </ul>
@@ -258,7 +258,7 @@ class MainTest(unittest.TestCase):
 
 </section> <!-- Mocking -->
 
-<section> <! -- Spec and autospec -->
+<section> <!-- Spec and autospec -->
 
 <section>
     <h1 class="title">Spec and autospec</h1>
@@ -495,24 +495,29 @@ TOTAL                             42      3     10      2    90%</code></pre>
 
 <section>
     <h1>Additional runners</h1>
-    <h2>Nose</h2>
-    <p><a href="https://nose.readthedocs.io/">nose.readthedocs.io</a></p>
+    <h2>PyTest</h2>
+    <p><a href="https://pytest.readthedocs.io/">pytest.readthedocs.io</a></p>
     <ul>
-        <li>A lot of plugins for integration with other tools</li>
-        <li>Select specific tests to run</li>
-        <li>Additional options controlling output</li>
+        <li>Completely different approach to writing tests</li>
+        <li>Hacks into Python <em>assert</em> statement</li>
+        <li>Automagical fixtures based on test method arguments</li>
+        <li>Rich plugin architecture</li>
+        <li>(Mostly?) compatible with regular tests</li>
     </ul>
 </section>
 
 <section>
     <h1>Additional runners</h1>
-    <h2>Nose</h2>
-    <pre><code>$ nosetests-3
-.....
-----------------------------------------------------------------------
-Ran 5 tests in 0.013s
+    <h2>PyTest</h2>
+    <pre><code style="font-size: 50%">$ pytest-3
+============================= test session starts =============================
+platform linux -- Python 3.6.6, pytest-3.4.2, py-1.5.4, pluggy-0.6.0
+rootdir: /home/dtantsur/Projects/berlin-python-unittest, inifile:
+collected 5 items
 
-OK</code></pre>
+my_utils/tests/test_roots.py .....                                      [100%]
+
+========================== 5 passed in 0.02 seconds ===========================</code></pre>
 </section>
 
 <section>
@@ -524,6 +529,7 @@ OK</code></pre>
         <li>Machine-parseable output in subunit format</li>
         <li>Emphasis on parallel execution and streaming results</li>
         <li>Execution time reporting</li>
+        <li>Testing framework agnostic</li>
     </ul>
 </section>
 
@@ -591,43 +597,142 @@ Worker Balance
     <pre><code>$ tox -epy3</code></pre>
     <p>Build a generic environment and run some commands there:</p>
     <pre><code>$ tox -evenv -- python -m some.package</code></pre>
+    <p>Alternative: <em>pyenv</em>.</p>
 </section>
 
 <section>
     <h1>Tools: tox</h1>
-    <p>Configuration in <em>tox.ini</em>:</p>
-    <pre><code>[tox]
-envlist = py3,py27
+    <h2>Case study: quadratic equation</h2>
+    <pre><code style="font-size: 60%">[tox]
+envlist = pep8,py3
 
 [testenv]
 usedevelop = True
 deps =
-    -r{toxinidir}/requirements.txt
+    # e.g. -r requirements.txt
 commands =
-    python -m unittest discover coolcats.tests
+    python -m unittest discover my_utils
 setenv =
     PYTHONDONTWRITEBYTECODE=1
-</code></pre>
+
+[testenv:pep8]
+basepython = python3
+deps =
+    flake8
+commands =
+    flake8 my_utils
+
+[testenv:venv]
+commands = {posargs}</code></pre>
 </section>
 
 <section>
     <h1>Tools: tox</h1>
-    <p>Custom environments doing anything:</p>
-    <pre><code>[testenv:pep8]
-basepython = python2.7
-deps =
-    flake8
-    doc8
-commands =
-    flake8 coolcats
-    doc8 README.rst doc/source
+    <h2>Case study: quadratic equation</h2>
+    <pre><code style="font-size: 60%">$ tox
+pep8 develop-inst-noop: /home/dtantsur/Projects/berlin-python-unittest
+pep8 installed: flake8==3.5.0,mccabe==0.6.1,-e git+git@github.com:dtantsur/berlin-python-unittest.git@1b9ac65cee9ba031eb5d3bea979ab2be60ffb844#egg=my_utils,pycodestyle==2.3.1,pyflakes==1.6.0
+pep8 runtests: PYTHONHASHSEED='2318298329'
+pep8 runtests: commands[0] | flake8 my_utils
+py3 create: /home/dtantsur/Projects/berlin-python-unittest/.tox/py3
+py3 develop-inst: /home/dtantsur/Projects/berlin-python-unittest
+py3 installed: -e git+git@github.com:dtantsur/berlin-python-unittest.git@1b9ac65cee9ba031eb5d3bea979ab2be60ffb844#egg=my_utils
+py3 runtests: PYTHONHASHSEED='2318298329'
+py3 runtests: commands[0] | python -m unittest discover my_utils
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 0.007s
 
-[testenv:venv]
-commands = {posargs}
-</code></pre>
+OK
+_____________________________________________________________________________________________________ summary _____________________________________________________________________________________________________
+  pep8: commands succeeded
+  py3: commands succeeded
+  congratulations :)</code></pre>
 </section>
 
 </section> <!-- Additional runners -->
+
+<section> <!-- Handy libraries -->
+
+<section>
+    <h1 class="title">Handly libraries</h1>
+</section>
+
+<section>
+    <h1>requests-mock</h1>
+    <h2>Problem statement</h2>
+    <p>How to test code that does complex network interations?</p>
+    <p>requests-mock: <a href="https://requests-mock.readthedocs.io/">
+        requests-mock.readthedocs.io</a></p>
+    <p>Enables pre-defined answers to specified requests.</p>
+</section>
+
+<section>
+    <h1>requests-mock</h1>
+    <h2>Example</h2>
+    <pre><code class="python">&gt;&gt;&gt; @requests_mock.Mocker()
+... def test_function(m):
+...     m.get('http://test.com', text='resp')
+...     return requests.get('http://test.com').text
+...
+&gt;&gt;&gt; test_function()
+'resp'</code></pre>
+</section>
+
+<section>
+    <h1>fixtures</h1>
+    <p>The <em>fixtures</em> library provides a format for defining and using
+    test fixtures.</p>
+    <p>Fixtures are self-contained helpers that ensure some state on test start
+    and revert to the initial state after a test finishes.</p>
+</section>
+
+<section>
+    <h1>fixtures</h1>
+    <h2>Writing fixtures</h2>
+    <pre><code class="python">import fixtures
+import os
+
+class SecretFileFixture(fixtures.Fixture):
+    def __init__(self, fname, content='Hello'):
+        self.fname = fname
+        self.content = content
+
+    def _setUp(self):
+        with open(self.fname, 'w') as f:
+            f.write(self.content)
+        self.addCleanup(lambda: os.unlink(self.fname))</code></pre>
+</section>
+
+<section>
+    <h1>fixtures</h1>
+    <h2>Using fixtures</h2>
+    <pre><code class="python">class MyTest(fixtures.TestWithFixtures):
+    def setUp(self):
+        self.useFixture(SecretFileFixture('/tmp/test'))
+
+    def test_with_file(self):
+        assert os.path.exists('/tmp/test')
+        # /tmp/test will be present here and deleted after the test ends</code></pre>
+    <p>The <em>testtools</em> library provides support for <em>useFixture</em>
+    out of box.</p>
+</section>
+
+<section>
+    <h1>fixtures</h1>
+    <h2>Existing fixtures</h2>
+    <ul>
+        <li><em>MockPatch</em> and <em>MockPatchObject</em></li>
+        <li><em>EnvironmentVariable</em></li>
+        <li><em>LogHandler</em> and <em>FakeLogger</em></li>
+        <li><em>FakePopen</em></li>
+        <li><em>TempDir</em> and <em>TempHomeDir</em></li>
+        <li><em>PythonPackage</em> and <em>PythonPathEntry</em></li>
+        <li>... and many more.</li>
+    </ul>
+</section>
+
+</section> <!-- Handy libraries -->
 
 <section>
     <h1 class="title">Questions?</h1>
