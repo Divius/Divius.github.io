@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlanta PTG Summary: Ironic (part 4) | Coding Music</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-4/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Dmitry Tantsur">
+<link rel="prev" href="../ironic-ptg-atlanta-2017-3/" title="Atlanta PTG Summary: Ironic (part 3)" type="text/html">
+<link rel="next" href="../ironic-ptg-denver-2017-1/" title="Denver PTG Summary: Ironic (part 1)" type="text/html">
+<meta property="og:site_name" content="Coding Music">
+<meta property="og:title" content="Atlanta PTG Summary: Ironic (part 4)">
+<meta property="og:url" content="http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-4/">
+<meta property="og:description" content="Atlanta PTG Summary: Ironic (part 4)
+This is an extract from my personal notes and public etherpads from the
+OpenStack PTG 2017 in Atlanta. A lot of text ahead!
+The previous part.
+
+
+Future Work (cont)">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2017-03-08T15:25:00+01:00">
+<meta property="article:tag" content="openstack">
+<meta property="article:tag" content="software">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Header and menu bar -->
+<div class="container">
+      <header class="blog-header py-3"><div class="row nbb-header align-items-center">
+          <div class="col-md-3 col-xs-2 col-sm-2" style="width: auto;">
+            <button class="navbar-toggler navbar-light bg-light nbb-navbar-toggler" type="button" data-toggle="collapse" data-target=".bs-nav-collapsible" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse bs-nav-collapsible bootblog4-search-form-holder">
+                
+            </div>
+        </div>
+          <div class="col-md-6 col-xs-10 col-sm-10 bootblog4-brand" style="width: auto;">
+            <a class="navbar-brand blog-header-logo text-dark" href="http://dtantsur.github.io/">
+
+            <span id="blog-title">Coding Music</span>
+        </a>
+          </div>
+            <div class="col-md-3 justify-content-end align-items-center bs-nav-collapsible collapse flex-collapse bootblog4-right-nav">
+            <nav class="navbar navbar-light bg-white"><ul class="navbar-nav bootblog4-right-nav"></ul></nav>
+</div>
+    </div>
+</header><nav class="navbar navbar-expand-md navbar-light bg-white static-top"><div class="collapse navbar-collapse bs-nav-collapsible" id="bs-navbar">
+            <ul class="navbar-nav nav-fill d-flex w-100">
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tags</a>
+            <div class="dropdown-menu">
+                    <a href="../../categories/music.html" class="dropdown-item">Music</a>
+                    <a href="../../categories/openstack.html" class="dropdown-item">OpenStack</a>
+                    <a href="../../categories/software.html" class="dropdown-item">Software</a>
+            </div>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Talks</a>
+            <div class="dropdown-menu">
+                    <a href="../../talks/pike-ironic-cleaning-deep-dive/" class="dropdown-item">Ironic Cleaning Deep Dive (Pike Version)</a>
+                    <a href="../../talks/pike-ironic-deploy-deep-dive/" class="dropdown-item">Ironic Deploy Deep Dive (Pike Version)</a>
+                    <a href="../../talks/mitaka-inspector-status" class="dropdown-item">Ironic Inspector Mitaka Status</a>
+                    <a href="../../talks/whatsnew-ironic-mitaka" class="dropdown-item">What's New in Ironic Mitaka</a>
+                    <a href="../../talks/fosdem2016" class="dropdown-item">FOSDEM16: Ironic Debugging</a>
+            </div>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Social</a>
+            <div class="dropdown-menu">
+                    <a href="https://instagram.com/creepy_owlet" class="dropdown-item">My Instagram</a>
+                    <a href="https://github.com/dtantsur" class="dropdown-item">My Github</a>
+            </div>
+                </li>
+<li class="nav-item">
+<a href="../../archive.html" class="nav-link">Archives</a>
+                </li>
+<li class="nav-item">
+<a href="../../rss.xml" class="nav-link">RSS</a>
+
+                
+            </li>
+</ul>
+</div>
+<!-- /.navbar-collapse -->
+</nav>
+</div>
+
+<div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Atlanta PTG Summary: Ironic (part 4)</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Dmitry Tantsur
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2017-03-08T15:25:00+01:00" itemprop="datePublished" title="2017-03-08 15:25">2017-03-08 15:25</time></a>
+            </p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/ironic-ptg-atlanta-2017-4.html">Comments</a>
+
+
+            
+
+        </p>
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div class="section" id="atlanta-ptg-summary-ironic-part-4">
+<h2>Atlanta PTG Summary: Ironic (part 4)</h2>
+<p>This is an extract from my personal notes and public etherpads from the
+OpenStack PTG 2017 in Atlanta. A lot of text ahead!</p>
+<p><a class="reference external" href="../posts/ironic-ptg-atlanta-2017-3.html">The previous part</a>.</p>
+<!-- TEASER_END: Read more -->
+<div class="section" id="future-work-cont">
+<h3>Future Work (cont)</h3>
+<p>Etherpad: <a class="reference external" href="https://etherpad.openstack.org/p/ironic-pike-ptg-future-work">https://etherpad.openstack.org/p/ironic-pike-ptg-future-work</a>.</p>
+<div class="section" id="deploy-time-raid">
+<h4>Deploy-time RAID</h4>
+<p>This was discussed on the last design summit. Since then we've got a <a class="reference external" href="https://review.openstack.org/408151">nova
+spec</a>, which, however, hasn't got many
+reviews so far. The spec continues using <tt class="docutils literal">block_device_mapping_v2</tt>, other
+options apparently were not considered.</p>
+<p>We discussed how to inform Nova whether or not RAID can be built for
+a particular node. Ideally, we need to tell the scheduler about many things:
+RAID support, disk number, disk sizes. We decided that it's an overkill, at
+least for the beginning. We'll only rely on a "supports RAID" trait for now.</p>
+<p>It's still unclear what to do about <tt class="docutils literal">local_gb</tt> property, but with planned
+Nova changes it may not be required any more.</p>
+</div>
+<div class="section" id="advanced-partitioning">
+<h4>Advanced partitioning</h4>
+<p>There is a desire for flexible partitioning in ironic, both in case of
+partition and whole disk images (in the latter case - partition other disks).
+Generally, there was no consensus on the PTG. Some people were very much in
+favor of this feature, some - quite against. It's unclear how to pass
+partitioning information from Nova. There is a concern that such feature will
+get us too much into OS-specific details. We agreed that someone interested
+will collect the requirements, create a more detailed proposal, and we'll
+discuss it on the next PTG.</p>
+</div>
+<div class="section" id="splitting-nodes-into-separate-pools">
+<h4>Splitting nodes into separate pools</h4>
+<p>This feature is about dedicating some nodes to a tenant, essentially adding a
+tenant_id field to nodes. This can be helpful e.g. for a hardware provider to
+reserve hardware for a tenant, so that it's always available.</p>
+<p>This seems relatively easy to implement in Ironic. We need a new field on
+nodes, then only show non-admin users their hardware. A bit trickier to make
+it work with Nova. We agreed to investigate passing a token from Nova to
+Ironic, as opposed to always using a service user admin token.</p>
+<dl class="docutils">
+<dt>Actions</dt>
+<dd>
+<strong>vdrok</strong> to work out the details and propose a spec.</dd>
+</dl>
+</div>
+<div class="section" id="requirements-for-routed-networks">
+<h4>Requirements for routed networks</h4>
+<p>We discussed requirements for achieving routed architecture like
+spine-and-leaf. It seems that most of the requirements are already in our
+plans. The outstanding items are:</p>
+<ul class="simple">
+<li>Multiple subnets support for ironic-inspector. Can be solved in
+<tt class="docutils literal">dnsmasq.conf</tt> level, an appropriate change was merged into
+puppet-ironic.</li>
+<li>Per-node provision and cleaning networks. There is an RFE, somebody just
+has to do the work.</li>
+</ul>
+<p>This does not seem to be a Pike goal for us, but many of the dependencies
+are planned for Pike.</p>
+</div>
+<div class="section" id="configuring-bios-setting-for-nodes">
+<h4>Configuring BIOS setting for nodes</h4>
+<p>Preparing a node to be configured to serve a certain rule by tweaking its
+settings. Currently, it is implemented by the Drac driver in a vendor pass-thru.</p>
+<p>We agreed that such feature would better fit cleaning, rather then
+pre-deployment. Thus, it does not depend on deploy steps. It was suggested to
+extend the management interface to support passing it an arbitrary JSON with
+configuration. Then a clean step would pick it (similar to RAID).</p>
+<dl class="docutils">
+<dt>Actions</dt>
+<dd>
+<strong>rpioso</strong> to write a spec for this feature.</dd>
+</dl>
+</div>
+<div class="section" id="deploy-steps">
+<h4>Deploy steps</h4>
+<p>We discussed <a class="reference external" href="https://review.openstack.org/412523">the deploy steps proposal</a>
+in depth. We agreed on partially splitting the deployment procedure into
+pluggable bits. We will leave the very core of the deployment - flashing the
+image onto a target disk - hardcoded, at least for now. The drivers will be
+able to define steps to run before and after this core deployment. Pre- and
+post-deployment steps will have different priorities ranges, something like:</p>
+<pre class="literal-block">
+0 &lt; pre-max/deploy-min &lt; deploy-max/post-min &lt; infinity
+</pre>
+<p>We plan on making partitioning a pre-deploy step, and installing a bootloader
+a post-deploy step. We will not allow IPA hardware managers to define deploy
+steps, at least for now.</p>
+<dl class="docutils">
+<dt>Actions</dt>
+<dd>
+<strong>yolanda</strong> is planning to work on this feature, <strong>rloo</strong> and <strong>TheJulia</strong>
+to help.</dd>
+</dl>
+</div>
+<div class="section" id="authenticating-ipa">
+<h4>Authenticating IPA</h4>
+<p>IPA HTTP endpoints, and the endpoints Ironic provides for ramdisk callbacks
+are completely insecure right now. We hesitated to add any authentication to
+them, as any secrets published for the ramdisk to use (be it part of kernel
+command line or image itself) are readily available to anyone on the network.</p>
+<p>We agreed on several things to look into:</p>
+<ul class="simple">
+<li>A random CSRF-like token to use for each node. This will somewhat limit the
+attack surface by requiring an attacker to intercept a token for the
+specific node, rather then just access the endpoints.</li>
+<li>Document splitting out public and private Ironic API as part of our future
+reference architecture guide.</li>
+<li>Make sure we support TLS between Ironic and IPA, which is particularly
+helpful when virtual media is used (and secrets are not leaked).</li>
+</ul>
+<dl class="docutils">
+<dt>Actions</dt>
+<dd>
+<strong>jroll</strong> and <strong>joanna</strong> to look into the random token idea.
+<strong>jroll</strong> to write an RFE for TLS between IPA and Ironic.</dd>
+</dl>
+</div>
+<div class="section" id="smaller-things">
+<h4>Smaller things</h4>
+<dl class="docutils">
+<dt>Using ansible-networking as a ML2 driver for ironic-neutron integration work</dt>
+<dd>It was suggested to make it one of backends for
+<tt class="docutils literal"><span class="pre">networking-generic-switch</span></tt> in addition to <tt class="docutils literal">netmiko</tt>. Potential
+concurrency issues when using SSH were raised, and still require a solution.</dd>
+<dt>Extending and standardizing the list of capabilities the drivers may discover</dt>
+<dd>It was proposed to use <a class="reference external" href="https://github.com/jaypipes/os-traits">os-traits</a>
+for standardizing qualitative capabilities. <strong>jroll</strong> will look into
+quantitative capabilities.</dd>
+<dt>Pluggable interface for long-running processes</dt>
+<dd>This was proposed as an optional way to mitigate certain problems with
+local long-running services, like console. E.g. if a conductor crashes,
+its console services keep running. It was noted that this is a bug to be
+fixed (<strong>TheJulia</strong> volunteered to triage it).
+The proposed solution involved optionally run processes on a remote
+cluster, e.g. k8s. Concerns were voiced on the PTG around complicating
+support matrix and adding more decisions to make for operators.
+There was no apparent consensus on implementing this feature due to that.</dd>
+<dt>Setting specific boot device for PXE booting</dt>
+<dd>It was found to be already solved by setting <tt class="docutils literal">pxe_enabled</tt> on ports.
+We just need to update ironic-inspector to set this flag.</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="priorities-and-planning">
+<h3>Priorities and planning</h3>
+<p>The suggested priorities list is now finalized in
+<a class="reference external" href="https://review.openstack.org/439710">https://review.openstack.org/439710</a>.</p>
+<p>We also agreed on the following priorities for ironic-inspector subteam:</p>
+<ul class="simple">
+<li>Inspector HA (<strong>milan</strong>)</li>
+<li>Community goal - python 3.5 (<strong>JayF</strong>, <strong>hurricanerix</strong>)</li>
+<li>Community goal - devstack+apache+wsgi (<strong>aarefiev</strong>, <strong>ovoshchana</strong>)</li>
+<li>Inspector needs to update <tt class="docutils literal">pxe_enabled</tt> flag on ports (<strong>dtantsur</strong>)</li>
+</ul>
+</div>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/openstack/" rel="tag">openstack</a></li>
+            <li><a class="tag p-category" href="../../categories/software/" rel="tag">software</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../ironic-ptg-atlanta-2017-3/" rel="prev" title="Atlanta PTG Summary: Ironic (part 3)">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../ironic-ptg-denver-2017-1/" rel="next" title="Denver PTG Summary: Ironic (part 1)">Next post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+        
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="diviusnet2",
+            disqus_url="http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-4/",
+        disqus_title="Atlanta PTG Summary: Ironic (part 4)",
+        disqus_identifier="cache/posts/ironic-ptg-atlanta-2017-4.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section></article><script>var disqus_shortname="diviusnet2";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
+            Contents © 2019 Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"></a> - Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a>
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../../assets/js/all-nocdn.js"></script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script>
+</body>
+</html>

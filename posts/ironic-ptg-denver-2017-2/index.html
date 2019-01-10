@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article# " lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Denver PTG Summary: Ironic (part 2) | Coding Music</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="http://dtantsur.github.io/posts/ironic-ptg-denver-2017-2/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Dmitry Tantsur">
+<link rel="prev" href="../ironic-ptg-denver-2017-1/" title="Denver PTG Summary: Ironic (part 1)" type="text/html">
+<meta property="og:site_name" content="Coding Music">
+<meta property="og:title" content="Denver PTG Summary: Ironic (part 2)">
+<meta property="og:url" content="http://dtantsur.github.io/posts/ironic-ptg-denver-2017-2/">
+<meta property="og:description" content="Denver PTG Summary: Ironic (part 2)
+This is an extract from my personal notes and public etherpads from the
+OpenStack PTG 2017 in Denver. A lot of text ahead!
+This part covers contentions topics and f">
+<meta property="og:type" content="article">
+<meta property="article:published_time" content="2017-10-06T16:12:52+02:00">
+<meta property="article:tag" content="openstack">
+<meta property="article:tag" content="software">
+</head>
+<body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+
+<!-- Header and menu bar -->
+<div class="container">
+      <header class="blog-header py-3"><div class="row nbb-header align-items-center">
+          <div class="col-md-3 col-xs-2 col-sm-2" style="width: auto;">
+            <button class="navbar-toggler navbar-light bg-light nbb-navbar-toggler" type="button" data-toggle="collapse" data-target=".bs-nav-collapsible" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse bs-nav-collapsible bootblog4-search-form-holder">
+                
+            </div>
+        </div>
+          <div class="col-md-6 col-xs-10 col-sm-10 bootblog4-brand" style="width: auto;">
+            <a class="navbar-brand blog-header-logo text-dark" href="http://dtantsur.github.io/">
+
+            <span id="blog-title">Coding Music</span>
+        </a>
+          </div>
+            <div class="col-md-3 justify-content-end align-items-center bs-nav-collapsible collapse flex-collapse bootblog4-right-nav">
+            <nav class="navbar navbar-light bg-white"><ul class="navbar-nav bootblog4-right-nav"></ul></nav>
+</div>
+    </div>
+</header><nav class="navbar navbar-expand-md navbar-light bg-white static-top"><div class="collapse navbar-collapse bs-nav-collapsible" id="bs-navbar">
+            <ul class="navbar-nav nav-fill d-flex w-100">
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tags</a>
+            <div class="dropdown-menu">
+                    <a href="../../categories/music.html" class="dropdown-item">Music</a>
+                    <a href="../../categories/openstack.html" class="dropdown-item">OpenStack</a>
+                    <a href="../../categories/software.html" class="dropdown-item">Software</a>
+            </div>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Talks</a>
+            <div class="dropdown-menu">
+                    <a href="../../talks/pike-ironic-cleaning-deep-dive/" class="dropdown-item">Ironic Cleaning Deep Dive (Pike Version)</a>
+                    <a href="../../talks/pike-ironic-deploy-deep-dive/" class="dropdown-item">Ironic Deploy Deep Dive (Pike Version)</a>
+                    <a href="../../talks/mitaka-inspector-status" class="dropdown-item">Ironic Inspector Mitaka Status</a>
+                    <a href="../../talks/whatsnew-ironic-mitaka" class="dropdown-item">What's New in Ironic Mitaka</a>
+                    <a href="../../talks/fosdem2016" class="dropdown-item">FOSDEM16: Ironic Debugging</a>
+            </div>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Social</a>
+            <div class="dropdown-menu">
+                    <a href="https://instagram.com/creepy_owlet" class="dropdown-item">My Instagram</a>
+                    <a href="https://github.com/dtantsur" class="dropdown-item">My Github</a>
+            </div>
+                </li>
+<li class="nav-item">
+<a href="../../archive.html" class="nav-link">Archives</a>
+                </li>
+<li class="nav-item">
+<a href="../../rss.xml" class="nav-link">RSS</a>
+
+                
+            </li>
+</ul>
+</div>
+<!-- /.navbar-collapse -->
+</nav>
+</div>
+
+<div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Denver PTG Summary: Ironic (part 2)</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Dmitry Tantsur
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2017-10-06T16:12:52+02:00" itemprop="datePublished" title="2017-10-06 16:12">2017-10-06 16:12</time></a>
+            </p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/ironic-ptg-denver-2017-2.html">Comments</a>
+
+
+            
+
+        </p>
+</div>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div class="section" id="denver-ptg-summary-ironic-part-2">
+<h2>Denver PTG Summary: Ironic (part 2)</h2>
+<p>This is an extract from my personal notes and <a class="reference external" href="https://etherpad.openstack.org/p/ironic-queens-ptg">public etherpads</a> from the
+OpenStack PTG 2017 in Denver. A lot of text ahead!</p>
+<p>This part covers contentions topics and future features discussion, as well as
+a summary of our Queens priorities.</p>
+<p><a class="reference external" href="../ironic-ptg-denver-2017-1/">Previous part</a>.</p>
+<!-- TEASER_END: Read more -->
+<div class="section" id="nova-virt-driver-api-compatibility">
+<h3>Nova virt driver API compatibility</h3>
+<p>Currently, we hardcode the required Bare Metal API microversion in our virt
+driver. This introduces a hard dependency on a certain version of ironic, even
+when it is not mandatory in reality, and enforces a particular upgrade order
+between nova and ironic. For example, when we introduced boot-from-volume
+support, we had to bump the required version, even though the feature itself
+is optional. Cinder support, on the other hand, has multiple code paths
+in nova, depending on which API version is available.</p>
+<p>We would like to support the current and the previous versions of ironic in
+the virt driver. For that we will need more advanced support for API
+microversion negotiation in <em>ironicclient</em>. Currently it's only possible to
+request one version during client creation. What we want to end up with is to
+request the <strong>minimum</strong> version in <a class="reference external" href="https://docs.openstack.org/python-ironicclient/latest/api/ironicclient.client.html">get_client</a>, and then provide an ability
+to specify a version in each call. For example,</p>
+<pre class="code python"><a name="rest_code_1edf245e42fd48f899694735f45d89e3-1"></a><span class="n">ir_client</span> <span class="o">=</span> <span class="n">ironicclient</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
+<a name="rest_code_1edf245e42fd48f899694735f45d89e3-2"></a>                                    <span class="n">os_ironic_api_version</span><span class="o">=</span><span class="s2">"1.28"</span><span class="p">)</span>
+<a name="rest_code_1edf245e42fd48f899694735f45d89e3-3"></a><span class="n">nodes</span> <span class="o">=</span> <span class="n">ir_client</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>  <span class="c1"># using 1.28</span>
+<a name="rest_code_1edf245e42fd48f899694735f45d89e3-4"></a><span class="n">ports</span> <span class="o">=</span> <span class="n">ir_client</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">os_ironic_api_version</span><span class="o">=</span><span class="s2">"1.34"</span><span class="p">)</span>  <span class="c1"># overriding</span>
+</pre>
+<p>Another idea was to allow specifying several versions in <a class="reference external" href="https://docs.openstack.org/python-ironicclient/latest/api/ironicclient.client.html">get_client</a>. The
+highest available version will be chosen and used for all calls:</p>
+<pre class="code python"><a name="rest_code_ab23b1522aa7492a9db8dd3d175238c4-1"></a><span class="n">ir_client</span> <span class="o">=</span> <span class="n">ironicclient</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
+<a name="rest_code_ab23b1522aa7492a9db8dd3d175238c4-2"></a>                                    <span class="n">os_ironic_api_version</span><span class="o">=</span><span class="p">[</span><span class="s2">"1.28"</span><span class="p">,</span> <span class="s2">"1.34"</span><span class="p">])</span>
+<a name="rest_code_ab23b1522aa7492a9db8dd3d175238c4-3"></a><span class="k">if</span> <span class="n">ir_client</span><span class="o">.</span><span class="n">negotiated_api_version</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">34</span><span class="p">):</span>
+<a name="rest_code_ab23b1522aa7492a9db8dd3d175238c4-4"></a>    <span class="c1"># do something</span>
+</pre>
+<p>Nothing prevents us from implementing both, but the former seems to be what
+the API SIG recommends (unofficially, <strong>dtantsur</strong> to follow up with a formal
+guideline). It seems that we can reuse newly introduces version discovery
+support from the <em>keystoneauth1</em> library. <strong>TheJulia</strong> will look into it.</p>
+</div>
+<div class="section" id="what-we-consider-a-deploy">
+<h3>What we consider a deploy?</h3>
+<p>We had a heated discussion on our deploy interfaces. Currently, the whole
+business logic of provisioning, unprovisioning, taking over and cleaning nodes
+is spread between the conductor and a deploy driver, with the deploy driver
+containing the most of it. This ends up with a lot of duplication, and also
+with vendor-specific deploy interfaces, which is something we would want to
+avoid. It also ends up with a lot of conditionals in the deploy interfaces
+code, as e.g. boot-from-volume does not need half of the actions.
+A few options were considered without a clear winner:</p>
+<ol class="arabic simple">
+<li>Move orchestration to the conductor, keep only image flashing logic in
+deploy interfaces. This is arguably how we planned on using deploy
+interfaces. But doing so would limit the ability of drivers to change how
+deploy if orchestrated, if e.g. they need to change the order of some
+operations or add a driver-specific operation in between of them.</li>
+<li>Create a new <em>orchestration</em> interface, keep only image flashing logic in
+deploy interfaces. That will fix the problem with customization, but it
+will complicate our interfaces matrix even further. And such change would
+break all out-of-tree drivers with custom deploy interfaces.</li>
+<li>Do nothing and just try our best to clean up the duplication.</li>
+</ol>
+<p>The last option is what we're going to do for Queens. Then we will re-evaluate
+the remaining options.</p>
+</div>
+<div class="section" id="available-clean-steps-api">
+<h3>Available clean steps API</h3>
+<p>We have currently no way to indicate which clean steps are available for which
+node. Implementing such API is complicated by the fact that some clean steps
+come from hardware interfaces, while some come from the ramdisk (at least for
+IPA-based drivers). The exact API was discussed in the API SIG room, and then
+later in the ironic room.</p>
+<p>We agreed that clean steps need to be cached to make sure we can return them
+in a synchronous GET request, like <tt class="docutils literal">GET <span class="pre">/v1/nodes/&lt;UUID&gt;/cleaning/steps</span></tt>
+(the exact URI to be discussed in the spec). The caching itself will happen in
+two cases:</p>
+<ol class="arabic simple">
+<li>Implicitly on every cleaning</li>
+<li>Explicitly when a user requests manual cleaning without clean steps</li>
+</ol>
+<p>A standard <tt class="docutils literal">update_at</tt> field will be provided, so that users know when the
+cached steps were last updated. <strong>rloo</strong> to follow up on the spec with it.</p>
+<p>We decided to not take any actions to invalidate the cache for now.</p>
+</div>
+<div class="section" id="rethinking-the-vendor-passthru-api">
+<h3>Rethinking the vendor passthru API</h3>
+<p>Two problems were discussed:</p>
+<ol class="arabic simple">
+<li>For dynamic drivers, the driver vendor passthru API only works with
+the default <em>vendor</em> interface implementation</li>
+<li>No more support for mixing several vendor passthru implementations</li>
+</ol>
+<p>For the first issue, we probably need to do the same thing as we plan to do
+with driver properties: <a class="reference external" href="https://review.openstack.org/#/c/471174/">https://review.openstack.org/#/c/471174/</a>. This does
+not seem to be a high priority, so <strong>dtantsur</strong> will just file an RFE and
+leave it there.</p>
+<p>For the second issue, we don't have a clean solution now. It can be worked
+around by changing <tt class="docutils literal">node.vendor_interface</tt> on flight. <strong>pas-ha</strong> will
+document it.</p>
+</div>
+<div class="section" id="future-of-bare-metal-scheduling">
+<h3>Future of bare metal scheduling</h3>
+<p>We have discussed the present and the future of scheduling bare metal
+instances using nova. The discussion has started in the nova room and
+continued in our room afterwards and on Friday.</p>
+<div class="section" id="node-availability">
+<h4>Node availability</h4>
+<p>First, we discussed marking a node as unavailable for nova. Currently, when a
+node is cleaning or otherwise unavailable, we set its resource classes count
+to zero. This is, of course, hacky, and we want to get rid of it. I was
+thinking about a new virt driver method to express availability, like</p>
+<pre class="code python"><a name="rest_code_aa878f60f1874843b9592f101a442f16-1"></a><span class="k">def</span> <span class="nf">is_operational</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">):</span>
+<a name="rest_code_aa878f60f1874843b9592f101a442f16-2"></a>    <span class="s2">"Returns whether the host can be used for deployment."""</span>
+</pre>
+<p>However, it was pointed out that ironic would probably be the only user of
+such feature. Instead, it was proposed to use <tt class="docutils literal">RESERVED</tt> field when
+reporting resource classes. Indeed, cleaning can be treated as a temporary
+reservation of the node by ironic for its internal business.</p>
+<p>We will return <tt class="docutils literal">RESERVED=0</tt> when node is active or available. Otherwise,
+<tt class="docutils literal">RESERVED</tt> will equal to the total amount of reported resources (<tt class="docutils literal">1</tt>
+in case of a custom resource class). This will ensure that no resources are
+available for scheduling without messing with the reported inventory.</p>
+</div>
+<div class="section" id="advanced-configuration">
+<h4>Advanced configuration</h4>
+<p>Then we discussed means of passing from nova to ironic such information as
+BIOS configuration or requested RAID layout. We agreed (again) that we don't
+want nova to just pipe JSON blobs from a user to ironic. Instead, we will use
+<em>traits</em> on the nova side and a new entity tentatively called <em>deploy
+templates</em> on the ironic side.</p>
+<p>A user will request a <em>deploy template</em> to be applied on a node by requesting
+an appropriate trait. All matches traits will be passed from nova to ironic in
+a similar way to how capabilities are passed now. Then ironic will fetch
+<em>deploy templates</em> corresponding to traits and apply them.</p>
+<p>The exact form of a <em>deploy template</em> is to be defined. A <em>deploy template</em>
+will probably contain a <em>deploy step</em> name and its arguments. Thus, this work
+will require the <em>deploy steps</em> work to be revived and finished.</p>
+<p><strong>johnthetubaguy</strong> will write specs on both topics.</p>
+</div>
+<div class="section" id="ownership-of-bare-metal-nodes">
+<h4>Ownership of bare metal nodes</h4>
+<p>We want to allow nodes to be optionally owned by a particular tena^Wproject.
+We discussed how to make the nova side work, with ironic still being the source
+of truth for who owns which node. We decided that we can probably make it work
+with <em>traits</em> as well.</p>
+</div>
+<div class="section" id="quantitative-scheduling">
+<h4>Quantitative scheduling</h4>
+<p>Next, by request of some of the community members, we have discussed bringing
+back the ability to use quantitative scheduling with bare metal instances.
+We ended up with the same outcome as previously. Starting with Pike, bare
+metal scheduling has to be done in terms of <em>custom resource classes</em> and
+<em>traits</em> (ah, that magical traits!), and quantitative scheduling is not
+coming back.</p>
+</div>
+<div class="section" id="inspection-and-resource-classes">
+<h4>Inspection and resource classes</h4>
+<p>After the switch to resource classes, inspection is much less useful.
+Previously the information it provided was enough for scheduling. Now we don't
+care too much about CPU/memory/disk properties, but we do care about the
+resource class. Essentially, inspection is only useful for discovering ports
+and capabilities.</p>
+<p>In-band inspection (using ironic-inspector) has a good work-around though: its
+<em>introspection rules</em> (mini-DSL to run on the discovered data) can be used to
+set the resource class based on logic provided by an operator. These rules are
+part of the ironic-inspector API, and thus out-of-band inspection does not
+benefit from them.</p>
+<p>A potential solution is to move introspection rules API to ironic itself. That
+would require agreeing on a common inventory format for both in-band and
+out-of-band inspection. This is likely to be the <cite>IPA inventory format</cite>.
+Then we'll have to change the <em>inspect</em> interface. Currently we have one call
+that does the whole inspection process, we need a call that returns
+an inventory. Then ironic itself will run introspection rules, create ports
+and update properties and capabilities.</p>
+<p>A big problem here is that the discovery process, implemented purely within
+ironic-inspector, also heavily relies on introspection rules. We cannot
+remove/deprecate the introspection rules API in ironic-inspector until this is
+solved. The two API will have to co-exist for the time being. We should
+probably put the mechanism behind introspection rules to ironic-lib.</p>
+<p><strong>sambetts</strong> plans to summarize a potential solution on the ML.</p>
+<p>We also discussed potentially having the default resource class to use for new
+nodes, if none is provided. That would simplify things for some consumers,
+like TripleO. Another option is to generate a resource class based on some
+template. We can even implement both:</p>
+<pre class="code ini"><a name="rest_code_831cffc899d14313af13e02f7fe377ba-1"></a><span class="na">default_hardware_type</span> <span class="o">=</span> <span class="s">baremetal</span>
+</pre>
+<p>results in <tt class="docutils literal">baremetal</tt> resource class for new nodes, while</p>
+<pre class="code ini"><a name="rest_code_d59440b6ad124e05a4538eadaefb89d8-1"></a><span class="na">inspected_hardware_type</span> <span class="o">=</span> <span class="s">bm-{memory_mb}-{cpus}-{cpu_arch}</span>
+</pre>
+<p>results in a templated resource class to be set for inspected nodes that do
+not have a resource class already set.</p>
+</div>
+</div>
+<div class="section" id="future-ironic-inspector-architecture">
+<h3>Future ironic-inspector architecture</h3>
+<p>The discussion in <a class="reference internal" href="#inspection-and-resource-classes">Inspection and resource classes</a> brought us to an idea of
+slowly merging most of ironic-inspector into ironic. Ironic will benefit by
+receiving introspection rules and optional inventory storage, while
+ironic-inspector will benefit from using the boot interface and from the
+existing HA architecture. In the end, the only part remaining in a separate
+project will be PXE handling for introspecting of nodes without ports and
+for auto-discovery.</p>
+<p>It's not clear how that will look. We could not discuss it in-depth, as a core
+contributor (<strong>milan</strong>) was not able to come to the PTG. However, we have a
+rough plan for the next steps:</p>
+<ol class="arabic">
+<li>
+<p class="first">Implement optional support for using boot interfaces in the <tt class="docutils literal">Inspector</tt>
+<em>inspect</em> interface: <a class="reference external" href="https://review.openstack.org/305864">https://review.openstack.org/305864</a>.</p>
+<p>When discussing its technical details, we agreed that instead of having a
+configuration option in ironic to force using a boot interface, we better
+introduce a configuration option in ironic-inspector to completely disable
+its boot management.</p>
+</li>
+<li>
+<p class="first">Implement optional support for using network interfaces in the <tt class="docutils literal">Inspector</tt>
+<em>inspect</em> interface: <a class="reference external" href="https://review.openstack.org/320003">https://review.openstack.org/320003</a>.</p>
+</li>
+<li>
+<p class="first">Move introspection rules to ironic itself as discussed in <a class="reference internal" href="#inspection-and-resource-classes">Inspection
+and resource classes</a>.</p>
+</li>
+<li>
+<p class="first">Move the whole data processing to ironic and stop using ironic-inspector
+when a boot interface has all required information.</p>
+</li>
+</ol>
+<p>The first item is planned for Queens, the second can fit as well. The timeline
+for the other items is unclear. A separate call will be scheduled soon to
+discuss this.</p>
+</div>
+<div class="section" id="bios-configuration">
+<h3>BIOS configuration</h3>
+<p>This feature has been discussed several times already. This time we came up
+with a more or less solid plan to implement it in Queens.</p>
+<ul class="simple">
+<li>We have confirmed the current plan to use clean steps for starting the
+configuration, similar how RAID already works. There will be two new clean
+steps: <tt class="docutils literal">bios.apply_configuration</tt> and <tt class="docutils literal">bios.factory_reset</tt>.</li>
+<li>We discussed having a new BIOS interface versus introducing new methods on
+the management interface. We agreed that we want to allow mix-and-match of
+interfaces, e.g. using Redfish power with a vendor BIOS interface.</li>
+<li>We also discussed the name of the new interface. While the name "BIOS" is
+not ideal, as some systems use UEFI and some don't even have a BIOS, we
+could not come up with a better proposal.</li>
+<li>We will apply only very minimum validation to requested parameters.</li>
+</ul>
+<p>Eventually, we will want to expose this feature as a deploy step as well.</p>
+<p>A point of contention was how to display available BIOS configuration to a
+user. Vendor representatives told us that available configurable parameters
+may vary from node to node even within the same generation, so doing it
+per-driver is not an option. We decided to go with the following approach:</p>
+<ul class="simple">
+<li>Introduce a new API endpoint to return cached available parameters. The
+response will contain the standard <tt class="docutils literal">updated_at</tt> field, informing a user
+when the cache was last updated.</li>
+<li>The cache will be updated every time the configuration is changed via
+the clean steps mentioned above.</li>
+<li>The cache will also be updated on moving a node from <tt class="docutils literal">enroll</tt> to
+<tt class="docutils literal">manageable</tt> provision states.</li>
+</ul>
+</div>
+<div class="section" id="api-for-single-request-deploy">
+<h3>API for single request deploy</h3>
+<p>This idea has been in the air for really long time. Currently, a deployment
+via the ironic API involves:</p>
+<ul class="simple">
+<li>locking a node by setting <tt class="docutils literal">instance_uuid</tt>,</li>
+<li>attaching VIFs via the VIF API,</li>
+<li>updating <tt class="docutils literal">instance_info</tt> with a few fields,</li>
+<li>requesting provision state <tt class="docutils literal">active</tt>, providing a configdrive.</li>
+</ul>
+<p>In addition to being not user-friendly, this complex procedure makes it harder
+to configure policies in a way to allow a user to only deploy/undeploy nodes
+and nothing else.</p>
+<p>Essentially, three ideas where considered:</p>
+<ol class="arabic">
+<li>
+<p class="first">Introduce a completely new API endpoint. This may complicate our already
+quite complex API.</p>
+</li>
+<li>
+<p class="first">Make working with the exising node more restful. For example, allow a PUT
+request against a node updating both <tt class="docutils literal">instance_uuid</tt> and
+<tt class="docutils literal">instance_info</tt>, and changing <tt class="docutils literal">provision_state</tt> to <tt class="docutils literal">active</tt>.</p>
+<p>It was noted, however, that directly changing <tt class="docutils literal">provision_state</tt> is
+confusing, as the result will not match it (the value of <tt class="docutils literal">provision_state</tt>
+will become <tt class="docutils literal">deploying</tt>, not <tt class="docutils literal">active</tt>). This can be fixed by setting
+<tt class="docutils literal">target_provision_state</tt> instead.</p>
+</li>
+<li>
+<p class="first">Introduce a new <em>deployment</em> object and CRUD API associated with it. A UUID
+of this object will replace <tt class="docutils literal">instance_uuid</tt>, while its body will contain
+what we have in <tt class="docutils literal">instance_info</tt> now. A deploy request would look like:</p>
+<pre class="literal-block">
+POST /v1/deployments {'node_uuid': '...', 'root_gb': '...', 'config_drive': '...'}
+</pre>
+<p>A request to undeploy will be just:</p>
+<pre class="literal-block">
+DELETE /v1/deployments/&lt;DEPLOY UUID&gt;
+</pre>
+<p>Finally, and update of this object will cause a reprovision:</p>
+<pre class="literal-block">
+PUT /v1/deployments/&lt;DEPLOY UUID&gt; {'config_drive': '...'}
+</pre>
+<p>This is also a restful option, which is also the hardest to implement.</p>
+</li>
+</ol>
+<p>We did not agree to implement any (or some) of these options. Instead,
+<strong>pas-ha</strong> will look into possible policies adjustments to allow a non-admin
+user to provision and unprovision instances. A definition of success is to be
+able to switch nova to a non-admin user.</p>
+</div>
+<div class="section" id="bare-metal-instance-ha">
+<h3>Bare metal instance HA</h3>
+<p>This session was dedicated to the proposal of implementing <tt class="docutils literal">nova migrate</tt>
+for bare metal instances: <a class="reference external" href="https://review.openstack.org/#/c/449155/">https://review.openstack.org/#/c/449155/</a>. This spec
+is against nova, and no ironic changes are expected.</p>
+<p>The idea is to enable moving an instance from one ironic node to another,
+assuming that any valuable data is stored only on remote volumes. We agreed
+that in the cloud case local disks should not be treated as a reliable
+persistent storage.</p>
+<p>We discussed using <tt class="docutils literal">nova migrate</tt> vs <tt class="docutils literal">nova evacuate</tt> and decided that the
+former probably will work better, as we won't mark a nove compute handling the
+source node as down (it will bring down many more nodes). The only caveat is
+that the users should not set any destination for the migration API call,
+allowing nova to pick the destination itself.</p>
+<p>Two more potential issues were spotted that need clarifying in the spec:</p>
+<ul class="simple">
+<li>How to update hash ring? The compute services for ironic are organized in a
+hash ring, but once a node is provisioned, it is attached to a compute
+service. Probably just a database update is enough.</li>
+<li>How exactly to replug VIFs.</li>
+</ul>
+<p>A bonus point for implementing this feature will be support for resizing bare
+metal instances, as migration is implemented as resizing without changing the
+flavor.</p>
+<p><strong>hshiina</strong> will update and clarify the spec.</p>
+</div>
+<div class="section" id="ansible-deploy-method">
+<h3>Ansible deploy method</h3>
+<p>This was a short session. The proposed <tt class="docutils literal">ansible</tt> deploy interface already
+exists in ironic-staging-drivers and have a voting CI job. We are more or less
+in agreement that we need it to satisfy cases requiring extensive
+customizations.</p>
+<p><strong>pas-ha</strong> presented a benchmark, showing that this method is only slightly
+slower than the <tt class="docutils literal">direct</tt> deploy method:
+<a class="reference external" href="http://pshchelo.github.io/ansible-deploy-perf.html">http://pshchelo.github.io/ansible-deploy-perf.html</a>. A major optimization
+would be calling ansible only once, when deploying several nodes, but
+the current ironic architecture does not quite allow that.</p>
+</div>
+<div class="section" id="console-log">
+<h3>Console log</h3>
+<p>We already have a support for serial console, so it feels natural to also
+implement console log. Not everything, however, is obvious in the
+implementation.</p>
+<p>First, we discussed the amount of data to store. The current proposal captures
+the log indefinitely, which is not perfect. It looks like we can document
+enabling <em>logrotate</em> to handle this problem outside of ironic. A mailing list
+thread can be started to learn what people are using. In any case, we should
+return only the last N KiB to nova, where N is to be defined.</p>
+<p>Next, we discussed when exactly to start the logging. Logging during
+cleaning/provisioning may be helpful, but can potentially expose sensitive
+information to end users. We agreed to start logging on starting a provisioned
+instance.</p>
+<p><strong>tiendc</strong> will update the spec with the outcome of this discussion.</p>
+</div>
+<div class="section" id="graphical-console">
+<h3>Graphical console</h3>
+<p>This has been discussed several times already. We confirmed our plan to
+introduce a new hardware interface - <tt class="docutils literal">graphical_console_interface</tt>.
+<strong>pas-ha</strong> will update the existing spec, as well as the implementation for
+the <em>idrac</em> hardware type.</p>
+</div>
+<div class="section" id="queens-priorities">
+<h3>Queens priorities</h3>
+<p>This time we decided to take less priorities for the cycle, and make it clear
+to the community that the priorities list is <strong>not</strong> our complete backlog.
+That means, we will accept work that is not on the priorities list, so not
+everything has to be fitted in it.</p>
+<p>The list was finalized as a spec after the PTG:
+<a class="reference external" href="http://specs.openstack.org/openstack/ironic-specs/priorities/queens-priorities.html">http://specs.openstack.org/openstack/ironic-specs/priorities/queens-priorities.html</a>.</p>
+</div>
+</div>
+    </div>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/openstack/" rel="tag">openstack</a></li>
+            <li><a class="tag p-category" href="../../categories/software/" rel="tag">software</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../ironic-ptg-denver-2017-1/" rel="prev" title="Denver PTG Summary: Ironic (part 1)">Previous post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
+        
+        
+        <div id="disqus_thread"></div>
+        <script>
+        var disqus_shortname ="diviusnet2",
+            disqus_url="http://dtantsur.github.io/posts/ironic-ptg-denver-2017-2/",
+        disqus_title="Denver PTG Summary: Ironic (part 2)",
+        disqus_identifier="cache/posts/ironic-ptg-denver-2017-2.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script><noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a>
+</noscript>
+    <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+        </section></article><script>var disqus_shortname="diviusnet2";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
+            Contents © 2019 Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"></a> - Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a>
+            
+        </footer>
+</div>
+</div>
+
+
+        <script src="../../assets/js/all-nocdn.js"></script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script>
+</body>
+</html>
