@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Python 2 is over</title>
+                <meta name="author" content="Dmitry Tantsur (divius.inside@gmail.com)">
+
+		<link rel="stylesheet" href="../reveal.js/css/reveal.css">
+		<link rel="stylesheet" href="../reveal.js/css/theme/dtantsur.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../reveal.js/lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi) ? '../reveal.js/css/print/pdf.css' : '../reveal.js/css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+                <style>
+                    .reveal pre code { font-size: 75%; }
+                    .reveal blockquote { font-style: italic; }
+                    .reveal var.file {
+                        font-size: 75%;
+                        border-top: solid rgb(63, 63, 63);
+                        border-left: solid rgb(63, 63, 63);
+                        border-right: solid rgb(63, 63, 63);
+                        padding-left: 15px;
+                        padding-right: 15px;
+                    }
+                </style>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+
+<section>
+    <h1 class="title">Python 2 is over</h1>
+    <br><br>
+    <p><small>Dmitry Tantsur (Principal Software Engineer, Red Hat)</small></p>
+    <p><small>
+        Twitter: <a href="https://twitter.com/creepy_owlet/">@creepy_owlet</a>
+    </small></p>
+    <p><small>Slides:
+        <a href="https://dtantsur.github.io/talks/berlin-python-2/">
+            dtantsur.github.io/talks/berlin-python-2</a>
+    </small></p>
+</section>
+
+<section>
+    <h1 class="title">Year 2020</h1>
+</section>
+
+<section>
+    <h1>Year 2020</h1>
+    <ul>
+        <li>Construction of the Berlin-Bradenburg airport gets another delay.</li>
+        <li>First trains go from Hauptbahnhof to Hönow through the
+        updated U5 line.</li>
+        <li><strong>Python 2 reaches end of life once and forever.</strong></li>
+    </ul>
+    <p>Nice countdown at <a
+        href="https://pythonclock.org/">pythonclock.org</a></p>
+</section>
+
+<section>
+    <h1 class="title">Questions?</h1>
+</section>
+
+			</div>
+		</div>
+
+		<script src="../reveal.js/lib/js/head.min.js"></script>
+		<script src="../reveal.js/js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+                                history: true,
+                                transitionSpeed: 'fast',
+				dependencies: [
+					{ src: '../reveal.js/plugin/markdown/marked.js' },
+					{ src: '../reveal.js/plugin/markdown/markdown.js' },
+					{ src: '../reveal.js/plugin/notes/notes.js', async: true },
+					{ src: '../reveal.js/plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+	</body>
+</html>
