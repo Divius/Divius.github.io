@@ -1,83 +1,130 @@
 <!DOCTYPE html>
-<html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
 <head>
-<link href="../../assets/css/rst.css" rel="stylesheet" type="text/css">
-<link href="../../assets/css/code.css" rel="stylesheet" type="text/css">
-<link href="../../assets/css/theme.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="../../assets/css/style.css">
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-<meta name="author" content="Dmitry Tantsur">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atlanta PTG Summary: Ironic (part 1) | Coding Music</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-1/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Dmitry Tantsur">
 <link rel="prev" href="../pulseaudio-external-sound-card/" title="Configuring PulseAudio to switch to external sound card automatically" type="text/html">
 <link rel="next" href="../ironic-ptg-atlanta-2017-2/" title="Atlanta PTG Summary: Ironic (part 2)" type="text/html">
 <meta property="og:site_name" content="Coding Music">
 <meta property="og:title" content="Atlanta PTG Summary: Ironic (part 1)">
 <meta property="og:url" content="http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-1/">
-<meta property="og:description" content="Atlanta PTG Summary: Ironic (part 1)
-This is an extract from my personal notes and public etherpads from the
+<meta property="og:description" content="This is an extract from my personal notes and public etherpads from the
 OpenStack PTG 2017 in Atlanta. A lot of text ahead!
 The next part.
 
 
-Ongoing work and statu">
+Ongoing work and status updates
+Etherpad: https://etherpad.">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2017-02-28T15:15:00+01:00">
 <meta property="article:tag" content="openstack">
 <meta property="article:tag" content="software">
 </head>
 <body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
 
-<section class="section"><div class="container">
-    <nav class="nav"><div class="nav-left">
-        <a class="nav-item" href="http://dtantsur.github.io"><h1 class="title is-4">Coding Music</h1></a>
-      </div>
-      <div class="nav-right">
-        <nav class="nav-item level is-mobile"><a class="level-item" href="(('/categories/music.html',%20'Music'),%20('/categories/openstack.html',%20'OpenStack'),%20('/categories/software.html',%20'Software'))">
-            <span class="icon">
-              <i class="Tags"></i>
-            </span>
-          </a>
-          <a class="level-item" href="(('/talks/pike-ironic-cleaning-deep-dive/',%20'Ironic%20Cleaning%20Deep%20Dive%20(Pike%20Version)'),%20('/talks/pike-ironic-deploy-deep-dive/',%20'Ironic%20Deploy%20Deep%20Dive%20(Pike%20Version)'),%20('/talks/mitaka-inspector-status',%20'Ironic%20Inspector%20Mitaka%20Status'),%20('/talks/whatsnew-ironic-mitaka'," what new in ironic mitaka debugging>
-            <span class="icon">
-              <i class="Talks"></i>
-            </span>
-          </a>
-          <a class="level-item" href="(('https:/instagram.com/creepy_owlet',%20'My%20Instagram'),%20('https:/github.com/dtantsur',%20'My%20Github'))">
-            <span class="icon">
-              <i class="Social"></i>
-            </span>
-          </a>
-          <a class="level-item" href="../../archive.html">
-            <span class="icon">
-              <i class="Archives"></i>
-            </span>
-          </a>
-          <a class="level-item" href="../../rss.xml">
-            <span class="icon">
-              <i class="RSS"></i>
-            </span>
-          </a>
-        </nav>
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="http://dtantsur.github.io/">
+
+            <span id="blog-title">Coding Music</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tags</a>
+            <div class="dropdown-menu">
+                    <a href="../../categories/openstack/" class="dropdown-item">OpenStack</a>
+                    <a href="../../categories/software/" class="dropdown-item">Software</a>
+            </div>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Talks</a>
+            <div class="dropdown-menu">
+                    <a href="../../talks/berlin-rust-openstack/" class="dropdown-item">Introduction into Rust-OpenStack</a>
+                    <a href="../../talks/berlin-python-openstack/" class="dropdown-item">OpenStack and Python (2018)</a>
+                    <a href="../../talks/pike-ironic-cleaning-deep-dive/" class="dropdown-item">Ironic Cleaning Deep Dive (Pike Version)</a>
+                    <a href="../../talks/pike-ironic-deploy-deep-dive/" class="dropdown-item">Ironic Deploy Deep Dive (Pike Version)</a>
+            </div>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Social</a>
+            <div class="dropdown-menu">
+                    <a href="https://instagram.com/creepy_owlet" class="dropdown-item">My Instagram</a>
+                    <a href="https://twitter.com/creepy_owlet" class="dropdown-item">My Twitter</a>
+                    <a href="https://github.com/dtantsur" class="dropdown-item">My Github</a>
+            </div>
+                </li>
+<li class="nav-item">
+<a href="../../archive.html" class="nav-link">Archives</a>
+                </li>
+<li class="nav-item">
+<a href="../../rss.xml" class="nav-link">RSS</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right"></ul>
 </div>
-    </nav>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Atlanta PTG Summary: Ironic (part 1)</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Dmitry Tantsur
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2017-02-28T15:15:00+01:00" itemprop="datePublished" title="2017-02-28 15:15">2017-02-28 15:15</time></a>
+            </p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/ironic-ptg-atlanta-2017-1.html">Comments</a>
+
+
+            
+
+        </p>
 </div>
-</section><section class="section"><div class="container">
-    <h2 class="subtitle is-6">2017-02-28 15:15</h2>
-    <h1 class="title">Atlanta PTG Summary: Ironic (part 1)</h1>
-    <div class="content">
-    <div class="section" id="atlanta-ptg-summary-ironic-part-1">
-<h2>Atlanta PTG Summary: Ironic (part 1)</h2>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
 <p>This is an extract from my personal notes and public etherpads from the
 OpenStack PTG 2017 in Atlanta. A lot of text ahead!</p>
 <p><a class="reference external" href="../posts/ironic-ptg-atlanta-2017-2.html">The next part</a>.</p>
 <!-- TEASER_END: Read more -->
 <div class="section" id="ongoing-work-and-status-updates">
-<h3>Ongoing work and status updates</h3>
+<h2>Ongoing work and status updates</h2>
 <p>Etherpad: <a class="reference external" href="https://etherpad.openstack.org/p/ironic-pike-ptg-ongoing-work">https://etherpad.openstack.org/p/ironic-pike-ptg-ongoing-work</a>.</p>
 <p>We spent the first half of Wednesday discussing this. There was a lot of
 incomplete work left from Ocata, and some major ongoing work that we did not
 even plan to finish in Ocata.</p>
 <div class="section" id="boot-from-volume">
-<h4>Boot-from-volume</h4>
+<h3>Boot-from-volume</h3>
 <p>Got some progress, most of the Ironic patches are up. Desperately needs review
 and testing, though. The Nova part is also lagging behind, and should be
 brought to the Nova team attention.</p>
@@ -91,7 +138,7 @@ brought to the Nova team attention.</p>
 </dl>
 </div>
 <div class="section" id="networking">
-<h4>Networking</h4>
+<h3>Networking</h3>
 <p>A lot of progress here during Ocata, completed bonding and attach/detach API.</p>
 <p>VLAN-aware instances should work. However, it requires an expensive ToR switch,
 supporting VLAN/VLAN and VLAN/VXLAN rewriting, and, of course ML2 plugin
@@ -130,7 +177,7 @@ multi-tenant networking setup.</p>
 </dl>
 </div>
 <div class="section" id="rolling-upgrades">
-<h4>Rolling upgrades</h4>
+<h3>Rolling upgrades</h3>
 <p>Missed Ocata by a small margin. The code is up and needs reviewing. The CI
 is waiting for the multinode job to start working (should be close as well).</p>
 <dl class="docutils">
@@ -139,7 +186,7 @@ is waiting for the multinode job to start working (should be close as well).</p>
 </dl>
 </div>
 <div class="section" id="driver-composition-reform">
-<h4>Driver composition reform</h4>
+<h3>Driver composition reform</h3>
 <p>Most of the code landed in Ocata already. Some client changes landed in Pike,
 some are still on review. As we released Ocata with the driver composition
 changes being experimental, we are not ready to deprecate old-style drivers in
@@ -165,7 +212,7 @@ the last accepted from them),</li>
 </dl>
 </div>
 <div class="section" id="ironic-inspector-ha">
-<h4>Ironic Inspector HA</h4>
+<h3>Ironic Inspector HA</h3>
 <p>Preliminary work (switch to a real state machine) done in Ocata. Splitting the
 service into API and conductor/engine parts correlates with the WSGI
 cross-project goal.</p>
@@ -192,7 +239,7 @@ non-intersecting IP addresses pools from the same subnet.</li>
 </dl>
 </div>
 <div class="section" id="ironic-ui">
-<h4>Ironic UI</h4>
+<h3>Ironic UI</h3>
 <p>The project got some important features implemented, and an RDO package
 emerged during Ocata. Still, it desperately needs volunteers for coding and
 testing. A <a class="reference external" href="https://docs.google.com/spreadsheets/d/1petifqVxOT70H2Krz7igV2m9YqgXaAiCHR8CXgoi9a0/edit?usp=sharing">spreadsheet</a>
@@ -205,7 +252,7 @@ dedicate some time to the UI.</dd>
 </dl>
 </div>
 <div class="section" id="rescue">
-<h4>Rescue</h4>
+<h3>Rescue</h3>
 <p>Most of the patches are up, the feature is tested with the CoreOS-based
 ramdisk for now. Still, the ramdisk side poses a problem: while using DHCP is
 easy, static network configuration seems not. It's especially problematic in
@@ -213,7 +260,7 @@ CoreOS. Might be much easier in the DIB-based ramdisk, but we don't support it
 officially in the Ironic community.</p>
 </div>
 <div class="section" id="redfish-driver">
-<h4>RedFish driver</h4>
+<h3>RedFish driver</h3>
 <p>We want to get a driver supporting RedFish soon. There was some critics raised
 around the currently proposed python-redfish library. As an alternative,
 <a class="reference external" href="https://github.com/openstack/sushy">a new library</a> was written. Is it
@@ -224,7 +271,7 @@ python-redfish library when/if it is ready to be consumed by us.</p>
 we get the basic driver in.</p>
 </div>
 <div class="section" id="small-status-updates">
-<h4>Small status updates</h4>
+<h3>Small status updates</h3>
 <ul class="simple">
 <li>Of the API evolution initiative, only E-Tag work got some progress. The spec
 needs reviewing now.</li>
@@ -239,9 +286,18 @@ support old IPA with new ironic, which is already tested by our grenade job.</li
 </div>
 </div>
     </div>
-    </div>
-</section><section class="section comments hidden-print"><div class="container">
-        <h2>Comments</h2>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/openstack/" rel="tag">openstack</a></li>
+            <li><a class="tag p-category" href="../../categories/software/" rel="tag">software</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../pulseaudio-external-sound-card/" rel="prev" title="Configuring PulseAudio to switch to external sound card automatically">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../ironic-ptg-atlanta-2017-2/" rel="next" title="Atlanta PTG Summary: Ironic (part 2)">Next post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
         
         
         <div id="disqus_thread"></div>
@@ -263,12 +319,24 @@ support old IPA with new ironic, which is already tested by our grenade job.</li
     <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
-        </div>
-        </section><script>var disqus_shortname="diviusnet2";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><section class="section"><div class="container has-text-centered">
-            <p>Contents © 2019 Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
-<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"></a> - Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a></p>
+        </section></article><script>var disqus_shortname="diviusnet2";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
+            Contents © 2019 Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"></a> - Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a>
             
-  </div>
-</section><script src="../../assets/js/all-nocdn.js"></script>
+        </footer>
+</div>
+</div>
+
+
+        <script src="../../assets/js/all-nocdn.js"></script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script>
 </body>
 </html>

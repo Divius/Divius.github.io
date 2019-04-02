@@ -1,67 +1,113 @@
 <!DOCTYPE html>
-<html>
+<html prefix="og: http://ogp.me/ns# article: http://ogp.me/ns/article#
+" lang="en">
 <head>
-<link href="../../assets/css/rst.css" rel="stylesheet" type="text/css">
-<link href="../../assets/css/code.css" rel="stylesheet" type="text/css">
-<link href="../../assets/css/theme.css" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="../../assets/css/style.css">
-<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-<meta name="author" content="Dmitry Tantsur">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Denver PTG Summary: Ironic (part 2) | Coding Music</title>
+<link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
+<meta name="theme-color" content="#FFFFFF">
+<meta name="generator" content="Nikola (getnikola.com)">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="canonical" href="http://dtantsur.github.io/posts/ironic-ptg-denver-2017-2/">
+<!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Dmitry Tantsur">
 <link rel="prev" href="../ironic-ptg-denver-2017-1/" title="Denver PTG Summary: Ironic (part 1)" type="text/html">
 <meta property="og:site_name" content="Coding Music">
 <meta property="og:title" content="Denver PTG Summary: Ironic (part 2)">
 <meta property="og:url" content="http://dtantsur.github.io/posts/ironic-ptg-denver-2017-2/">
-<meta property="og:description" content="Denver PTG Summary: Ironic (part 2)
-This is an extract from my personal notes and public etherpads from the
+<meta property="og:description" content="This is an extract from my personal notes and public etherpads from the
 OpenStack PTG 2017 in Denver. A lot of text ahead!
-This part covers contentions topics and f">
+This part covers contentions topics and future features discussion, as well a">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2017-10-06T16:12:52+02:00">
 <meta property="article:tag" content="openstack">
 <meta property="article:tag" content="software">
 </head>
 <body>
+<a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
 
-<section class="section"><div class="container">
-    <nav class="nav"><div class="nav-left">
-        <a class="nav-item" href="http://dtantsur.github.io"><h1 class="title is-4">Coding Music</h1></a>
-      </div>
-      <div class="nav-right">
-        <nav class="nav-item level is-mobile"><a class="level-item" href="(('/categories/music.html',%20'Music'),%20('/categories/openstack.html',%20'OpenStack'),%20('/categories/software.html',%20'Software'))">
-            <span class="icon">
-              <i class="Tags"></i>
-            </span>
-          </a>
-          <a class="level-item" href="(('/talks/pike-ironic-cleaning-deep-dive/',%20'Ironic%20Cleaning%20Deep%20Dive%20(Pike%20Version)'),%20('/talks/pike-ironic-deploy-deep-dive/',%20'Ironic%20Deploy%20Deep%20Dive%20(Pike%20Version)'),%20('/talks/mitaka-inspector-status',%20'Ironic%20Inspector%20Mitaka%20Status'),%20('/talks/whatsnew-ironic-mitaka'," what new in ironic mitaka debugging>
-            <span class="icon">
-              <i class="Talks"></i>
-            </span>
-          </a>
-          <a class="level-item" href="(('https:/instagram.com/creepy_owlet',%20'My%20Instagram'),%20('https:/github.com/dtantsur',%20'My%20Github'))">
-            <span class="icon">
-              <i class="Social"></i>
-            </span>
-          </a>
-          <a class="level-item" href="../../archive.html">
-            <span class="icon">
-              <i class="Archives"></i>
-            </span>
-          </a>
-          <a class="level-item" href="../../rss.xml">
-            <span class="icon">
-              <i class="RSS"></i>
-            </span>
-          </a>
-        </nav>
+<!-- Menubar -->
+
+<nav class="navbar navbar-expand-md static-top mb-4
+navbar-dark bg-dark
+"><div class="container">
+<!-- This keeps the margins nice -->
+        <a class="navbar-brand" href="http://dtantsur.github.io/">
+
+            <span id="blog-title">Coding Music</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#bs-navbar" aria-controls="bs-navbar" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="bs-navbar">
+            <ul class="navbar-nav mr-auto">
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Tags</a>
+            <div class="dropdown-menu">
+                    <a href="../../categories/openstack/" class="dropdown-item">OpenStack</a>
+                    <a href="../../categories/software/" class="dropdown-item">Software</a>
+            </div>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Talks</a>
+            <div class="dropdown-menu">
+                    <a href="../../talks/berlin-rust-openstack/" class="dropdown-item">Introduction into Rust-OpenStack</a>
+                    <a href="../../talks/berlin-python-openstack/" class="dropdown-item">OpenStack and Python (2018)</a>
+                    <a href="../../talks/pike-ironic-cleaning-deep-dive/" class="dropdown-item">Ironic Cleaning Deep Dive (Pike Version)</a>
+                    <a href="../../talks/pike-ironic-deploy-deep-dive/" class="dropdown-item">Ironic Deploy Deep Dive (Pike Version)</a>
+            </div>
+            </li>
+<li class="nav-item dropdown">
+<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Social</a>
+            <div class="dropdown-menu">
+                    <a href="https://instagram.com/creepy_owlet" class="dropdown-item">My Instagram</a>
+                    <a href="https://twitter.com/creepy_owlet" class="dropdown-item">My Twitter</a>
+                    <a href="https://github.com/dtantsur" class="dropdown-item">My Github</a>
+            </div>
+                </li>
+<li class="nav-item">
+<a href="../../archive.html" class="nav-link">Archives</a>
+                </li>
+<li class="nav-item">
+<a href="../../rss.xml" class="nav-link">RSS</a>
+
+                
+            </li>
+</ul>
+<ul class="navbar-nav navbar-right"></ul>
 </div>
-    </nav>
+<!-- /.navbar-collapse -->
+    </div>
+<!-- /.container -->
+</nav><!-- End of Menubar --><div class="container" id="content" role="main">
+    <div class="body-content">
+        <!--Body content-->
+        
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Denver PTG Summary: Ironic (part 2)</a></h1>
+
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                    Dmitry Tantsur
+            </span></p>
+            <p class="dateline">
+            <a href="." rel="bookmark">
+            <time class="published dt-published" datetime="2017-10-06T16:12:52+02:00" itemprop="datePublished" title="2017-10-06 16:12">2017-10-06 16:12</time></a>
+            </p>
+                <p class="commentline">
+        
+    <a href="#disqus_thread" data-disqus-identifier="cache/posts/ironic-ptg-denver-2017-2.html">Comments</a>
+
+
+            
+
+        </p>
 </div>
-</section><section class="section"><div class="container">
-    <h2 class="subtitle is-6">2017-10-06 16:12</h2>
-    <h1 class="title">Denver PTG Summary: Ironic (part 2)</h1>
-    <div class="content">
-    <div class="section" id="denver-ptg-summary-ironic-part-2">
-<h2>Denver PTG Summary: Ironic (part 2)</h2>
+        
+
+    </header><div class="e-content entry-content" itemprop="articleBody text">
+    <div>
 <p>This is an extract from my personal notes and <a class="reference external" href="https://etherpad.openstack.org/p/ironic-queens-ptg">public etherpads</a> from the
 OpenStack PTG 2017 in Denver. A lot of text ahead!</p>
 <p>This part covers contentions topics and future features discussion, as well as
@@ -69,7 +115,7 @@ a summary of our Queens priorities.</p>
 <p><a class="reference external" href="../ironic-ptg-denver-2017-1/">Previous part</a>.</p>
 <!-- TEASER_END: Read more -->
 <div class="section" id="nova-virt-driver-api-compatibility">
-<h3>Nova virt driver API compatibility</h3>
+<h2>Nova virt driver API compatibility</h2>
 <p>Currently, we hardcode the required Bare Metal API microversion in our virt
 driver. This introduces a hard dependency on a certain version of ironic, even
 when it is not mandatory in reality, and enforces a particular upgrade order
@@ -83,17 +129,17 @@ microversion negotiation in <em>ironicclient</em>. Currently it's only possible 
 request one version during client creation. What we want to end up with is to
 request the <strong>minimum</strong> version in <a class="reference external" href="https://docs.openstack.org/python-ironicclient/latest/api/ironicclient.client.html">get_client</a>, and then provide an ability
 to specify a version in each call. For example,</p>
-<pre class="code python"><a name="rest_code_f6b10a5ae8c04238801249042b5430a8-1"></a><span class="n">ir_client</span> <span class="o">=</span> <span class="n">ironicclient</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
-<a name="rest_code_f6b10a5ae8c04238801249042b5430a8-2"></a>                                    <span class="n">os_ironic_api_version</span><span class="o">=</span><span class="s2">"1.28"</span><span class="p">)</span>
-<a name="rest_code_f6b10a5ae8c04238801249042b5430a8-3"></a><span class="n">nodes</span> <span class="o">=</span> <span class="n">ir_client</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>  <span class="c1"># using 1.28</span>
-<a name="rest_code_f6b10a5ae8c04238801249042b5430a8-4"></a><span class="n">ports</span> <span class="o">=</span> <span class="n">ir_client</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">os_ironic_api_version</span><span class="o">=</span><span class="s2">"1.34"</span><span class="p">)</span>  <span class="c1"># overriding</span>
+<pre class="code python"><a name="rest_code_c3d320e250444a7aa36b3b67e72f8f18-1"></a><span class="n">ir_client</span> <span class="o">=</span> <span class="n">ironicclient</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
+<a name="rest_code_c3d320e250444a7aa36b3b67e72f8f18-2"></a>                                    <span class="n">os_ironic_api_version</span><span class="o">=</span><span class="s2">"1.28"</span><span class="p">)</span>
+<a name="rest_code_c3d320e250444a7aa36b3b67e72f8f18-3"></a><span class="n">nodes</span> <span class="o">=</span> <span class="n">ir_client</span><span class="o">.</span><span class="n">node</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>  <span class="c1"># using 1.28</span>
+<a name="rest_code_c3d320e250444a7aa36b3b67e72f8f18-4"></a><span class="n">ports</span> <span class="o">=</span> <span class="n">ir_client</span><span class="o">.</span><span class="n">port</span><span class="o">.</span><span class="n">list</span><span class="p">(</span><span class="n">os_ironic_api_version</span><span class="o">=</span><span class="s2">"1.34"</span><span class="p">)</span>  <span class="c1"># overriding</span>
 </pre>
 <p>Another idea was to allow specifying several versions in <a class="reference external" href="https://docs.openstack.org/python-ironicclient/latest/api/ironicclient.client.html">get_client</a>. The
 highest available version will be chosen and used for all calls:</p>
-<pre class="code python"><a name="rest_code_c341d05c6fb8424c85eb817a685e10c6-1"></a><span class="n">ir_client</span> <span class="o">=</span> <span class="n">ironicclient</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
-<a name="rest_code_c341d05c6fb8424c85eb817a685e10c6-2"></a>                                    <span class="n">os_ironic_api_version</span><span class="o">=</span><span class="p">[</span><span class="s2">"1.28"</span><span class="p">,</span> <span class="s2">"1.34"</span><span class="p">])</span>
-<a name="rest_code_c341d05c6fb8424c85eb817a685e10c6-3"></a><span class="k">if</span> <span class="n">ir_client</span><span class="o">.</span><span class="n">negotiated_api_version</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">34</span><span class="p">):</span>
-<a name="rest_code_c341d05c6fb8424c85eb817a685e10c6-4"></a>    <span class="c1"># do something</span>
+<pre class="code python"><a name="rest_code_a661f868e4024d41be9ba1a8a80a6efa-1"></a><span class="n">ir_client</span> <span class="o">=</span> <span class="n">ironicclient</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span>
+<a name="rest_code_a661f868e4024d41be9ba1a8a80a6efa-2"></a>                                    <span class="n">os_ironic_api_version</span><span class="o">=</span><span class="p">[</span><span class="s2">"1.28"</span><span class="p">,</span> <span class="s2">"1.34"</span><span class="p">])</span>
+<a name="rest_code_a661f868e4024d41be9ba1a8a80a6efa-3"></a><span class="k">if</span> <span class="n">ir_client</span><span class="o">.</span><span class="n">negotiated_api_version</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">34</span><span class="p">):</span>
+<a name="rest_code_a661f868e4024d41be9ba1a8a80a6efa-4"></a>    <span class="c1"># do something</span>
 </pre>
 <p>Nothing prevents us from implementing both, but the former seems to be what
 the API SIG recommends (unofficially, <strong>dtantsur</strong> to follow up with a formal
@@ -101,7 +147,7 @@ guideline). It seems that we can reuse newly introduces version discovery
 support from the <em>keystoneauth1</em> library. <strong>TheJulia</strong> will look into it.</p>
 </div>
 <div class="section" id="what-we-consider-a-deploy">
-<h3>What we consider a deploy?</h3>
+<h2>What we consider a deploy?</h2>
 <p>We had a heated discussion on our deploy interfaces. Currently, the whole
 business logic of provisioning, unprovisioning, taking over and cleaning nodes
 is spread between the conductor and a deploy driver, with the deploy driver
@@ -126,7 +172,7 @@ break all out-of-tree drivers with custom deploy interfaces.</li>
 the remaining options.</p>
 </div>
 <div class="section" id="available-clean-steps-api">
-<h3>Available clean steps API</h3>
+<h2>Available clean steps API</h2>
 <p>We have currently no way to indicate which clean steps are available for which
 node. Implementing such API is complicated by the fact that some clean steps
 come from hardware interfaces, while some come from the ramdisk (at least for
@@ -145,7 +191,7 @@ cached steps were last updated. <strong>rloo</strong> to follow up on the spec w
 <p>We decided to not take any actions to invalidate the cache for now.</p>
 </div>
 <div class="section" id="rethinking-the-vendor-passthru-api">
-<h3>Rethinking the vendor passthru API</h3>
+<h2>Rethinking the vendor passthru API</h2>
 <p>Two problems were discussed:</p>
 <ol class="arabic simple">
 <li>For dynamic drivers, the driver vendor passthru API only works with
@@ -161,18 +207,18 @@ around by changing <tt class="docutils literal">node.vendor_interface</tt> on fl
 document it.</p>
 </div>
 <div class="section" id="future-of-bare-metal-scheduling">
-<h3>Future of bare metal scheduling</h3>
+<h2>Future of bare metal scheduling</h2>
 <p>We have discussed the present and the future of scheduling bare metal
 instances using nova. The discussion has started in the nova room and
 continued in our room afterwards and on Friday.</p>
 <div class="section" id="node-availability">
-<h4>Node availability</h4>
+<h3>Node availability</h3>
 <p>First, we discussed marking a node as unavailable for nova. Currently, when a
 node is cleaning or otherwise unavailable, we set its resource classes count
 to zero. This is, of course, hacky, and we want to get rid of it. I was
 thinking about a new virt driver method to express availability, like</p>
-<pre class="code python"><a name="rest_code_01ceb8320e9e424e8d11ac76107ac984-1"></a><span class="k">def</span> <span class="nf">is_operational</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">):</span>
-<a name="rest_code_01ceb8320e9e424e8d11ac76107ac984-2"></a>    <span class="s2">"Returns whether the host can be used for deployment."""</span>
+<pre class="code python"><a name="rest_code_1cfb08bbc3be4277a9d6006fd0d3ea38-1"></a><span class="k">def</span> <span class="nf">is_operational</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hostname</span><span class="p">):</span>
+<a name="rest_code_1cfb08bbc3be4277a9d6006fd0d3ea38-2"></a>    <span class="s2">"Returns whether the host can be used for deployment."""</span>
 </pre>
 <p>However, it was pointed out that ironic would probably be the only user of
 such feature. Instead, it was proposed to use <tt class="docutils literal">RESERVED</tt> field when
@@ -184,7 +230,7 @@ in case of a custom resource class). This will ensure that no resources are
 available for scheduling without messing with the reported inventory.</p>
 </div>
 <div class="section" id="advanced-configuration">
-<h4>Advanced configuration</h4>
+<h3>Advanced configuration</h3>
 <p>Then we discussed means of passing from nova to ironic such information as
 BIOS configuration or requested RAID layout. We agreed (again) that we don't
 want nova to just pipe JSON blobs from a user to ironic. Instead, we will use
@@ -200,14 +246,14 @@ will require the <em>deploy steps</em> work to be revived and finished.</p>
 <p><strong>johnthetubaguy</strong> will write specs on both topics.</p>
 </div>
 <div class="section" id="ownership-of-bare-metal-nodes">
-<h4>Ownership of bare metal nodes</h4>
+<h3>Ownership of bare metal nodes</h3>
 <p>We want to allow nodes to be optionally owned by a particular tena^Wproject.
 We discussed how to make the nova side work, with ironic still being the source
 of truth for who owns which node. We decided that we can probably make it work
 with <em>traits</em> as well.</p>
 </div>
 <div class="section" id="quantitative-scheduling">
-<h4>Quantitative scheduling</h4>
+<h3>Quantitative scheduling</h3>
 <p>Next, by request of some of the community members, we have discussed bringing
 back the ability to use quantitative scheduling with bare metal instances.
 We ended up with the same outcome as previously. Starting with Pike, bare
@@ -216,7 +262,7 @@ metal scheduling has to be done in terms of <em>custom resource classes</em> and
 coming back.</p>
 </div>
 <div class="section" id="inspection-and-resource-classes">
-<h4>Inspection and resource classes</h4>
+<h3>Inspection and resource classes</h3>
 <p>After the switch to resource classes, inspection is much less useful.
 Previously the information it provided was enough for scheduling. Now we don't
 care too much about CPU/memory/disk properties, but we do care about the
@@ -244,17 +290,17 @@ probably put the mechanism behind introspection rules to ironic-lib.</p>
 nodes, if none is provided. That would simplify things for some consumers,
 like TripleO. Another option is to generate a resource class based on some
 template. We can even implement both:</p>
-<pre class="code ini"><a name="rest_code_2729526a613742fcb739d6f6ab099329-1"></a><span class="na">default_hardware_type</span> <span class="o">=</span> <span class="s">baremetal</span>
+<pre class="code ini"><a name="rest_code_01bdd121d9e841e49d86e41087e81032-1"></a><span class="na">default_hardware_type</span> <span class="o">=</span> <span class="s">baremetal</span>
 </pre>
 <p>results in <tt class="docutils literal">baremetal</tt> resource class for new nodes, while</p>
-<pre class="code ini"><a name="rest_code_dc37000d007f42c3b8caa344f12d38c2-1"></a><span class="na">inspected_hardware_type</span> <span class="o">=</span> <span class="s">bm-{memory_mb}-{cpus}-{cpu_arch}</span>
+<pre class="code ini"><a name="rest_code_1dd860057fdd4611909a61d3c65f9cab-1"></a><span class="na">inspected_hardware_type</span> <span class="o">=</span> <span class="s">bm-{memory_mb}-{cpus}-{cpu_arch}</span>
 </pre>
 <p>results in a templated resource class to be set for inspected nodes that do
 not have a resource class already set.</p>
 </div>
 </div>
 <div class="section" id="future-ironic-inspector-architecture">
-<h3>Future ironic-inspector architecture</h3>
+<h2>Future ironic-inspector architecture</h2>
 <p>The discussion in <a class="reference internal" href="#inspection-and-resource-classes">Inspection and resource classes</a> brought us to an idea of
 slowly merging most of ironic-inspector into ironic. Ironic will benefit by
 receiving introspection rules and optional inventory storage, while
@@ -292,7 +338,7 @@ for the other items is unclear. A separate call will be scheduled soon to
 discuss this.</p>
 </div>
 <div class="section" id="bios-configuration">
-<h3>BIOS configuration</h3>
+<h2>BIOS configuration</h2>
 <p>This feature has been discussed several times already. This time we came up
 with a more or less solid plan to implement it in Queens.</p>
 <ul class="simple">
@@ -323,7 +369,7 @@ the clean steps mentioned above.</li>
 </ul>
 </div>
 <div class="section" id="api-for-single-request-deploy">
-<h3>API for single request deploy</h3>
+<h2>API for single request deploy</h2>
 <p>This idea has been in the air for really long time. Currently, a deployment
 via the ironic API involves:</p>
 <ul class="simple">
@@ -374,7 +420,7 @@ user to provision and unprovision instances. A definition of success is to be
 able to switch nova to a non-admin user.</p>
 </div>
 <div class="section" id="bare-metal-instance-ha">
-<h3>Bare metal instance HA</h3>
+<h2>Bare metal instance HA</h2>
 <p>This session was dedicated to the proposal of implementing <tt class="docutils literal">nova migrate</tt>
 for bare metal instances: <a class="reference external" href="https://review.openstack.org/#/c/449155/">https://review.openstack.org/#/c/449155/</a>. This spec
 is against nova, and no ironic changes are expected.</p>
@@ -400,7 +446,7 @@ flavor.</p>
 <p><strong>hshiina</strong> will update and clarify the spec.</p>
 </div>
 <div class="section" id="ansible-deploy-method">
-<h3>Ansible deploy method</h3>
+<h2>Ansible deploy method</h2>
 <p>This was a short session. The proposed <tt class="docutils literal">ansible</tt> deploy interface already
 exists in ironic-staging-drivers and have a voting CI job. We are more or less
 in agreement that we need it to satisfy cases requiring extensive
@@ -412,7 +458,7 @@ would be calling ansible only once, when deploying several nodes, but
 the current ironic architecture does not quite allow that.</p>
 </div>
 <div class="section" id="console-log">
-<h3>Console log</h3>
+<h2>Console log</h2>
 <p>We already have a support for serial console, so it feels natural to also
 implement console log. Not everything, however, is obvious in the
 implementation.</p>
@@ -428,14 +474,14 @@ instance.</p>
 <p><strong>tiendc</strong> will update the spec with the outcome of this discussion.</p>
 </div>
 <div class="section" id="graphical-console">
-<h3>Graphical console</h3>
+<h2>Graphical console</h2>
 <p>This has been discussed several times already. We confirmed our plan to
 introduce a new hardware interface - <tt class="docutils literal">graphical_console_interface</tt>.
 <strong>pas-ha</strong> will update the existing spec, as well as the implementation for
 the <em>idrac</em> hardware type.</p>
 </div>
 <div class="section" id="queens-priorities">
-<h3>Queens priorities</h3>
+<h2>Queens priorities</h2>
 <p>This time we decided to take less priorities for the cycle, and make it clear
 to the community that the priorities list is <strong>not</strong> our complete backlog.
 That means, we will accept work that is not on the priorities list, so not
@@ -445,9 +491,15 @@ everything has to be fitted in it.</p>
 </div>
 </div>
     </div>
-    </div>
-</section><section class="section comments hidden-print"><div class="container">
-        <h2>Comments</h2>
+    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
+<li><a class="tag p-category" href="../../categories/openstack/" rel="tag">openstack</a></li>
+            <li><a class="tag p-category" href="../../categories/software/" rel="tag">software</a></li>
+        </ul>
+<ul class="pager hidden-print">
+<li class="previous">
+                <a href="../ironic-ptg-denver-2017-1/" rel="prev" title="Denver PTG Summary: Ironic (part 1)">Previous post</a>
+            </li>
+        </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
         
         
         <div id="disqus_thread"></div>
@@ -469,12 +521,24 @@ everything has to be fitted in it.</p>
     <a href="https://disqus.com" class="dsq-brlink" rel="nofollow">Comments powered by <span class="logo-disqus">Disqus</span></a>
 
 
-        </div>
-        </section><script>var disqus_shortname="diviusnet2";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><section class="section"><div class="container has-text-centered">
-            <p>Contents © 2019 Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
-<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"></a> - Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a></p>
+        </section></article><script>var disqus_shortname="diviusnet2";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
+            Contents © 2019 Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"></a> - Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a>
             
-  </div>
-</section><script src="../../assets/js/all-nocdn.js"></script>
+        </footer>
+</div>
+</div>
+
+
+        <script src="../../assets/js/all-nocdn.js"></script><!-- fancy dates --><script>
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    </script><!-- end fancy dates --><script>
+    baguetteBox.run('div#content', {
+        ignoreClass: 'islink',
+        captions: function(element) {
+            return element.getElementsByTagName('img')[0].alt;
+    }});
+    </script>
 </body>
 </html>
