@@ -7,9 +7,6 @@
 .. description: 
 .. type: text
 
-Denver PTG Summary: Ironic (part 1)
-===================================
-
 This is an extract from my personal notes and `public etherpads`_ from the
 OpenStack PTG 2017 in Denver. A lot of text ahead!
 

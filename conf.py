@@ -123,27 +123,28 @@ NAVIGATION_LINKS = {
     DEFAULT_LANG: (
         (
             (
-                ('/categories/music.html', 'Music'),
-                ('/categories/openstack.html', 'OpenStack'),
-                ('/categories/software.html', 'Software'),
+                ('/categories/openstack/', 'OpenStack'),
+                ('/categories/software/', 'Software'),
             ),
             'Tags'
         ),
         (
             (
+                ('/talks/berlin-rust-openstack/',
+                 'Introduction into Rust-OpenStack'),
+                ('/talks/berlin-python-openstack/',
+                 'OpenStack and Python (2018)'),
                 ('/talks/pike-ironic-cleaning-deep-dive/',
                  'Ironic Cleaning Deep Dive (Pike Version)'),
                 ('/talks/pike-ironic-deploy-deep-dive/',
                  'Ironic Deploy Deep Dive (Pike Version)'),
-                ('/talks/mitaka-inspector-status', 'Ironic Inspector Mitaka Status'),
-                ('/talks/whatsnew-ironic-mitaka', 'What\'s New in Ironic Mitaka'),
-                ('/talks/fosdem2016', 'FOSDEM16: Ironic Debugging'),
             ),
             'Talks'
         ),
         (
             (
                 ('https://instagram.com/creepy_owlet', 'My Instagram'),
+                ('https://twitter.com/creepy_owlet', 'My Twitter'),
                 ('https://github.com/dtantsur', 'My Github'),
             ),
             'Social'
@@ -154,7 +155,7 @@ NAVIGATION_LINKS = {
 }
 
 # Name of the theme to use.
-THEME = "hemingway"
+THEME = "bootstrap4"
 THEME_COLOR = "#FFFFFF"
 
 # Below this point, everything is optional

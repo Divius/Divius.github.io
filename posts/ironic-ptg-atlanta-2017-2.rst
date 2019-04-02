@@ -7,9 +7,6 @@
 .. description: 
 .. type: text
 
-Atlanta PTG Summary: Ironic (part 2)
-====================================
-
 This is an extract from my personal notes and public etherpads from the
 OpenStack PTG 2017 in Atlanta. A lot of text ahead!
 
