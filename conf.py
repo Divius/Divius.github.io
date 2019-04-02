@@ -155,7 +155,7 @@ NAVIGATION_LINKS = {
 }
 
 # Name of the theme to use.
-THEME = "bootstrap4"
+THEME = "custom"
 THEME_COLOR = "#FFFFFF"
 
 # Below this point, everything is optional
