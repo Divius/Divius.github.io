@@ -1,11 +1,9 @@
 .. title: GuitarPro 6 on Fedora 20 x86_64
 .. slug: guitarpro-6-on-fedora-20-x86_64
 .. date: 2014-03-07 22:23 UTC+01:00
-.. tags: music, software, draft
-.. category: 
-.. link: 
-.. description: 
+.. tags: music, software
 .. type: text
+.. status: draft
 
 Well, since I started using Fedora, some things are harder than in Ubuntu. For
 example, GuitarPro only provides i686 .deb installer which just does not work.
