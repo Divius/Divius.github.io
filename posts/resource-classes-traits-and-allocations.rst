@@ -228,9 +228,9 @@ Candidate Nodes
 ~~~~~~~~~~~~~~~
 
 There are just too many ways to choose nodes, we cannot cover them all in the
-API. For example, a common request is to support *capabilities*, which are like
-traits with values. To avoid bloating the API further, we have an ability to
-provide a list of *candidate nodes* for an allocation
+API. For example, a common request is to support *capabilities*, which can be
+seen as traits with values. To avoid bloating the API further, we have an
+ability to provide a list of *candidate nodes* for an allocation
 
 .. code-block:: console
 
@@ -264,7 +264,7 @@ While the core allocation API is available, there is still work to be done:
   <https://storyboard.openstack.org/#!/story/2005126>`_
 * `Backfilling allocations for deployed nodes
   <https://storyboard.openstack.org/#!/story/2005014>`_
-* Update metalsmith_ to use the allocation API
+* Updating metalsmith_ to use the allocation API
 
 Something I would love to see done, but certainly won't have time for, is
 adding Placement_ as an optional backend for the allocation API. This may
