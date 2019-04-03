@@ -162,7 +162,16 @@ suitable resource class and traits and reserve it via the existing
     Allocations in Ironic (including the earlier approach of using
     ``instance_uuid``) are cooperative. API consumers that are not using the
     allocation API are required to set ``instance_uuid`` directly before doing
-    anything with a node.
+    anything with a node. The allocation API does it for you:
+
+    .. code-block:: console
+
+        $ openstack baremetal node show 5d946337-b1d9-4b06-8eda-4fb77e994a0d --fields instance_uuid
+        +---------------+--------------------------------------+
+        | Field         | Value                                |
+        +---------------+--------------------------------------+
+        | instance_uuid | e84f5d60-84f1-4701-a635-10ff90e2f3b0 |
+        +---------------+--------------------------------------+
 
 Now that you have an ``active`` allocation, you can proceed with the
 deployment of the node specified in the ``node_uuid`` field, for example:
