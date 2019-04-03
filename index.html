@@ -11,7 +11,7 @@
 <meta name="generator" content="Nikola (getnikola.com)">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
 <link rel="canonical" href="http://dtantsur.github.io/">
-<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/ironic-ptg-denver-2017-2/" type="text/html">
+<!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]--><link rel="prefetch" href="posts/resource-classes-traits-and-allocations/" type="text/html">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -81,7 +81,32 @@ navbar-dark bg-dark
 
     
 <div class="postindex">
-    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/ironic-ptg-denver-2017-2/" class="u-url">Denver PTG Summary: Ironic (part 2)</a></h1>
+    <article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/resource-classes-traits-and-allocations/" class="u-url">Bare Metal Resource Classes, Traits and Allocations</a></h1>
+        <div class="metadata">
+            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+                Dmitry Tantsur
+            </span></p>
+            <p class="dateline">
+            <a href="posts/resource-classes-traits-and-allocations/" rel="bookmark">
+            <time class="published dt-published" datetime="2019-04-03T15:57:05+02:00" itemprop="datePublished" title="2019-04-03 15:57">2019-04-03 15:57</time></a>
+            </p>
+                <p class="commentline">
+        
+    <a href="posts/resource-classes-traits-and-allocations/#disqus_thread" data-disqus-identifier="cache/posts/resource-classes-traits-and-allocations.html">Comments</a>
+
+
+        </p>
+</div>
+    </header><div class="p-summary entry-summary">
+    <div>
+<p>This blog post introduces the recent features for scheduling bare metal nodes
+with <a class="reference external" href="https://docs.openstack.org/ironic/latest/">OpenStack Bare Metal (Ironic)</a>. It explains <em>resource classes</em> and
+<em>traits</em> as applied to bare metal nodes and show-cases the new <a class="reference external" href="https://developer.openstack.org/api-ref/baremetal/?expanded=create-allocation-detail#allocations-allocations">Allocation
+API</a>, introduced in the 12.1.0 (Stein) release.</p>
+<p class="more"><a href="posts/resource-classes-traits-and-allocations/"> Read more …</a></p>
+</div>
+    </div>
+    </article><article class="h-entry post-text" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title"><a href="posts/ironic-ptg-denver-2017-2/" class="u-url">Denver PTG Summary: Ironic (part 2)</a></h1>
         <div class="metadata">
             <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
                 Dmitry Tantsur
@@ -276,10 +301,7 @@ solution goes to <a class="reference external" href="http://askubuntu.com/a/3961
 </div>
 
 
-        <script src="assets/js/all-nocdn.js"></script><!-- fancy dates --><script>
-    moment.locale("en");
-    fancydates(0, "YYYY-MM-DD HH:mm");
-    </script><!-- end fancy dates --><script>
+        <script src="assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
         captions: function(element) {
