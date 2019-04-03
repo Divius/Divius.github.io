@@ -169,12 +169,12 @@ have a <tt class="docutils literal">resource_class</tt> field that serves exactl
 Rocky cycle, each node exposes one instance of its custom resource class and
 nothing else.</p>
 <p>For example, a node defined as</p>
-<pre class="code console"><a name="rest_code_4609f14163674202a86215b3d0a633ec-1"></a><span class="gp">$</span> openstack baremetal node create --name large-01 --driver ipmi --resource-class baremetal-large
+<pre class="code console"><a name="rest_code_fadd8caa8bec45caaf8266afbd58a036-1"></a><span class="gp">$</span> openstack baremetal node create --name large-01 --driver ipmi --resource-class baremetal-large
 </pre>
 <p>will expose (once made <tt class="docutils literal">available</tt>) one instance of custom resource class
 called <tt class="docutils literal">CUSTOM_BAREMETAL_LARGE</tt>. It can be consumed by a flavor defined with
 (see <a class="reference external" href="https://docs.openstack.org/ironic/latest/install/configure-nova-flavors.html">baremetal flavor documentation</a> for details):</p>
-<pre class="code console"><a name="rest_code_5fd1eb8cbf25444d90b747950edb3ead-1"></a><span class="gp">$</span> openstack flavor <span class="nb">set</span> --property resources:CUSTOM_BAREMETAL_LARGE<span class="o">=</span><span class="m">1</span> my-baremetal-flavor
+<pre class="code console"><a name="rest_code_0eea18e8f2b44f11a6c5569229aa5cb1-1"></a><span class="gp">$</span> openstack flavor <span class="nb">set</span> --property resources:CUSTOM_BAREMETAL_LARGE<span class="o">=</span><span class="m">1</span> my-baremetal-flavor
 </pre>
 <p>What is a resource class for bare metal in the end? These are just
 non-overlapping groups of the bare metal nodes. If it's not possible to split
@@ -191,15 +191,15 @@ node have virtualization CPU extension?</em> A whole bunch of <em>standard trait
 defined by the <a class="reference external" href="https://docs.openstack.org/os-traits/latest/user/index.html">os-traits</a> library, but you can also define custom ones by
 prefixing them with <tt class="docutils literal">CUSTOM_</tt>.</p>
 <p>Starting with the Queens release, traits can be added to bare metal nodes:</p>
-<pre class="code console"><a name="rest_code_4f414af50ae44dfd9b4b79df5a815c1d-1"></a><span class="gp">$</span> openstack baremetal node add trait large-01 HW_CPU_X86_VMX CUSTOM_OPENCV
-<a name="rest_code_4f414af50ae44dfd9b4b79df5a815c1d-2"></a><span class="go">Added trait HW_CPU_X86_VMX</span>
-<a name="rest_code_4f414af50ae44dfd9b4b79df5a815c1d-3"></a><span class="go">Added trait CUSTOM_OPENCV</span>
+<pre class="code console"><a name="rest_code_409c12cfd478462fa3ebd6b1c64de48c-1"></a><span class="gp">$</span> openstack baremetal node add trait large-01 HW_CPU_X86_VMX CUSTOM_OPENCV
+<a name="rest_code_409c12cfd478462fa3ebd6b1c64de48c-2"></a><span class="go">Added trait HW_CPU_X86_VMX</span>
+<a name="rest_code_409c12cfd478462fa3ebd6b1c64de48c-3"></a><span class="go">Added trait CUSTOM_OPENCV</span>
 </pre>
 <p>As you see, I'm associating two traits with the node: one is standard (coming
 from <a class="reference external" href="https://docs.openstack.org/os-traits/latest/user/index.html">os-traits</a>), the other is custom (invented by me). Now we can update our
 flavor to request them:</p>
-<pre class="code console"><a name="rest_code_4abe0311779441af984a0416631e03b1-1"></a><span class="gp">$</span> openstack flavor <span class="nb">set</span> --property trait:HW_CPU_X86_VMX<span class="o">=</span>required my-baremetal-flavor
-<a name="rest_code_4abe0311779441af984a0416631e03b1-2"></a><span class="gp">$</span> openstack flavor <span class="nb">set</span> --property trait:CUSTOM_OPENCV<span class="o">=</span>required my-baremetal-flavor
+<pre class="code console"><a name="rest_code_c593214b7a1a415cbc08fa9a4d0594cd-1"></a><span class="gp">$</span> openstack flavor <span class="nb">set</span> --property trait:HW_CPU_X86_VMX<span class="o">=</span>required my-baremetal-flavor
+<a name="rest_code_c593214b7a1a415cbc08fa9a4d0594cd-2"></a><span class="gp">$</span> openstack flavor <span class="nb">set</span> --property trait:CUSTOM_OPENCV<span class="o">=</span>required my-baremetal-flavor
 </pre>
 <p>Now this flavor will make the scheduler take nodes with the resource class
 <tt class="docutils literal"><span class="pre">baremetal-large</span></tt> (defined in the previous section) and then choose from only
@@ -218,22 +218,22 @@ concept of an <em>allocation</em> is introduced (again, borrowing a similar term
 Placement). An allocation is a request to find a bare metal node with
 suitable resource class and traits and reserve it via the existing
 <tt class="docutils literal">instance_uuid</tt> mechanism (making it compatible with Nova).</p>
-<pre class="code console"><a name="rest_code_ace7d3a0def146a388dbc55b4a9cd2a9-1"></a><span class="gp">$</span> openstack baremetal allocation create --resource-class baremetal-large --wait
-<a name="rest_code_ace7d3a0def146a388dbc55b4a9cd2a9-2"></a><span class="go">+-----------------+--------------------------------------+</span>
-<a name="rest_code_ace7d3a0def146a388dbc55b4a9cd2a9-3"></a><span class="go">| Field           | Value                                |</span>
-<a name="rest_code_ace7d3a0def146a388dbc55b4a9cd2a9-4"></a><span class="go">+-----------------+--------------------------------------+</span>
-<a name="rest_code_ace7d3a0def146a388dbc55b4a9cd2a9-5"></a><span class="go">| candidate_nodes | []                                   |</span>
-<a name="rest_code_ace7d3a0def146a388dbc55b4a9cd2a9-6"></a><span class="go">| created_at      | 2019-04-03T12:18:26+00:00            |</span>
-<a name="rest_code_ace7d3a0def146a388dbc55b4a9cd2a9-7"></a><span class="go">| extra           | {}                                   |</span>
-<a name="rest_code_ace7d3a0def146a388dbc55b4a9cd2a9-8"></a><span class="go">| last_error      | None                                 |</span>
-<a name="rest_code_ace7d3a0def146a388dbc55b4a9cd2a9-9"></a><span class="go">| name            | None                                 |</span>
-<a name="rest_code_ace7d3a0def146a388dbc55b4a9cd2a9-10"></a><span class="go">| node_uuid       | 5d946337-b1d9-4b06-8eda-4fb77e994a0d |</span>
-<a name="rest_code_ace7d3a0def146a388dbc55b4a9cd2a9-11"></a><span class="go">| resource_class  | baremetal-large                      |</span>
-<a name="rest_code_ace7d3a0def146a388dbc55b4a9cd2a9-12"></a><span class="go">| state           | active                               |</span>
-<a name="rest_code_ace7d3a0def146a388dbc55b4a9cd2a9-13"></a><span class="go">| traits          | []                                   |</span>
-<a name="rest_code_ace7d3a0def146a388dbc55b4a9cd2a9-14"></a><span class="go">| updated_at      | 2019-04-03T12:18:26+00:00            |</span>
-<a name="rest_code_ace7d3a0def146a388dbc55b4a9cd2a9-15"></a><span class="go">| uuid            | e84f5d60-84f1-4701-a635-10ff90e2f3b0 |</span>
-<a name="rest_code_ace7d3a0def146a388dbc55b4a9cd2a9-16"></a><span class="go">+-----------------+--------------------------------------+</span>
+<pre class="code console"><a name="rest_code_3595858b2f814b32807cc4c58fa5d5d7-1"></a><span class="gp">$</span> openstack baremetal allocation create --resource-class baremetal-large --wait
+<a name="rest_code_3595858b2f814b32807cc4c58fa5d5d7-2"></a><span class="go">+-----------------+--------------------------------------+</span>
+<a name="rest_code_3595858b2f814b32807cc4c58fa5d5d7-3"></a><span class="go">| Field           | Value                                |</span>
+<a name="rest_code_3595858b2f814b32807cc4c58fa5d5d7-4"></a><span class="go">+-----------------+--------------------------------------+</span>
+<a name="rest_code_3595858b2f814b32807cc4c58fa5d5d7-5"></a><span class="go">| candidate_nodes | []                                   |</span>
+<a name="rest_code_3595858b2f814b32807cc4c58fa5d5d7-6"></a><span class="go">| created_at      | 2019-04-03T12:18:26+00:00            |</span>
+<a name="rest_code_3595858b2f814b32807cc4c58fa5d5d7-7"></a><span class="go">| extra           | {}                                   |</span>
+<a name="rest_code_3595858b2f814b32807cc4c58fa5d5d7-8"></a><span class="go">| last_error      | None                                 |</span>
+<a name="rest_code_3595858b2f814b32807cc4c58fa5d5d7-9"></a><span class="go">| name            | None                                 |</span>
+<a name="rest_code_3595858b2f814b32807cc4c58fa5d5d7-10"></a><span class="go">| node_uuid       | 5d946337-b1d9-4b06-8eda-4fb77e994a0d |</span>
+<a name="rest_code_3595858b2f814b32807cc4c58fa5d5d7-11"></a><span class="go">| resource_class  | baremetal-large                      |</span>
+<a name="rest_code_3595858b2f814b32807cc4c58fa5d5d7-12"></a><span class="go">| state           | active                               |</span>
+<a name="rest_code_3595858b2f814b32807cc4c58fa5d5d7-13"></a><span class="go">| traits          | []                                   |</span>
+<a name="rest_code_3595858b2f814b32807cc4c58fa5d5d7-14"></a><span class="go">| updated_at      | 2019-04-03T12:18:26+00:00            |</span>
+<a name="rest_code_3595858b2f814b32807cc4c58fa5d5d7-15"></a><span class="go">| uuid            | e84f5d60-84f1-4701-a635-10ff90e2f3b0 |</span>
+<a name="rest_code_3595858b2f814b32807cc4c58fa5d5d7-16"></a><span class="go">+-----------------+--------------------------------------+</span>
 </pre>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -244,82 +244,82 @@ anything with a node.</p>
 </div>
 <p>Now that you have an <tt class="docutils literal">active</tt> allocation, you can proceed with the
 deployment of the node specified in the <tt class="docutils literal">node_uuid</tt> field, for example:</p>
-<pre class="code console"><a name="rest_code_6cf8efd93e8f4a719579892ff2cb2c0c-1"></a><span class="gp">$</span> openstack baremetal node <span class="nb">set</span> 5d946337-b1d9-4b06-8eda-4fb77e994a0d <span class="se">\</span>
-<a name="rest_code_6cf8efd93e8f4a719579892ff2cb2c0c-2"></a>    --instance-info <span class="nv">image_source</span><span class="o">=</span>https://images.local/image.img <span class="se">\</span>
-<a name="rest_code_6cf8efd93e8f4a719579892ff2cb2c0c-3"></a>    --instance-info <span class="nv">image_checksum</span><span class="o">=</span>9dba20bace2bf54b63154a473feea422
-<a name="rest_code_6cf8efd93e8f4a719579892ff2cb2c0c-4"></a><span class="gp">$</span> openstack baremetal node deploy 5d946337-b1d9-4b06-8eda-4fb77e994a0d <span class="se">\</span>
-<a name="rest_code_6cf8efd93e8f4a719579892ff2cb2c0c-5"></a>    --config-drive /path/to/config/drive --wait
+<pre class="code console"><a name="rest_code_a75b4453fc8f458c93d0e2cc088b4720-1"></a><span class="gp">$</span> openstack baremetal node <span class="nb">set</span> 5d946337-b1d9-4b06-8eda-4fb77e994a0d <span class="se">\</span>
+<a name="rest_code_a75b4453fc8f458c93d0e2cc088b4720-2"></a>    --instance-info <span class="nv">image_source</span><span class="o">=</span>https://images.local/image.img <span class="se">\</span>
+<a name="rest_code_a75b4453fc8f458c93d0e2cc088b4720-3"></a>    --instance-info <span class="nv">image_checksum</span><span class="o">=</span>9dba20bace2bf54b63154a473feea422
+<a name="rest_code_a75b4453fc8f458c93d0e2cc088b4720-4"></a><span class="gp">$</span> openstack baremetal node deploy 5d946337-b1d9-4b06-8eda-4fb77e994a0d <span class="se">\</span>
+<a name="rest_code_a75b4453fc8f458c93d0e2cc088b4720-5"></a>    --config-drive /path/to/config/drive --wait
 </pre>
 <p>An error to allocate will be clearly communicated to you:</p>
-<pre class="code console"><a name="rest_code_0418de2590e7477a8eaa743574c7c7e1-1"></a><span class="gp">$</span> openstack baremetal allocation create --resource-class I-dont-exist --wait
-<a name="rest_code_0418de2590e7477a8eaa743574c7c7e1-2"></a><span class="go">Allocation 34202b56-389a-4845-ae36-90e82a707adc failed: Failed to process allocation 34202b56-389a-4845-ae36-90e82a707adc: no available nodes match the resource class I-dont-exist.</span>
+<pre class="code console"><a name="rest_code_85ebefa7cb9546919fc24cf6b8ea2bb4-1"></a><span class="gp">$</span> openstack baremetal allocation create --resource-class I-dont-exist --wait
+<a name="rest_code_85ebefa7cb9546919fc24cf6b8ea2bb4-2"></a><span class="go">Allocation 34202b56-389a-4845-ae36-90e82a707adc failed: Failed to process allocation 34202b56-389a-4845-ae36-90e82a707adc: no available nodes match the resource class I-dont-exist.</span>
 </pre>
 <p>Allocations are automatically deleted when an associated node is undeployed, so
 usually you don't have to worry about them. If you decided not to deploy at
 all (or if allocation has failed), delete the allocation:</p>
-<pre class="code console"><a name="rest_code_4f6d9b1ab34d42248ebdf37a1f49faf5-1"></a><span class="gp">$</span> openstack baremetal allocation delete 34202b56-389a-4845-ae36-90e82a707adc
-<a name="rest_code_4f6d9b1ab34d42248ebdf37a1f49faf5-2"></a><span class="go">Deleted allocation 34202b56-389a-4845-ae36-90e82a707adc</span>
+<pre class="code console"><a name="rest_code_ede8dde1219f496792a4c23bb6796903-1"></a><span class="gp">$</span> openstack baremetal allocation delete 34202b56-389a-4845-ae36-90e82a707adc
+<a name="rest_code_ede8dde1219f496792a4c23bb6796903-2"></a><span class="go">Deleted allocation 34202b56-389a-4845-ae36-90e82a707adc</span>
 </pre>
 <div class="section" id="allocations-and-traits">
 <h3><a class="toc-backref" href="#id6">Allocations and Traits</a></h3>
 <p>Since we're aiming for compatibility with Nova, traits are also supported.</p>
-<pre class="code console"><a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-1"></a><span class="gp">$</span> openstack baremetal allocation create --resource-class baremetal-large <span class="se">\</span>
-<a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-2"></a>    --trait HW_CPU_X86_VMX --trait CUSTOM_OPENCV --wait
-<a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-3"></a><span class="go">+-----------------+---------------------------------------+</span>
-<a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-4"></a><span class="go">| Field           | Value                                 |</span>
-<a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-5"></a><span class="go">+-----------------+---------------------------------------+</span>
-<a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-6"></a><span class="go">| candidate_nodes | []                                    |</span>
-<a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-7"></a><span class="go">| created_at      | 2019-04-03T13:28:45+00:00             |</span>
-<a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-8"></a><span class="go">| extra           | {}                                    |</span>
-<a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-9"></a><span class="go">| last_error      | None                                  |</span>
-<a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-10"></a><span class="go">| name            | None                                  |</span>
-<a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-11"></a><span class="go">| node_uuid       | 3ddb8b0c-8cc2-4c23-8239-eeda4e93d07f  |</span>
-<a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-12"></a><span class="go">| resource_class  | baremetal-large                       |</span>
-<a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-13"></a><span class="go">| state           | active                                |</span>
-<a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-14"></a><span class="go">| traits          | [u'HW_CPU_X86_VMX', u'CUSTOM_OPENCV'] |</span>
-<a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-15"></a><span class="go">| updated_at      | 2019-04-03T13:28:45+00:00             |</span>
-<a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-16"></a><span class="go">| uuid            | 7b3bd8bf-3a00-41a4-a018-69b620226629  |</span>
-<a name="rest_code_dbc4d725179e4d7dbdfe8e118adf828d-17"></a><span class="go">+-----------------+---------------------------------------+</span>
+<pre class="code console"><a name="rest_code_3c7da807012142128bb50e4adbb77122-1"></a><span class="gp">$</span> openstack baremetal allocation create --resource-class baremetal-large <span class="se">\</span>
+<a name="rest_code_3c7da807012142128bb50e4adbb77122-2"></a>    --trait HW_CPU_X86_VMX --trait CUSTOM_OPENCV --wait
+<a name="rest_code_3c7da807012142128bb50e4adbb77122-3"></a><span class="go">+-----------------+---------------------------------------+</span>
+<a name="rest_code_3c7da807012142128bb50e4adbb77122-4"></a><span class="go">| Field           | Value                                 |</span>
+<a name="rest_code_3c7da807012142128bb50e4adbb77122-5"></a><span class="go">+-----------------+---------------------------------------+</span>
+<a name="rest_code_3c7da807012142128bb50e4adbb77122-6"></a><span class="go">| candidate_nodes | []                                    |</span>
+<a name="rest_code_3c7da807012142128bb50e4adbb77122-7"></a><span class="go">| created_at      | 2019-04-03T13:28:45+00:00             |</span>
+<a name="rest_code_3c7da807012142128bb50e4adbb77122-8"></a><span class="go">| extra           | {}                                    |</span>
+<a name="rest_code_3c7da807012142128bb50e4adbb77122-9"></a><span class="go">| last_error      | None                                  |</span>
+<a name="rest_code_3c7da807012142128bb50e4adbb77122-10"></a><span class="go">| name            | None                                  |</span>
+<a name="rest_code_3c7da807012142128bb50e4adbb77122-11"></a><span class="go">| node_uuid       | 3ddb8b0c-8cc2-4c23-8239-eeda4e93d07f  |</span>
+<a name="rest_code_3c7da807012142128bb50e4adbb77122-12"></a><span class="go">| resource_class  | baremetal-large                       |</span>
+<a name="rest_code_3c7da807012142128bb50e4adbb77122-13"></a><span class="go">| state           | active                                |</span>
+<a name="rest_code_3c7da807012142128bb50e4adbb77122-14"></a><span class="go">| traits          | [u'HW_CPU_X86_VMX', u'CUSTOM_OPENCV'] |</span>
+<a name="rest_code_3c7da807012142128bb50e4adbb77122-15"></a><span class="go">| updated_at      | 2019-04-03T13:28:45+00:00             |</span>
+<a name="rest_code_3c7da807012142128bb50e4adbb77122-16"></a><span class="go">| uuid            | 7b3bd8bf-3a00-41a4-a018-69b620226629  |</span>
+<a name="rest_code_3c7da807012142128bb50e4adbb77122-17"></a><span class="go">+-----------------+---------------------------------------+</span>
 </pre>
 <p>This list of matched traits is automatically added to the node's
 <tt class="docutils literal">instance_info</tt> for seamless integration with <em>Deploy Templates</em> in the
 future:</p>
-<pre class="code console"><a name="rest_code_c2eca85a06064b3cb0119d3e9f490539-1"></a><span class="gp">$</span> openstack baremetal node show 3ddb8b0c-8cc2-4c23-8239-eeda4e93d07f --fields instance_info
-<a name="rest_code_c2eca85a06064b3cb0119d3e9f490539-2"></a><span class="go">+---------------+----------------------------------------------------+</span>
-<a name="rest_code_c2eca85a06064b3cb0119d3e9f490539-3"></a><span class="go">| Field         | Value                                              |</span>
-<a name="rest_code_c2eca85a06064b3cb0119d3e9f490539-4"></a><span class="go">+---------------+----------------------------------------------------+</span>
-<a name="rest_code_c2eca85a06064b3cb0119d3e9f490539-5"></a><span class="go">| instance_info | {u'traits': [u'HW_CPU_X86_VMX', u'CUSTOM_OPENCV']} |</span>
-<a name="rest_code_c2eca85a06064b3cb0119d3e9f490539-6"></a><span class="go">+---------------+----------------------------------------------------+</span>
+<pre class="code console"><a name="rest_code_7483016ffd4b4a6a9e5ee5f0ad69d4e7-1"></a><span class="gp">$</span> openstack baremetal node show 3ddb8b0c-8cc2-4c23-8239-eeda4e93d07f --fields instance_info
+<a name="rest_code_7483016ffd4b4a6a9e5ee5f0ad69d4e7-2"></a><span class="go">+---------------+----------------------------------------------------+</span>
+<a name="rest_code_7483016ffd4b4a6a9e5ee5f0ad69d4e7-3"></a><span class="go">| Field         | Value                                              |</span>
+<a name="rest_code_7483016ffd4b4a6a9e5ee5f0ad69d4e7-4"></a><span class="go">+---------------+----------------------------------------------------+</span>
+<a name="rest_code_7483016ffd4b4a6a9e5ee5f0ad69d4e7-5"></a><span class="go">| instance_info | {u'traits': [u'HW_CPU_X86_VMX', u'CUSTOM_OPENCV']} |</span>
+<a name="rest_code_7483016ffd4b4a6a9e5ee5f0ad69d4e7-6"></a><span class="go">+---------------+----------------------------------------------------+</span>
 </pre>
 <p>And again, errors are pretty clear:</p>
-<pre class="code console"><a name="rest_code_d321f17760cd4d8caf63684a7c035072-1"></a><span class="gp">$</span> openstack baremetal allocation create --resource-class baremetal --trait CUSTOM_UNKNOWN --wait
-<a name="rest_code_d321f17760cd4d8caf63684a7c035072-2"></a><span class="go">Allocation e34af6cb-1a4b-4437-a252-7aac560ab257 failed: Failed to process allocation e34af6cb-1a4b-4437-a252-7aac560ab257: no suitable nodes have the requested traits CUSTOM_UNKNOWN.</span>
+<pre class="code console"><a name="rest_code_2a58f7d0c7f747e5b3cefdba31fee126-1"></a><span class="gp">$</span> openstack baremetal allocation create --resource-class baremetal --trait CUSTOM_UNKNOWN --wait
+<a name="rest_code_2a58f7d0c7f747e5b3cefdba31fee126-2"></a><span class="go">Allocation e34af6cb-1a4b-4437-a252-7aac560ab257 failed: Failed to process allocation e34af6cb-1a4b-4437-a252-7aac560ab257: no suitable nodes have the requested traits CUSTOM_UNKNOWN.</span>
 </pre>
 </div>
 <div class="section" id="candidate-nodes">
 <h3><a class="toc-backref" href="#id7">Candidate Nodes</a></h3>
 <p>There are just too many ways to choose nodes, we cannot cover them all in the
-API. For example, a common request is to support <em>capabilities</em>, which are like
-traits with values. To avoid bloating the API further, we have an ability to
-provide a list of <em>candidate nodes</em> for an allocation</p>
-<pre class="code console"><a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-1"></a><span class="gp">$</span> openstack baremetal allocation create --resource-class baremetal-large <span class="se">\</span>
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-2"></a>    --candidate-node ae1ebb09-a903-4199-8616-a0a5f3334203 <span class="se">\</span>
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-3"></a>    --candidate-node 3ddb8b0c-8cc2-4c23-8239-eeda4e93d07f --wait
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-4"></a><span class="go">+-----------------+------------------------------------------------------------------------------------+</span>
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-5"></a><span class="go">| Field           | Value                                                                              |</span>
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-6"></a><span class="go">+-----------------+------------------------------------------------------------------------------------+</span>
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-7"></a><span class="go">| candidate_nodes | [u'ae1ebb09-a903-4199-8616-a0a5f3334203', u'3ddb8b0c-8cc2-4c23-8239-eeda4e93d07f'] |</span>
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-8"></a><span class="go">| created_at      | 2019-04-03T13:50:24+00:00                                                          |</span>
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-9"></a><span class="go">| extra           | {}                                                                                 |</span>
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-10"></a><span class="go">| last_error      | None                                                                               |</span>
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-11"></a><span class="go">| name            | None                                                                               |</span>
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-12"></a><span class="go">| node_uuid       | 3ddb8b0c-8cc2-4c23-8239-eeda4e93d07f                                               |</span>
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-13"></a><span class="go">| resource_class  | baremetal-large                                                                    |</span>
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-14"></a><span class="go">| state           | active                                                                             |</span>
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-15"></a><span class="go">| traits          | []                                                                                 |</span>
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-16"></a><span class="go">| updated_at      | 2019-04-03T13:50:24+00:00                                                          |</span>
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-17"></a><span class="go">| uuid            | 199a7e80-e688-4244-83de-ae9b21aac4a0                                               |</span>
-<a name="rest_code_c1e9f61933964eeeb3ef5585ef7b2c98-18"></a><span class="go">+-----------------+------------------------------------------------------------------------------------+</span>
+API. For example, a common request is to support <em>capabilities</em>, which can be
+seen as traits with values. To avoid bloating the API further, we have an
+ability to provide a list of <em>candidate nodes</em> for an allocation</p>
+<pre class="code console"><a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-1"></a><span class="gp">$</span> openstack baremetal allocation create --resource-class baremetal-large <span class="se">\</span>
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-2"></a>    --candidate-node ae1ebb09-a903-4199-8616-a0a5f3334203 <span class="se">\</span>
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-3"></a>    --candidate-node 3ddb8b0c-8cc2-4c23-8239-eeda4e93d07f --wait
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-4"></a><span class="go">+-----------------+------------------------------------------------------------------------------------+</span>
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-5"></a><span class="go">| Field           | Value                                                                              |</span>
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-6"></a><span class="go">+-----------------+------------------------------------------------------------------------------------+</span>
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-7"></a><span class="go">| candidate_nodes | [u'ae1ebb09-a903-4199-8616-a0a5f3334203', u'3ddb8b0c-8cc2-4c23-8239-eeda4e93d07f'] |</span>
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-8"></a><span class="go">| created_at      | 2019-04-03T13:50:24+00:00                                                          |</span>
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-9"></a><span class="go">| extra           | {}                                                                                 |</span>
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-10"></a><span class="go">| last_error      | None                                                                               |</span>
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-11"></a><span class="go">| name            | None                                                                               |</span>
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-12"></a><span class="go">| node_uuid       | 3ddb8b0c-8cc2-4c23-8239-eeda4e93d07f                                               |</span>
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-13"></a><span class="go">| resource_class  | baremetal-large                                                                    |</span>
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-14"></a><span class="go">| state           | active                                                                             |</span>
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-15"></a><span class="go">| traits          | []                                                                                 |</span>
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-16"></a><span class="go">| updated_at      | 2019-04-03T13:50:24+00:00                                                          |</span>
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-17"></a><span class="go">| uuid            | 199a7e80-e688-4244-83de-ae9b21aac4a0                                               |</span>
+<a name="rest_code_f48c6aba478f433eb97168ab84a4aa37-18"></a><span class="go">+-----------------+------------------------------------------------------------------------------------+</span>
 </pre>
 <p>This feature allows pre-filtering nodes based on any criteria.</p>
 </div>
@@ -330,7 +330,7 @@ provide a list of <em>candidate nodes</em> for an allocation</p>
 <ul class="simple">
 <li><a class="reference external" href="https://storyboard.openstack.org/#!/story/2005126">Updating allocation name and extra</a></li>
 <li><a class="reference external" href="https://storyboard.openstack.org/#!/story/2005014">Backfilling allocations for deployed nodes</a></li>
-<li>Update <a class="reference external" href="https://docs.openstack.org/metalsmith/latest/">metalsmith</a> to use the allocation API</li>
+<li>Updating <a class="reference external" href="https://docs.openstack.org/metalsmith/latest/">metalsmith</a> to use the allocation API</li>
 </ul>
 <p>Something I would love to see done, but certainly won't have time for, is
 adding <a class="reference external" href="https://docs.openstack.org/placement/latest/">Placement</a> as an optional backend for the allocation API. This may
