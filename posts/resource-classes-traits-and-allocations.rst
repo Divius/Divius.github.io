@@ -28,9 +28,9 @@ issues:
 
 #. A flavor could request only a part of exposed resources (e.g. 1G RAM out of
    4G available). The remaining resources would be seen as available, even
-   though there weren't.
+   though they weren't.
 #. During the *automated cleaning* process the nodes were no longer occupied
-   from Nova's point of view, but they were nonetheless not available yet.
+   from Nova's point of view, but they were not available yet.
 
 Two hacks were introduced in the Nova code base as solutions:
 
@@ -74,6 +74,17 @@ called ``CUSTOM_BAREMETAL_LARGE``. It can be consumed by a flavor defined with
 
     $ openstack flavor set --property resources:CUSTOM_BAREMETAL_LARGE=1 my-baremetal-flavor
 
+.. note::
+    To completely opt-out of scheduling based on CPU/RAM/disk, your flavor must
+    also contain:
+
+    .. code-block:: console
+
+        $ openstack flavor set my-baremetal-flavor \
+            --property resources:VCPU=0 \
+            --property resources:MEMORY_MB=0 \
+            --property resources:DISK_GB=0
+
 What is a resource class for bare metal in the end? These are just
 non-overlapping groups of the bare metal nodes. If it's not possible to split
 your nodes into such groups, you may opt for using only one custom resource
@@ -104,8 +115,9 @@ flavor to request them:
 
 .. code-block:: console
 
-    $ openstack flavor set --property trait:HW_CPU_X86_VMX=required my-baremetal-flavor
-    $ openstack flavor set --property trait:CUSTOM_OPENCV=required my-baremetal-flavor
+    $ openstack flavor set my-baremetal-flavor \
+        --property trait:HW_CPU_X86_VMX=required \
+        --property trait:CUSTOM_OPENCV=required
 
 Now this flavor will make the scheduler take nodes with the resource class
 ``baremetal-large`` (defined in the previous section) and then choose from only
@@ -117,7 +129,7 @@ Allocation API
 The previous two sections have covered scheduling bare metal nodes with Nova
 pretty well. But what about using Ironic standalone? Indeed, we have been
 advertizing standalone Ironic as a viable solution for a long time, including
-maintaining the Bifrost_ project as ones of the ways to install and use it.
+maintaining the Bifrost_ project as one of the ways to install and use it.
 However, we did not have any scheduling story for standalone Ironic - until the
 Stein release.
 
@@ -148,8 +160,8 @@ suitable resource class and traits and reserve it via the existing
 
 .. note::
     Allocations in Ironic (including the earlier approach of using
-    ``instance_uuid``) are cooperative. API consumers are required to set
-    ``instance_uuid`` either directly or via the allocation API before doing
+    ``instance_uuid``) are cooperative. API consumers that are not using the
+    allocation API are required to set ``instance_uuid`` directly before doing
     anything with a node.
 
 Now that you have an ``active`` allocation, you can proceed with the
