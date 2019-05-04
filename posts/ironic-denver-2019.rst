@@ -260,6 +260,39 @@ effort approach: command IPA to shutdown all its functionality and schedule a
 *kexec* after some time. After that, switch to tenant networks. This is not
 entirely secure, but will probably fit the operators (HPC) who requests it.
 
+Asynchronous clean steps
+------------------------
+
+We discussed enhancements for asynchronous clean and deploy steps. Currently
+running a step asynchronously requires either busy polling (occupying a green
+thread) or creating a new periodic task in a hardware type. We came up with
+two updates for clean steps:
+
+* Allow a clean step to request re-running itself after certain amount of
+  time. E.g. a clean step would do something like
+
+  .. code-block:: python
+
+    @clean_step(...)
+    def wait_for_raid(self):
+        if not raid_is_ready():
+            return RerunAfter(60)
+
+  and the conductor would schedule re-running the same step in 60 seconds.
+
+* Allow a clean step to spawn more clean steps. E.g. a clean step would
+  do something like
+
+  .. code-block:: python
+
+    @clean_step(...)
+    def create_raid_configuration(self):
+        start_create_raid()
+        return RunNext([{'step': 'wait_for_raid'}])
+
+  and the conductor would insert the provided step to ``node.clean_steps``
+  after the current one.
+
 PTG: TripleO
 ============
 
@@ -280,6 +313,41 @@ The current concerns are:
 The next action item is to create a CI job based on the already merged code and
 verify a few assumptions made above.
 
+PTG: Ironic, Placement, Blazar
+==============================
+
+We reiterated over our plans to allow Ironic to optionally report nodes to
+Placement. This will be turned off when Nova is present to avoid conflicts with
+the Nova reporting. We will optionally use Placement as a backend for Ironic
+allocation API.
+
+Then we discussed potentially exposing detailed bare metal inventory to
+Placement. To avoid partial allocations, Placement could introduce new API to
+consume the whole resource provider. Ironic would use it when creating an
+allocation. No specifically committments were made with regards to this idea.
+
+Finally we came with the following workflow for bare metal reservations in
+Blazar:
+
+#. A user requests a bare metal reservation from Blazar.
+#. Blazar fetches allocation candidates from Placement.
+#. Blazar fetches a list of bare metal nodes from Ironic and filters out
+   allocation candidates, whose resource provider UUID does not match one of
+   the node UUIDs.
+#. Blazar remembers the node UUID and returns the reservation UUID to the user.
+
+When the reservation time comes:
+
+#. Blazar creates an allocation in Ironic (not Placement) with the candidate
+   node matching previously picked node and allocation UUID matching the
+   reservation UUID.
+#. When the enhancements in `Standalone roadmap`_ are implemented, Blazar will
+   also set the node's leasee field to the user ID of the reservation, so that
+   Ironic allows access to this node.
+#. A user fetches an Ironic allocation corresponding to the Blazar reservation
+   UUID and learns the node UUID from it.
+#. A user proceeds with deploying the node.
+
 Side and hallway discussions
 ============================
 
@@ -287,6 +355,13 @@ Side and hallway discussions
   state that can be detected and entered by a request from a third party
   monitoring tooling (as opposed to from within Ironic itself). It's unclear if
   the existing *rescue* feature can fill this gap.
+
+* We discussed having Heat resources for Ironic. We recommended the team to
+  start with Allocation and Deployment resources (the latter being virtual
+  until we implement the planned deployment API).
+
+* We prototyped how Heat resources for Ironic could look, including Node, Port,
+  Allocation and Deployment as a first step.
 
 .. _Metal3: http://metal3.io
 .. _live demo: https://www.openstack.org/videos/summits/denver-2019/openstack-ironic-and-bare-metal-infrastructure-all-abstractions-start-somewhere
