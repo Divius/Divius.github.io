@@ -1,14 +1,14 @@
 .. title: Ironic at OpenInfra Summit and PTG
 .. slug: ironic-denver-2019
-.. date: 2019-05-02 19:00:36 UTC+02:00
+.. date: 2019-05-07 10:03:26 UTC+02:00
 .. tags: openstack, software
 .. category: 
 .. link: 
 .. description: 
 .. type: text
 
-This is a summary of bare metal discussions at the OpenInfra Summit & PTG 2019
-in Denver.
+This is a brief summary of bare metal discussions at the OpenInfra Summit & PTG
+2019 in Denver.
 
 .. TEASER_END: Read more
 
@@ -114,7 +114,7 @@ majority of reviews, and some of them are close to burning out.
   single +2 approval for specs and/or documentation. Approving documentation
   cannot break anyone, and follow-ups are easy, so it seems a good idea.
 
-* Fascilitating deprecated feature removals can help clean up the code, and it
+* Facilitating deprecated feature removals can help clean up the code, and it
   can often be done by new contributors. We would like to maintain a list of
   what can be removed when, so that we don't forget it.
 
@@ -192,15 +192,18 @@ ironic the state when a deployed node looks healthy from our side but is
 detected as failed by the monitoring.
 
 It seems that we could introduce a new state transition from ``active`` to
-something like ``failed`` or ``quarantened``, where a node is still deployed,
+something like ``failed`` or ``quarantined``, where a node is still deployed,
 but explicitly marked as at fault by an operator. On unprovisioning, this node
 would not become ``available`` automatically. We also considered the
 possibility of using a flag instead of a new state, although the operators in
-the room were more in favour of using a state. We largely agreed that the
+the room were more in favor of using a state. We largely agreed that the
 already overloaded ``maintenance`` flag should not be used for this.
 
 On the Nova side we would probably use the ``error`` state to reflect nodes in
 the new state.
+
+A very similar request had been done for node retirement support. We decided to
+look for a unified solution.
 
 DHCP-less deploy
 ----------------
@@ -220,8 +223,8 @@ Nova room
 
 In a cross-project discussion with the Nova team we went through a few topics:
 
-* We discussed whether Nova should use new Ironic API to build configdrives.
-  Since Ironic is not the only driver building configdrives, we agreed that it
+* We discussed whether Nova should use new Ironic API to build config drives.
+  Since Ironic is not the only driver building config drives, we agreed that it
   probably doesn't make much sense to change that.
 
 * We did not come to a conclusion on deprecating capabilities. We agreed that
@@ -324,7 +327,7 @@ allocation API.
 Then we discussed potentially exposing detailed bare metal inventory to
 Placement. To avoid partial allocations, Placement could introduce new API to
 consume the whole resource provider. Ironic would use it when creating an
-allocation. No specifically committments were made with regards to this idea.
+allocation. No specific commitments were made with regards to this idea.
 
 Finally we came with the following workflow for bare metal reservations in
 Blazar:
