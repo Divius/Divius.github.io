@@ -1,6 +1,6 @@
 .. title: Ironic at OpenInfra Summit and PTG
 .. slug: ironic-denver-2019
-.. date: 2019-05-07 10:03:26 UTC+02:00
+.. date: 2019-05-07 19:42:23 UTC+02:00
 .. tags: openstack, software
 .. category: 
 .. link: 
@@ -40,7 +40,7 @@ services:
   directly, since they are planning on providing a Python API independent of
   their ML2 implementation.
 
-Next, firmware update support has been a recurring topic (also in hallway
+Next, firmware update support was a recurring topic (also in hallway
 conversations and also in non-standalone context). Related to that, a driver
 feature matrix documentation was requested, so that such driver-specific
 features are easier to discover.
@@ -54,24 +54,23 @@ Then we had a separate `API multi-tenancy session`_. Three topic were covered:
   context this field would stay free-form. We did not agree whether we need an
   option to enable this feature.
 
-  An interesting use case was mentioned: assign a non-admin user to Nova, to
-  allocate it only a part of the bare metal pool, instead of all nodes.
+  An interesting use case was mentioned: assign a non-admin user to Nova to
+  allocate it only a part of the bare metal pool instead of all nodes.
 
-  We did not reach a consensus on whether we should use a schema with the
-  ``owner`` field, e.g. ``keystone://{project ID}`` would represent a Keystone
-  project ID.
+  We did not reach a consensus on using a schema with the ``owner`` field,
+  e.g. where ``keystone://{project ID}`` represents a Keystone project ID.
 
-* Adding a new field (probably ``deployed_by``) to track a user that requested
-  a deploy for auditing purposes.
+* Adding a new field (e.g. ``deployed_by``) to track a user that requested
+  deploy for auditing purposes.
 
   We agreed that the ``owner`` field should not be used for this purpose, and
-  overall it should not be changed automatically.
+  overall it should never be changed automatically by Ironic.
 
 * Adding some notion of *node leased to*, probably via a new field.
 
   This proposal was not well defined during the session, but we probably would
-  allow some subset of API to leasers using the policy mechanism. It became
-  apparent, that implementing a separate *deployment API endpoint* is required
+  allow some subset of API to lessees using the policy mechanism. It became
+  apparent that implementing a separate *deployment API endpoint* is required
   to make such policy possible.
 
 Creating the deployment API was identified as a potential immediate action
@@ -85,7 +84,7 @@ The PTG started for me with the `Scientific SIG discussions`_ of desired
 features and fixes in Ironic.
 
 The hottest topic was reducing the deployment time by reducing the number of
-reboots that are done during the whole provisioning process. `Ramdisk deploy`_
+reboots that are done during the provisioning process. `Ramdisk deploy`_
 was identified as a very promising feature to solve this, as well as enable
 booting from remote volumes not supported directly by Ironic and/or Cinder.
 A few SIG members committed to testing it as soon as possible.
@@ -94,7 +93,9 @@ Two related ideas were proposed for later brainstorming:
 
 * Keeping some proportion of nodes always on and with IPA booted. This is
   basing directly on the `fast-track deploy`_ work completed in the Stein
-  cycle.
+  cycle. A third party orchestrator would be needed for keeping the percentage,
+  but Ironic will have to provide an API to boot an ``available`` node into the
+  ramdisk.
 
 * Allow using *kexec* to instantly switch into a freshly deployed operating
   system.
@@ -112,13 +113,16 @@ majority of reviews, and some of them are close to burning out.
 
 * The first thing we discussed is simplifying the specs process. We considered a
   single +2 approval for specs and/or documentation. Approving documentation
-  cannot break anyone, and follow-ups are easy, so it seems a good idea.
+  cannot break anyone, and follow-ups are easy, so it seems a good idea. We did
+  not reach a firm agreement on a single +2 approval for specs; I personally
+  feel that it would only move the bottleneck from specs to the code.
 
 * Facilitating deprecated feature removals can help clean up the code, and it
   can often be done by new contributors. We would like to maintain a list of
   what can be removed when, so that we don't forget it.
 
-* We would also like to switch to single +2 for stable backports.
+* We would also like to switch to single +2 for stable backports. This needs
+  changing the stable policy, and Tony volunteered to propose it.
 
 We felt that we're adding cores at a good pace, Julia had been mentoring people
 that wanted it. We would like people to volunteer, then we can mentor them into
@@ -133,7 +137,8 @@ Then we discussed moving away from WSME, which is barely maintained by a team
 of not really interested individuals. The proposal was to follow the example of
 Keystone and just move to Flask. We can use ironic-inspector as an example, and
 probably migrate part by part. JSON schema could replace WSME objects,
-similarly to how Nova does it.
+similarly to how Nova does it. I volunteered to come up with a plan to switch,
+and some folks from Intel expressed interest in participating.
 
 Standalone roadmap
 ------------------
@@ -145,20 +150,21 @@ driver capabilities in the source code (similar to existing iSCSI boot) and
 generate the documentation from it. Then we could go as far as exposing this
 information in the API.
 
-During the multi-tenancy discussion, the idea of owner and leasee fields was
+During the multi-tenancy discussion, the idea of owner and lessee fields was
 well received. Julia volunteered to write a specification for that. We
 clarified the following access control policies implemented by default:
 
 * A user can list or show nodes if they are an administrator, an owner of a
-  node or a leasee of this node.
+  node or a leaser of this node.
 * A user can deploy or undeploy a node (through the future deployment API) if
-  they are an administrator, an owner of this node or a leasee of this node.
+  they are an administrator, an owner of this node or a lessee of this node.
 * A user can update a node or any of its resources if they are an administrator
-  or an owner of this node. A leasee of a node can **not** update it.
+  or an owner of this node. A lessee of a node can **not** update it.
 
 The discussion of recording the user that did a deployment turned into
 discussing introducing a searchable log of changes to node power and provision
-states.
+states. We did not reach a final consensus on it, and we probably need a
+volunteer to push this effort forward.
 
 Deploy steps continued
 ----------------------
@@ -166,9 +172,9 @@ Deploy steps continued
 This session was dedicated to making the deploy templates framework more usable
 in practice.
 
-* We agreed that we need to implement support for in-band deploy steps (other
-  than the built-in ``deploy.deploy`` step). We probably need to start IPA
-  before proceeding with the steps, similarly to how it is done with cleaning.
+* We need to implement support for in-band deploy steps (other than the
+  built-in ``deploy.deploy`` step). We probably need to start IPA before
+  proceeding with the steps, similarly to how it is done with cleaning.
 
 * We agreed to proceed with splitting the built-in core step, making it a
   regular deploy step, as well as removing the compatibility shim for drivers
@@ -187,9 +193,9 @@ Mark and Ruby volunteered to write a new spec on these topics.
 Day 2 operational workflow
 --------------------------
 
-For deployments with extensive external monitoring, we need a way to reflect in
-ironic the state when a deployed node looks healthy from our side but is
-detected as failed by the monitoring.
+For deployments with external health monitoring, we need a way to represent
+the state when a deployed node looks healthy from our side but is detected
+as failed by the monitoring.
 
 It seems that we could introduce a new state transition from ``active`` to
 something like ``failed`` or ``quarantined``, where a node is still deployed,
@@ -212,20 +218,21 @@ We discussed options to avoid relying on DHCP for deploying.
 
 * An existing specification proposes attaching IP information to virtual media.
   The initial contributors had become inactive, so we decided to help this work
-  to go through.
+  to go through. Volunteers are welcome.
 
 * As an alternative to that, we discussed using IPv6 SLAAC with multicast DNS
   (routed across WAN for Edge cases). A couple of folks on the room volunteered
-  to help with testing. We need to fix python-zeroconf_ to support IPv6.
+  to help with testing. We need to fix python-zeroconf_ to support IPv6, which
+  is something I'm planning on.
 
 Nova room
 ---------
 
 In a cross-project discussion with the Nova team we went through a few topics:
 
-* We discussed whether Nova should use new Ironic API to build config drives.
-  Since Ironic is not the only driver building config drives, we agreed that it
-  probably doesn't make much sense to change that.
+* Whether Nova should use new Ironic API to build config drives. Since Ironic
+  is not the only driver building config drives, we agreed that it probably
+  doesn't make much sense to change that.
 
 * We did not come to a conclusion on deprecating capabilities. We agreed that
   Ironic has to provide alternatives for ``boot_option`` and ``boot_mode``
@@ -233,7 +240,7 @@ In a cross-project discussion with the Nova team we went through a few topics:
   traits.
 
 * We agreed that we should switch Nova to using *openstacksdk* instead of
-  *ironicclient* to access Ironic. This work is already in progress.
+  *ironicclient* to access Ironic. This work had already been in progress.
 
 Faster deploy
 -------------
@@ -267,9 +274,9 @@ Asynchronous clean steps
 ------------------------
 
 We discussed enhancements for asynchronous clean and deploy steps. Currently
-running a step asynchronously requires either busy polling (occupying a green
-thread) or creating a new periodic task in a hardware type. We came up with
-two updates for clean steps:
+running a step asynchronously requires either polling in a loop (occupying
+a green thread) or creating a new periodic task in a hardware type. We came up
+with two proposed updates for clean steps:
 
 * Allow a clean step to request re-running itself after certain amount of
   time. E.g. a clean step would do something like
@@ -294,12 +301,16 @@ two updates for clean steps:
         return RunNext([{'step': 'wait_for_raid'}])
 
   and the conductor would insert the provided step to ``node.clean_steps``
-  after the current one.
+  after the current one and start running it.
+
+  This would allow for several follow-up steps as well. A use case is a clean
+  step for resetting iDRAC to a clean state that in turn consists of several
+  other clean steps. The idea of sub-steps was deemed too complicated.
 
 PTG: TripleO
 ============
 
-We discussed possibility of removing Nova from the TripleO undercloud and
+We discussed our plans for removing Nova from the TripleO undercloud and
 moving bare metal provisioning from under control of Heat. The plan from the
 `nova-less-deploy specification`_, as well as the current state
 of the implementation, were presented.
@@ -322,7 +333,7 @@ PTG: Ironic, Placement, Blazar
 We reiterated over our plans to allow Ironic to optionally report nodes to
 Placement. This will be turned off when Nova is present to avoid conflicts with
 the Nova reporting. We will optionally use Placement as a backend for Ironic
-allocation API.
+allocation API (which is something that had been planned before).
 
 Then we discussed potentially exposing detailed bare metal inventory to
 Placement. To avoid partial allocations, Placement could introduce new API to
@@ -345,7 +356,7 @@ When the reservation time comes:
    node matching previously picked node and allocation UUID matching the
    reservation UUID.
 #. When the enhancements in `Standalone roadmap`_ are implemented, Blazar will
-   also set the node's leasee field to the user ID of the reservation, so that
+   also set the node's lessee field to the user ID of the reservation, so that
    Ironic allows access to this node.
 #. A user fetches an Ironic allocation corresponding to the Blazar reservation
    UUID and learns the node UUID from it.
@@ -353,11 +364,6 @@ When the reservation time comes:
 
 Side and hallway discussions
 ============================
-
-* We discussed a request from the Edge WG to have a special "failure" provision
-  state that can be detected and entered by a request from a third party
-  monitoring tooling (as opposed to from within Ironic itself). It's unclear if
-  the existing *rescue* feature can fill this gap.
 
 * We discussed having Heat resources for Ironic. We recommended the team to
   start with Allocation and Deployment resources (the latter being virtual
