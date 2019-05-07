@@ -23,7 +23,7 @@
  </url>
  <url>
   <loc>http://dtantsur.github.io/archive.html</loc>
-  <lastmod>2019-04-03T14:09:00Z</lastmod>
+  <lastmod>2019-05-02T17:00:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/categories/</loc>
@@ -40,6 +40,14 @@
  <url>
   <loc>http://dtantsur.github.io/categories/software/</loc>
   <lastmod>2019-04-03T14:09:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://dtantsur.github.io/posts/ironic-at-openinfra-summit-and-ptg/</loc>
+  <lastmod>2019-05-02T17:00:00Z</lastmod>
+ </url>
+ <url>
+  <loc>http://dtantsur.github.io/posts/ironic-denver-2019/</loc>
+  <lastmod>2019-05-02T17:44:00Z</lastmod>
  </url>
  <url>
   <loc>http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-1/</loc>
