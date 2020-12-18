@@ -9,7 +9,7 @@
 <link href="assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
 <meta name="theme-color" content="#FFFFFF">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="rss.xml">
 <link rel="canonical" href="http://dtantsur.github.io/archive.html">
 <!--[if lt IE 9]><script src="assets/js/html5.js"></script><![endif]-->
 </head>
@@ -19,10 +19,11 @@
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="http://dtantsur.github.io/">
+        <a class="navbar-brand" href=".">
 
             <span id="blog-title">Coding Music</span>
         </a>
@@ -75,8 +76,13 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
+        
 <article class="listpage"><header><h1>Archive</h1>
     </header><ul class="postlist">
+<li>
+<a href="2020/">2020</a>
+            (1)
+        </li>
 <li>
 <a href="2019/">2019</a>
             (2)
@@ -90,8 +96,9 @@ navbar-dark bg-dark
             (1)
     </li>
 </ul></article><!--End of body content--><footer id="footer">
-            Contents © 2019 Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+            Contents © 2020 Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
 <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"></a> - Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a>
+            
             
         </footer>
 </div>
@@ -101,9 +108,7 @@ navbar-dark bg-dark
         <script src="assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script>
 </body>
 </html>

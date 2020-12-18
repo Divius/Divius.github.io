@@ -4,30 +4,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Atlanta PTG Summary: Ironic (part 3) | Coding Music</title>
+<title>Atlanta PTG Summary | Coding Music</title>
 <link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
 <meta name="theme-color" content="#FFFFFF">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../../rss.xml">
 <link rel="canonical" href="http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-3/">
 <!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Dmitry Tantsur">
-<link rel="prev" href="../ironic-ptg-atlanta-2017-2/" title="Atlanta PTG Summary: Ironic (part 2)" type="text/html">
-<link rel="next" href="../ironic-ptg-atlanta-2017-4/" title="Atlanta PTG Summary: Ironic (part 4)" type="text/html">
+<link rel="prev" href="../ironic-ptg-atlanta-2017-2/" title="Atlanta PTG Summary" type="text/html">
+<link rel="next" href="../ironic-ptg-atlanta-2017-4/" title="Atlanta PTG Summary" type="text/html">
 <meta property="og:site_name" content="Coding Music">
-<meta property="og:title" content="Atlanta PTG Summary: Ironic (part 3)">
+<meta property="og:title" content="Atlanta PTG Summary">
 <meta property="og:url" content="http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-3/">
-<meta property="og:description" content="This is an extract from my personal notes and public etherpads from the
-OpenStack PTG 2017 in Atlanta. A lot of text ahead!
-The previous part,
-the next part.
-
-
-Operations
-Etherpad: https://etherpad.op">
+<meta property="og:description" content="Content migrated to https://owlet.today/posts/ironic-ptg-atlanta-2017-3/.">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2017-03-06T17:00:00+01:00">
-<meta property="article:tag" content="openstack">
-<meta property="article:tag" content="software">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -35,10 +26,11 @@ Etherpad: https://etherpad.op">
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="http://dtantsur.github.io/">
+        <a class="navbar-brand" href="../../">
 
             <span id="blog-title">Coding Music</span>
         </a>
@@ -91,10 +83,11 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
-<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Atlanta PTG Summary: Ironic (part 3)</a></h1>
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Atlanta PTG Summary</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
                     Dmitry Tantsur
             </span></p>
             <p class="dateline">
@@ -113,214 +106,15 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>This is an extract from my personal notes and public etherpads from the
-OpenStack PTG 2017 in Atlanta. A lot of text ahead!</p>
-<p><a class="reference external" href="../posts/ironic-ptg-atlanta-2017-2.html">The previous part</a>,
-<a class="reference external" href="../posts/ironic-ptg-atlanta-2017-4.html">the next part</a>.</p>
-<!-- TEASER_END: Read more -->
-<div class="section" id="operations">
-<h2>Operations</h2>
-<p>Etherpad: <a class="reference external" href="https://etherpad.openstack.org/p/ironic-pike-ptg-operations">https://etherpad.openstack.org/p/ironic-pike-ptg-operations</a></p>
-<div class="section" id="osc-plugin-and-api-versioning">
-<h3>OSC plugin and API versioning</h3>
-<p>Currently we default the OSC plugin (and old client too) to a really old API
-version. We agreed that this situation is not desired, and that we should take
-the same approach as Nova and default to the latest version. We are planning
-to announce the change this cycle, both via the ML and via a warning issues
-when no versions are specified.</p>
-<p>Next, in the Queens cycle, we will have to make the change, bearing in mind
-that OSC does not support values like <tt class="docutils literal">latest</tt> for API versions. So the plan
-is as follows:</p>
-<ul class="simple">
-<li>make the default <tt class="docutils literal"><span class="pre">--os-baremetal-api-version=1</span></tt> in
-<a class="reference external" href="https://github.com/openstack/python-ironicclient/blob/f242c6af3b295051019aeabb4ec7cf82eb085874/ironicclient/osc/plugin.py#L67">https://github.com/openstack/python-ironicclient/blob/f242c6af3b295051019aeabb4ec7cf82eb085874/ironicclient/osc/plugin.py#L67</a>
-</li>
-<li>when instantiating the ironic client in the OSC plugin, replace '1' with
-'latest':
-<a class="reference external" href="https://github.com/openstack/python-ironicclient/blob/f242c6af3b295051019aeabb4ec7cf82eb085874/ironicclient/osc/plugin.py#L41">https://github.com/openstack/python-ironicclient/blob/f242c6af3b295051019aeabb4ec7cf82eb085874/ironicclient/osc/plugin.py#L41</a>
-</li>
-<li>when handling <tt class="docutils literal"><span class="pre">--os-baremetal-api-version=latest</span></tt>, replace it with <tt class="docutils literal">1</tt>,
-so that it's later replaced with <tt class="docutils literal">latest</tt> again:
-<a class="reference external" href="https://github.com/openstack/python-ironicclient/blob/f242c6af3b295051019aeabb4ec7cf82eb085874/ironicclient/osc/plugin.py#L85">https://github.com/openstack/python-ironicclient/blob/f242c6af3b295051019aeabb4ec7cf82eb085874/ironicclient/osc/plugin.py#L85</a>
-</li>
-</ul>
-<p>As a side effect, that will make <tt class="docutils literal">1</tt> equivalent to <tt class="docutils literal">latest</tt> as well.</p>
-<p>It was also suggested to have an new command, displaying both server supported
-and client supported API versions.</p>
-</div>
-<div class="section" id="deprecating-the-standalone-ironic-cli-in-favor-of-the-osc-plugin">
-<h3>Deprecating the standalone ironic CLI in favor of the OSC plugin</h3>
-<p>We do not want to maintain two CLI in the long run. We agreed to start
-thinking about deprecating the old <tt class="docutils literal">ironic</tt> command. Main concerns:</p>
-<ul>
-<li>
-<p class="first">lack of feature parity,</p>
-</li>
-<li>
-<p class="first">ugly way to work without authentication, for example:</p>
-<pre class="literal-block">
-openstack baremetal --os-url http://ironic --os-token fake &lt;COMMAND&gt;
-</pre>
-</li>
-</ul>
-<dl class="docutils">
-<dt>Plan for Pike</dt>
-<dd><ul class="first last simple">
-<li>Ensure complete feature parity between two clients.</li>
-<li>Only use <tt class="docutils literal">openstack baremetal</tt> commands in the documentation.</li>
-</ul></dd>
-</dl>
-<p>The actual deprecation is planned for Queens.</p>
-</div>
-<div class="section" id="raid-configuration-enhancements">
-<h3>RAID configuration enhancements</h3>
-<p>A few suggestions were made:</p>
-<ul class="simple">
-<li>Support ordered list of logical disk definition. The first possible
-configuration is applied to the node. For example:<ul>
-<li>Top of list - RAID 10 but we don't have enough drives</li>
-<li>Fallback to next preference in list - RAID 1 on a pair of available drives</li>
-<li>Finally, JBOD or RAID 0 on only available drive</li>
-</ul>
-</li>
-<li>Specify the number of instances for a logical disk definition to create.</li>
-<li>Specify backing physical disks by stating preference for the smallest, e.g.
-smallest like-sized pair or two smallest disks.</li>
-<li>Specify location of physical disks, e.g. first two or last two as perceived
-by the hardware, front/rear/internal location.</li>
-</ul>
-<dl class="docutils">
-<dt>Actions</dt>
-<dd>
-<strong>rpioso</strong> will write RFE(s)</dd>
-</dl>
-</div>
-<div class="section" id="smaller-topics">
-<h3>Smaller topics</h3>
-<dl class="docutils">
-<dt>Non-aborteable clean steps stuck in <tt class="docutils literal">clean wait</tt> state</dt>
-<dd>We discussed a potential <tt class="docutils literal"><span class="pre">force-abort</span></tt> functionality, but the only thing
-we agreed on is check that all current clean steps are marked as
-<tt class="docutils literal">abortable</tt> if they really are.</dd>
-<dt>Status of long-running cleaning operations</dt>
-<dd>There is a request to be able to get status of e.g. disk shredding (which
-may take hours). We found out that the current IPA API design essentially
-prevents running several commands in parallel. We agreed that we need IPA
-API versioning first, and that this work is not a huge priority right now.</dd>
-<dt>OSC command for listing driver and RAID properties</dt>
-<dd>
-<p class="first">We cannot agree on the exact form of these two commands. The primary
-candidates discussed on the PTG were:</p>
-<pre class="literal-block">
-openstack baremetal driver property list &lt;DRIVER&gt;
-openstack baremetal driver property show &lt;DRIVER&gt;
-</pre>
-<p class="last">We agreed to move this to the spec: <a class="reference external" href="https://review.openstack.org/439907">https://review.openstack.org/439907</a>.</p>
-</dd>
-<dt>Abandoning an active node</dt>
-<dd>I.e. an opposite to adopt. It's unclear how such operation would play with
-nova, maybe it's only useful for a standalone case.</dd>
-</dl>
-</div>
-</div>
-<div class="section" id="future-work">
-<h2>Future Work</h2>
-<p>Etherpad: <a class="reference external" href="https://etherpad.openstack.org/p/ironic-pike-ptg-future-work">https://etherpad.openstack.org/p/ironic-pike-ptg-future-work</a>.</p>
-<div class="section" id="neutron-event-processing">
-<h3>Neutron event processing</h3>
-<p>RFE: <a class="reference external" href="https://bugs.launchpad.net/ironic/+bug/1304673">https://bugs.launchpad.net/ironic/+bug/1304673</a>, spec:
-<a class="reference external" href="https://review.openstack.org/343684">https://review.openstack.org/343684</a>.</p>
-<p>We need to wait for certain events from neutron (like port bindings).
-Currently we just wait some time, and hope it went well. We agreed to follow
-the same pattern that nova does for neutron to nova notifications.
-The neutron part is
-<a class="reference external" href="https://github.com/openstack/neutron/blob/master/neutron/notifiers/nova.py">https://github.com/openstack/neutron/blob/master/neutron/notifiers/nova.py</a>.
-We agreed with the Neutron team that notifier and the other ironic-specific
-stuff for neutron would live in a separate repo under Baremetal governance.
-Draft code is <a class="reference external" href="https://review.openstack.org/#/c/357780">https://review.openstack.org/#/c/357780</a>.</p>
-</div>
-<div class="section" id="splitting-node-properties-capabilities-into-a-separate-table">
-<h3>Splitting node.properties[capabilities] into a separate table</h3>
-<p>This is something we've planned on for long time. Currently, it's not possible
-to update capabilities atomically, and the format is quite hard to work with:
-<tt class="docutils literal">k1:v1,k2:v2</tt>. We discussed going away from using word <tt class="docutils literal">capability</tt>. It's
-already overused in the OpenStack world, and nova is switching to the notion
-of "traits". It also looks like traits will be qualitative-only while, we have
-proposals from quantitative capabilities (like <tt class="docutils literal">gpu_count</tt>).</p>
-<p>It was proposed to model a typical CRUD API for traits in Ironic:</p>
-<pre class="literal-block">
-GET /v1/nodes/&lt;NODE&gt;/traits
-POST  /v1/nodes/&lt;NODE&gt;/traits
-GET /v1/nodes/&lt;NODE&gt;/traits/&lt;trait&gt;
-DELETE /v1/nodes/&lt;NODE&gt;/traits/&lt;trait&gt;
-</pre>
-<p>In API versions before this addition, we would make
-<tt class="docutils literal">properties/capabilities</tt> a transparent proxy to new tables.</p>
-<p>It was noted that the database change can be done first, with API change
-following it.</p>
-<dl class="docutils">
-<dt>Actions</dt>
-<dd>
-<strong>rloo</strong> to propose two separate RFEs for database and API parts.</dd>
-</dl>
-</div>
-<div class="section" id="avoid-changing-behavior-based-on-properties-capabilities">
-<h3>Avoid changing behavior based on properties[capabilities]</h3>
-<p>Currently our capabilities have a dual role. They serve both for scheduling
-(to inform nova of what nodes can) and for making decisions based on flavor
-(e.g. request UEFI boot). It is complicated by the fact that sometimes the
-same capability (e.g. UEFI) can be of both types depending on a driver.
-This is quite confusing for users, and may be incompatible with future changes
-both in ironic and nova.</p>
-<p>For things like boot option and (potentially) BIOS setting, we need to be able
-to get requests from flavors and/or nova boot arguments without abusing
-capabilities for it. Maybe similar to how NUMA support does it:
-<a class="reference external" href="https://docs.openstack.org/admin-guide/compute-cpu-topologies.html">https://docs.openstack.org/admin-guide/compute-cpu-topologies.html</a>.</p>
-<p>For example:</p>
-<pre class="literal-block">
-flavor.extra_specs[traits:has_ssd]=True
-</pre>
-<p>(tells the scheduler to find a node with SSD disk; does not change
-behavior/config of node)</p>
-<pre class="literal-block">
-flavor.extra_specs[configuration:use_uefi]=True
-</pre>
-<p>(configures the node to boot UEFI; has no impact on scheduling)</p>
-<pre class="literal-block">
-flavor.extra_specs[traits:has_uefi]=True
-flavor.extra_specs[configuration:use_uefi]=True
-</pre>
-<p>(tells the scheduler to find a node supporting UEFI; if this support is
-dynamic, configures the node to enable UEFI boot).</p>
-<dl class="docutils">
-<dt>Actions</dt>
-<dd>
-<p class="first"><strong>jroll</strong> to start conversation with nova folks about how/if to have a
-replacement for this elsewhere.</p>
-<p class="last">Stop accepting driver features relying on <tt class="docutils literal">properties[capabilities]</tt> (as
-opposed to <tt class="docutils literal">instance_info[capabilities]</tt>).</p>
-</dd>
-<dt>Potential actions</dt>
-<dd><ul class="first last simple">
-<li>Remove <tt class="docutils literal">instance_info[capabilities]</tt> into
-<tt class="docutils literal">instance_info[configuration]</tt> for clarity.</li>
-</ul></dd>
-</dl>
-</div>
-</div>
-</div>
+    <p>Content migrated to <a href="https://owlet.today/posts/ironic-ptg-atlanta-2017-3/">https://owlet.today/posts/ironic-ptg-atlanta-2017-3/</a>.</p>
+    
     </div>
-    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
-<li><a class="tag p-category" href="../../categories/openstack/" rel="tag">openstack</a></li>
-            <li><a class="tag p-category" href="../../categories/software/" rel="tag">software</a></li>
-        </ul>
-<ul class="pager hidden-print">
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
-                <a href="../ironic-ptg-atlanta-2017-2/" rel="prev" title="Atlanta PTG Summary: Ironic (part 2)">Previous post</a>
+                <a href="../ironic-ptg-atlanta-2017-2/" rel="prev" title="Atlanta PTG Summary">Previous post</a>
             </li>
             <li class="next">
-                <a href="../ironic-ptg-atlanta-2017-4/" rel="next" title="Atlanta PTG Summary: Ironic (part 4)">Next post</a>
+                <a href="../ironic-ptg-atlanta-2017-4/" rel="next" title="Atlanta PTG Summary">Next post</a>
             </li>
         </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
         
@@ -329,7 +123,7 @@ opposed to <tt class="docutils literal">instance_info[capabilities]</tt>).</p>
         <script>
         var disqus_shortname ="diviusnet2",
             disqus_url="http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-3/",
-        disqus_title="Atlanta PTG Summary: Ironic (part 3)",
+        disqus_title="Atlanta PTG Summary",
         disqus_identifier="cache/posts/ironic-ptg-atlanta-2017-3.html",
         disqus_config = function () {
             this.language = "en";
@@ -345,8 +139,9 @@ opposed to <tt class="docutils literal">instance_info[capabilities]</tt>).</p>
 
 
         </section></article><script>var disqus_shortname="diviusnet2";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
-            Contents © 2019 Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+            Contents © 2020 Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
 <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"></a> - Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a>
+            
             
         </footer>
 </div>
@@ -356,9 +151,7 @@ opposed to <tt class="docutils literal">instance_info[capabilities]</tt>).</p>
         <script src="../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script>
 </body>
 </html>

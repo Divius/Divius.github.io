@@ -8,24 +8,17 @@
 <link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
 <meta name="theme-color" content="#FFFFFF">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../../rss.xml">
 <link rel="canonical" href="http://dtantsur.github.io/posts/ironic-denver-2019/">
 <!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Dmitry Tantsur">
 <link rel="prev" href="../resource-classes-traits-and-allocations/" title="Bare Metal Resource Classes, Traits and Allocations" type="text/html">
+<link rel="next" href="../blog-migrated/" title="Blog migrated" type="text/html">
 <meta property="og:site_name" content="Coding Music">
 <meta property="og:title" content="Ironic at OpenInfra Summit and PTG">
 <meta property="og:url" content="http://dtantsur.github.io/posts/ironic-denver-2019/">
-<meta property="og:description" content="This is a brief summary of bare metal discussions at the OpenInfra Summit &amp; PTG
-2019 in Denver.
-
-
-Keynotes
-The Metal3 project got some spotlight during the keynotes. A (successful!)
-live demo was done">
+<meta property="og:description" content="Content migrated to https://owlet.today/posts/ironic-denver-2019/.">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2019-05-07T19:42:23+02:00">
-<meta property="article:tag" content="openstack">
-<meta property="article:tag" content="software">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -33,10 +26,11 @@ live demo was done">
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="http://dtantsur.github.io/">
+        <a class="navbar-brand" href="../../">
 
             <span id="blog-title">Coding Music</span>
         </a>
@@ -89,10 +83,11 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
+        
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Ironic at OpenInfra Summit and PTG</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
                     Dmitry Tantsur
             </span></p>
             <p class="dateline">
@@ -111,345 +106,15 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>This is a brief summary of bare metal discussions at the OpenInfra Summit &amp; PTG
-2019 in Denver.</p>
-<!-- TEASER_END: Read more -->
-<div class="section" id="keynotes">
-<h2>Keynotes</h2>
-<p>The <a class="reference external" href="http://metal3.io">Metal3</a> project got some spotlight during the keynotes. A (successful!)
-<a class="reference external" href="https://www.openstack.org/videos/summits/denver-2019/openstack-ironic-and-bare-metal-infrastructure-all-abstractions-start-somewhere">live demo</a> was done that demonstrated using Ironic through Kubernetes API to
-drive provisioning of bare metal nodes.</p>
-<p>The official <a class="reference external" href="https://www.openstack.org/bare-metal/">bare metal program</a> was announced to promote managing bare metal
-infrastructure via OpenStack.</p>
-</div>
-<div class="section" id="forum-standalone-ironic">
-<h2>Forum: standalone Ironic</h2>
-<p>On Monday we had two sessions dedicated to the future development of standalone
-Ironic (without Nova or without any other OpenStack services).</p>
-<p>During the <a class="reference external" href="https://etherpad.openstack.org/p/DEN-train-next-steps-for-standalone-ironic">standalone roadmap session</a> the audience identified two potential
-domains where we could provide simple alternatives to depending on OpenStack
-services:</p>
-<ul class="simple">
-<li>Alternative authentication. It was mentioned, however, that Keystone is a
-relatively easy service to install and operate, so adding this to Ironic
-may not be worth the effort.</li>
-<li>Multi-tenant networking without Neutron. We could use <a class="reference external" href="https://opendev.org/x/networking-ansible">networking-ansible</a>
-directly, since they are planning on providing a Python API independent of
-their ML2 implementation.</li>
-</ul>
-<p>Next, firmware update support was a recurring topic (also in hallway
-conversations and also in non-standalone context). Related to that, a driver
-feature matrix documentation was requested, so that such driver-specific
-features are easier to discover.</p>
-<p>Then we had a separate <a class="reference external" href="https://etherpad.openstack.org/p/DEN-train-ironic-multi-tenancy">API multi-tenancy session</a>. Three topic were covered:</p>
-<ul>
-<li>
-<p class="first">Wiring in the existing <tt class="docutils literal">owner</tt> field for access control.</p>
-<p>The idea is to allow operations for non-administrator users only to nodes
-with <tt class="docutils literal">owner</tt> equal to their project (aka tenant) ID. In the non-keystone
-context this field would stay free-form. We did not agree whether we need an
-option to enable this feature.</p>
-<p>An interesting use case was mentioned: assign a non-admin user to Nova to
-allocate it only a part of the bare metal pool instead of all nodes.</p>
-<p>We did not reach a consensus on using a schema with the <tt class="docutils literal">owner</tt> field,
-e.g. where <tt class="docutils literal"><span class="pre">keystone://{project</span> ID}</tt> represents a Keystone project ID.</p>
-</li>
-<li>
-<p class="first">Adding a new field (e.g. <tt class="docutils literal">deployed_by</tt>) to track a user that requested
-deploy for auditing purposes.</p>
-<p>We agreed that the <tt class="docutils literal">owner</tt> field should not be used for this purpose, and
-overall it should never be changed automatically by Ironic.</p>
-</li>
-<li>
-<p class="first">Adding some notion of <em>node leased to</em>, probably via a new field.</p>
-<p>This proposal was not well defined during the session, but we probably would
-allow some subset of API to lessees using the policy mechanism. It became
-apparent that implementing a separate <em>deployment API endpoint</em> is required
-to make such policy possible.</p>
-</li>
-</ul>
-<p>Creating the deployment API was identified as a potential immediate action
-item. Wiring the <tt class="docutils literal">owner</tt> field can also be done in the Train cycle, if we
-find volunteers to push it forward.</p>
-</div>
-<div class="section" id="ptg-scientific-sig">
-<h2>PTG: scientific SIG</h2>
-<p>The PTG started for me with the <a class="reference external" href="https://etherpad.openstack.org/p/scientific-sig-ptg-train">Scientific SIG discussions</a> of desired
-features and fixes in Ironic.</p>
-<p>The hottest topic was reducing the deployment time by reducing the number of
-reboots that are done during the provisioning process. <a class="reference external" href="https://docs.openstack.org/ironic/latest/admin/interfaces/deploy.html#ramdisk-deploy">Ramdisk deploy</a>
-was identified as a very promising feature to solve this, as well as enable
-booting from remote volumes not supported directly by Ironic and/or Cinder.
-A few SIG members committed to testing it as soon as possible.</p>
-<p>Two related ideas were proposed for later brainstorming:</p>
-<ul class="simple">
-<li>Keeping some proportion of nodes always on and with IPA booted. This is
-basing directly on the <a class="reference external" href="https://storyboard.openstack.org/#!/story/2004965">fast-track deploy</a> work completed in the Stein
-cycle. A third party orchestrator would be needed for keeping the percentage,
-but Ironic will have to provide an API to boot an <tt class="docutils literal">available</tt> node into the
-ramdisk.</li>
-<li>Allow using <em>kexec</em> to instantly switch into a freshly deployed operating
-system.</li>
-</ul>
-<p>Combined together, these features can allow zero-reboot deployments.</p>
-</div>
-<div class="section" id="ptg-ironic">
-<h2>PTG: Ironic</h2>
-<div class="section" id="community-sustainability">
-<h3>Community sustainability</h3>
-<p>We seem to have a disbalance in reviews, with very few people handling the
-majority of reviews, and some of them are close to burning out.</p>
-<ul class="simple">
-<li>The first thing we discussed is simplifying the specs process. We considered a
-single +2 approval for specs and/or documentation. Approving documentation
-cannot break anyone, and follow-ups are easy, so it seems a good idea. We did
-not reach a firm agreement on a single +2 approval for specs; I personally
-feel that it would only move the bottleneck from specs to the code.</li>
-<li>Facilitating deprecated feature removals can help clean up the code, and it
-can often be done by new contributors. We would like to maintain a list of
-what can be removed when, so that we don't forget it.</li>
-<li>We would also like to switch to single +2 for stable backports. This needs
-changing the stable policy, and Tony volunteered to propose it.</li>
-</ul>
-<p>We felt that we're adding cores at a good pace, Julia had been mentoring people
-that wanted it. We would like people to volunteer, then we can mentor them into
-core status.</p>
-<p>However, we were not so sure we wanted to increase the stable core team. This
-team is supposed to be a small number of people that know quite a few small
-details of the stable policy (e.g. requirements changes). We thought we should
-better switch to single +2 approval for the existing team.</p>
-<p>Then we discussed moving away from WSME, which is barely maintained by a team
-of not really interested individuals. The proposal was to follow the example of
-Keystone and just move to Flask. We can use ironic-inspector as an example, and
-probably migrate part by part. JSON schema could replace WSME objects,
-similarly to how Nova does it. I volunteered to come up with a plan to switch,
-and some folks from Intel expressed interest in participating.</p>
-</div>
-<div class="section" id="standalone-roadmap">
-<h3>Standalone roadmap</h3>
-<p>We started with a recap of items from <a class="reference internal" href="#forum-standalone-ironic">Forum: standalone Ironic</a>.</p>
-<p>While discussing creating a driver matrix, we realized that we could keep
-driver capabilities in the source code (similar to existing iSCSI boot) and
-generate the documentation from it. Then we could go as far as exposing this
-information in the API.</p>
-<p>During the multi-tenancy discussion, the idea of owner and lessee fields was
-well received. Julia volunteered to write a specification for that. We
-clarified the following access control policies implemented by default:</p>
-<ul class="simple">
-<li>A user can list or show nodes if they are an administrator, an owner of a
-node or a leaser of this node.</li>
-<li>A user can deploy or undeploy a node (through the future deployment API) if
-they are an administrator, an owner of this node or a lessee of this node.</li>
-<li>A user can update a node or any of its resources if they are an administrator
-or an owner of this node. A lessee of a node can <strong>not</strong> update it.</li>
-</ul>
-<p>The discussion of recording the user that did a deployment turned into
-discussing introducing a searchable log of changes to node power and provision
-states. We did not reach a final consensus on it, and we probably need a
-volunteer to push this effort forward.</p>
-</div>
-<div class="section" id="deploy-steps-continued">
-<h3>Deploy steps continued</h3>
-<p>This session was dedicated to making the deploy templates framework more usable
-in practice.</p>
-<ul>
-<li>
-<p class="first">We need to implement support for in-band deploy steps (other than the
-built-in <tt class="docutils literal">deploy.deploy</tt> step). We probably need to start IPA before
-proceeding with the steps, similarly to how it is done with cleaning.</p>
-</li>
-<li>
-<p class="first">We agreed to proceed with splitting the built-in core step, making it a
-regular deploy step, as well as removing the compatibility shim for drivers
-that do not support deploy steps. We will probably separate writing an image
-to disk, writing a configdrive and creating a bootloader.</p>
-<p>The latter could be overridden to provide custom kernel parameters.</p>
-</li>
-<li>
-<p class="first">To handle potential differences between deploy steps in different hardware
-types, we discussed the possibility of optionally including a hardware type
-or interface name in a clean step. Such steps will only be run for nodes with
-matching hardware type or interface.</p>
-</li>
-</ul>
-<p>Mark and Ruby volunteered to write a new spec on these topics.</p>
-</div>
-<div class="section" id="day-2-operational-workflow">
-<h3>Day 2 operational workflow</h3>
-<p>For deployments with external health monitoring, we need a way to represent
-the state when a deployed node looks healthy from our side but is detected
-as failed by the monitoring.</p>
-<p>It seems that we could introduce a new state transition from <tt class="docutils literal">active</tt> to
-something like <tt class="docutils literal">failed</tt> or <tt class="docutils literal">quarantined</tt>, where a node is still deployed,
-but explicitly marked as at fault by an operator. On unprovisioning, this node
-would not become <tt class="docutils literal">available</tt> automatically. We also considered the
-possibility of using a flag instead of a new state, although the operators in
-the room were more in favor of using a state. We largely agreed that the
-already overloaded <tt class="docutils literal">maintenance</tt> flag should not be used for this.</p>
-<p>On the Nova side we would probably use the <tt class="docutils literal">error</tt> state to reflect nodes in
-the new state.</p>
-<p>A very similar request had been done for node retirement support. We decided to
-look for a unified solution.</p>
-</div>
-<div class="section" id="dhcp-less-deploy">
-<h3>DHCP-less deploy</h3>
-<p>We discussed options to avoid relying on DHCP for deploying.</p>
-<ul class="simple">
-<li>An existing specification proposes attaching IP information to virtual media.
-The initial contributors had become inactive, so we decided to help this work
-to go through. Volunteers are welcome.</li>
-<li>As an alternative to that, we discussed using IPv6 SLAAC with multicast DNS
-(routed across WAN for Edge cases). A couple of folks on the room volunteered
-to help with testing. We need to fix <a class="reference external" href="https://github.com/jstasiak/python-zeroconf">python-zeroconf</a> to support IPv6, which
-is something I'm planning on.</li>
-</ul>
-</div>
-<div class="section" id="nova-room">
-<h3>Nova room</h3>
-<p>In a cross-project discussion with the Nova team we went through a few topics:</p>
-<ul class="simple">
-<li>Whether Nova should use new Ironic API to build config drives. Since Ironic
-is not the only driver building config drives, we agreed that it probably
-doesn't make much sense to change that.</li>
-<li>We did not come to a conclusion on deprecating capabilities. We agreed that
-Ironic has to provide alternatives for <tt class="docutils literal">boot_option</tt> and <tt class="docutils literal">boot_mode</tt>
-capabilities first. These will probably become deploy steps or built-in
-traits.</li>
-<li>We agreed that we should switch Nova to using <em>openstacksdk</em> instead of
-<em>ironicclient</em> to access Ironic. This work had already been in progress.</li>
-</ul>
-</div>
-<div class="section" id="faster-deploy">
-<h3>Faster deploy</h3>
-<p>We followed up to <a class="reference internal" href="#ptg-scientific-sig">PTG: scientific SIG</a> with potential action items on
-speeding up the deployment process by reducing the number of reboots. We
-discussed an ability to keep all or some nodes powered on and heartbeating in
-the <tt class="docutils literal">available</tt> state:</p>
-<ul class="simple">
-<li>Add an option to keep the ramdisk running after cleaning.<ul>
-<li>For this to work with multi-tenant networking we'll need an IPA command to
-reset networking.</li>
-</ul>
-</li>
-<li>Add a provisioning verb going from <tt class="docutils literal">available</tt> to <tt class="docutils literal">available</tt> booting the
-node into IPA.</li>
-<li>Make sure that pre-booted nodes are prioritized for scheduling. We will
-probably dynamically add a special trait. Then we'll have to update both
-Nova/Placement and the allocation API to support preferred (optional) traits.</li>
-</ul>
-<p>We also agreed that we could provide an option to <em>kexec</em> instead of rebooting
-as an advanced deploy step for operators that really know their hardware.
-Multi-tenant networking can be tricky in this case, since there is no safe
-point to switch from deployment to tenant network. We will probably take a best
-effort approach: command IPA to shutdown all its functionality and schedule a
-<em>kexec</em> after some time. After that, switch to tenant networks. This is not
-entirely secure, but will probably fit the operators (HPC) who requests it.</p>
-</div>
-<div class="section" id="asynchronous-clean-steps">
-<h3>Asynchronous clean steps</h3>
-<p>We discussed enhancements for asynchronous clean and deploy steps. Currently
-running a step asynchronously requires either polling in a loop (occupying
-a green thread) or creating a new periodic task in a hardware type. We came up
-with two proposed updates for clean steps:</p>
-<ul>
-<li>
-<p class="first">Allow a clean step to request re-running itself after certain amount of
-time. E.g. a clean step would do something like</p>
-<pre class="code python"><a name="rest_code_461840562b964e76a964ef4aca41e312-1"></a><span class="nd">@clean_step</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<a name="rest_code_461840562b964e76a964ef4aca41e312-2"></a><span class="k">def</span> <span class="nf">wait_for_raid</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a name="rest_code_461840562b964e76a964ef4aca41e312-3"></a>    <span class="k">if</span> <span class="ow">not</span> <span class="n">raid_is_ready</span><span class="p">():</span>
-<a name="rest_code_461840562b964e76a964ef4aca41e312-4"></a>        <span class="k">return</span> <span class="n">RerunAfter</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
-</pre>
-<p>and the conductor would schedule re-running the same step in 60 seconds.</p>
-</li>
-<li>
-<p class="first">Allow a clean step to spawn more clean steps. E.g. a clean step would
-do something like</p>
-<pre class="code python"><a name="rest_code_37b750548bd54e4da5725cb0210dd955-1"></a><span class="nd">@clean_step</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<a name="rest_code_37b750548bd54e4da5725cb0210dd955-2"></a><span class="k">def</span> <span class="nf">create_raid_configuration</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<a name="rest_code_37b750548bd54e4da5725cb0210dd955-3"></a>    <span class="n">start_create_raid</span><span class="p">()</span>
-<a name="rest_code_37b750548bd54e4da5725cb0210dd955-4"></a>    <span class="k">return</span> <span class="n">RunNext</span><span class="p">([{</span><span class="s1">'step'</span><span class="p">:</span> <span class="s1">'wait_for_raid'</span><span class="p">}])</span>
-</pre>
-<p>and the conductor would insert the provided step to <tt class="docutils literal">node.clean_steps</tt>
-after the current one and start running it.</p>
-<p>This would allow for several follow-up steps as well. A use case is a clean
-step for resetting iDRAC to a clean state that in turn consists of several
-other clean steps. The idea of sub-steps was deemed too complicated.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="section" id="ptg-tripleo">
-<h2>PTG: TripleO</h2>
-<p>We discussed our plans for removing Nova from the TripleO undercloud and
-moving bare metal provisioning from under control of Heat. The plan from the
-<a class="reference external" href="http://specs.openstack.org/openstack/tripleo-specs/specs/stein/nova-less-deploy.html">nova-less-deploy specification</a>, as well as the current state
-of the implementation, were presented.</p>
-<p>The current concerns are:</p>
-<ul class="simple">
-<li>upgrades from a Nova based deployment (probably just wipe the Nova
-database),</li>
-<li>losing user experience of <tt class="docutils literal">nova list</tt> (largely compensated by
-<tt class="docutils literal">metalsmith list</tt>),</li>
-<li>tracking IP addresses for networks other than <em>ctlplane</em> (solved the same
-way as for deployed servers).</li>
-</ul>
-<p>The next action item is to create a CI job based on the already merged code and
-verify a few assumptions made above.</p>
-</div>
-<div class="section" id="ptg-ironic-placement-blazar">
-<h2>PTG: Ironic, Placement, Blazar</h2>
-<p>We reiterated over our plans to allow Ironic to optionally report nodes to
-Placement. This will be turned off when Nova is present to avoid conflicts with
-the Nova reporting. We will optionally use Placement as a backend for Ironic
-allocation API (which is something that had been planned before).</p>
-<p>Then we discussed potentially exposing detailed bare metal inventory to
-Placement. To avoid partial allocations, Placement could introduce new API to
-consume the whole resource provider. Ironic would use it when creating an
-allocation. No specific commitments were made with regards to this idea.</p>
-<p>Finally we came with the following workflow for bare metal reservations in
-Blazar:</p>
-<ol class="arabic simple">
-<li>A user requests a bare metal reservation from Blazar.</li>
-<li>Blazar fetches allocation candidates from Placement.</li>
-<li>Blazar fetches a list of bare metal nodes from Ironic and filters out
-allocation candidates, whose resource provider UUID does not match one of
-the node UUIDs.</li>
-<li>Blazar remembers the node UUID and returns the reservation UUID to the user.</li>
-</ol>
-<p>When the reservation time comes:</p>
-<ol class="arabic simple">
-<li>Blazar creates an allocation in Ironic (not Placement) with the candidate
-node matching previously picked node and allocation UUID matching the
-reservation UUID.</li>
-<li>When the enhancements in <a class="reference internal" href="#standalone-roadmap">Standalone roadmap</a> are implemented, Blazar will
-also set the node's lessee field to the user ID of the reservation, so that
-Ironic allows access to this node.</li>
-<li>A user fetches an Ironic allocation corresponding to the Blazar reservation
-UUID and learns the node UUID from it.</li>
-<li>A user proceeds with deploying the node.</li>
-</ol>
-</div>
-<div class="section" id="side-and-hallway-discussions">
-<h2>Side and hallway discussions</h2>
-<ul class="simple">
-<li>We discussed having Heat resources for Ironic. We recommended the team to
-start with Allocation and Deployment resources (the latter being virtual
-until we implement the planned deployment API).</li>
-<li>We prototyped how Heat resources for Ironic could look, including Node, Port,
-Allocation and Deployment as a first step.</li>
-</ul>
-</div>
-</div>
+    <p>Content migrated to <a href="https://owlet.today/posts/ironic-denver-2019/">https://owlet.today/posts/ironic-denver-2019/</a>.</p>
+    
     </div>
-    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
-<li><a class="tag p-category" href="../../categories/openstack/" rel="tag">openstack</a></li>
-            <li><a class="tag p-category" href="../../categories/software/" rel="tag">software</a></li>
-        </ul>
-<ul class="pager hidden-print">
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
                 <a href="../resource-classes-traits-and-allocations/" rel="prev" title="Bare Metal Resource Classes, Traits and Allocations">Previous post</a>
+            </li>
+            <li class="next">
+                <a href="../blog-migrated/" rel="next" title="Blog migrated">Next post</a>
             </li>
         </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
         
@@ -474,8 +139,9 @@ Allocation and Deployment as a first step.</li>
 
 
         </section></article><script>var disqus_shortname="diviusnet2";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
-            Contents © 2019 Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+            Contents © 2020 Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
 <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"></a> - Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a>
+            
             
         </footer>
 </div>
@@ -485,9 +151,7 @@ Allocation and Deployment as a first step.</li>
         <script src="../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script>
 </body>
 </html>

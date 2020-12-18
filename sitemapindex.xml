@@ -7,22 +7,22 @@
                         http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <sitemap>
   <loc>http://dtantsur.github.io/categories/coding.xml</loc>
-  <lastmod>2019-04-03T14:54:00Z</lastmod>
+  <lastmod>2020-12-18T17:21:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://dtantsur.github.io/categories/openstack.xml</loc>
-  <lastmod>2019-05-02T17:44:00Z</lastmod>
+  <lastmod>2020-12-18T17:21:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://dtantsur.github.io/categories/software.xml</loc>
-  <lastmod>2019-05-02T17:44:00Z</lastmod>
+  <lastmod>2020-12-18T17:26:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://dtantsur.github.io/rss.xml</loc>
-  <lastmod>2019-05-02T17:44:00Z</lastmod>
+  <lastmod>2020-12-18T17:26:00Z</lastmod>
  </sitemap>
  <sitemap>
   <loc>http://dtantsur.github.io/sitemap.xml</loc>
-  <lastmod>2019-05-02T17:44:00Z</lastmod>
+  <lastmod>2020-12-18T17:26:00Z</lastmod>
  </sitemap>
 </sitemapindex>

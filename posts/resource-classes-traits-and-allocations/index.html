@@ -8,21 +8,17 @@
 <link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
 <meta name="theme-color" content="#FFFFFF">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../../rss.xml">
 <link rel="canonical" href="http://dtantsur.github.io/posts/resource-classes-traits-and-allocations/">
 <!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Dmitry Tantsur">
-<link rel="prev" href="../ironic-ptg-denver-2017-2/" title="Denver PTG Summary: Ironic (part 2)" type="text/html">
+<link rel="prev" href="../ironic-ptg-denver-2017-2/" title="Denver PTG Summary" type="text/html">
 <link rel="next" href="../ironic-denver-2019/" title="Ironic at OpenInfra Summit and PTG" type="text/html">
 <meta property="og:site_name" content="Coding Music">
 <meta property="og:title" content="Bare Metal Resource Classes, Traits and Allocations">
 <meta property="og:url" content="http://dtantsur.github.io/posts/resource-classes-traits-and-allocations/">
-<meta property="og:description" content="This blog post introduces the recent features for scheduling bare metal nodes
-with OpenStack Bare Metal (Ironic). It explains resource classes and
-traits as applied to bare metal nodes and show-cases ">
+<meta property="og:description" content="Content migrated to https://owlet.today/posts/resource-classes-traits-and-allocations/.">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2019-04-03T15:57:05+02:00">
-<meta property="article:tag" content="coding">
-<meta property="article:tag" content="openstack">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -30,10 +26,11 @@ traits as applied to bare metal nodes and show-cases ">
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="http://dtantsur.github.io/">
+        <a class="navbar-brand" href="../../">
 
             <span id="blog-title">Coding Music</span>
         </a>
@@ -86,10 +83,11 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
+        
 <article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Bare Metal Resource Classes, Traits and Allocations</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
                     Dmitry Tantsur
             </span></p>
             <p class="dateline">
@@ -108,265 +106,12 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>This blog post introduces the recent features for scheduling bare metal nodes
-with <a class="reference external" href="https://docs.openstack.org/ironic/latest/">OpenStack Bare Metal (Ironic)</a>. It explains <em>resource classes</em> and
-<em>traits</em> as applied to bare metal nodes and show-cases the new <a class="reference external" href="https://developer.openstack.org/api-ref/baremetal/?expanded=create-allocation-detail#allocations-allocations">Allocation
-API</a>, introduced in the 12.1.0 (Stein) release.</p>
-<!-- TEASER_END: Read more -->
-<div class="contents topic" id="table-of-contents">
-<p class="topic-title first">Table of Contents</p>
-<ul class="simple">
-<li><a class="reference internal" href="#history-of-ironic-and-nova" id="id2">History of Ironic and Nova</a></li>
-<li><a class="reference internal" href="#resource-classes" id="id3">Resource Classes</a></li>
-<li><a class="reference internal" href="#traits" id="id4">Traits</a></li>
-<li>
-<a class="reference internal" href="#allocation-api" id="id5">Allocation API</a><ul>
-<li><a class="reference internal" href="#allocations-and-traits" id="id6">Allocations and Traits</a></li>
-<li><a class="reference internal" href="#candidate-nodes" id="id7">Candidate Nodes</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#future-work" id="id8">Future Work</a></li>
-</ul>
-</div>
-<div class="section" id="history-of-ironic-and-nova">
-<h2><a class="toc-backref" href="#id2">History of Ironic and Nova</a></h2>
-<p>Long time ago, when the trees were greener and Ironic was younger, OpenStack
-Compute (aka Nova) tried to work with bare metal nodes the same way it worked
-with virtual machines. Each node pretended to be a separate hypervisor and
-added its CPU count, RAM size and disk size to the pool of resources, as any
-other hypervisor would. This beautiful idea, however, suffered from two serious
-issues:</p>
-<ol class="arabic simple">
-<li>A flavor could request only a part of exposed resources (e.g. 1G RAM out of
-4G available). The remaining resources would be seen as available, even
-though they weren't.</li>
-<li>During the <em>automated cleaning</em> process the nodes were no longer occupied
-from Nova's point of view, but they were not available yet.</li>
-</ol>
-<p>Two hacks were introduced in the Nova code base as solutions:</p>
-<ol class="arabic simple">
-<li>Ironic required a special <em>host manager</em> that made sure that any instance
-consumes all resources of a node.</li>
-<li>During cleaning the nodes returned zero resources.</li>
-</ol>
-<p>The existence of these hacks broke the illusion that bare metal machines behave
-the same way as virtual hypervisors. Furthermore, races were possible when the
-number of free instances was very low (e.g. in case of <a class="reference external" href="https://tripleo.org">TripleO</a> it isn't
-uncommon to deploy all available nodes).</p>
-</div>
-<div class="section" id="resource-classes">
-<h2><a class="toc-backref" href="#id3">Resource Classes</a></h2>
-<p>An obvious solution to both problems mentioned above is to stop treating bare
-metal hypervisors as pools of CPU/RAM/disk and start treating them the way
-they are - single instances of an indivisible resource. This is where <em>custom
-resource classes</em> come into play. The <a class="reference external" href="https://docs.openstack.org/placement/latest/">Placement</a> service defines resource
-classes as types of resources that can be tracked, consumed and released. For
-example, the conventional CPU/RAM/disk triad maps to resource classes called
-<tt class="docutils literal">VCPU</tt>, <tt class="docutils literal">MEMORY_MB</tt> and <tt class="docutils literal">DISK_GB</tt>.</p>
-<p>What about bare metal nodes? Starting with the Newton release of Ironic, nodes
-have a <tt class="docutils literal">resource_class</tt> field that serves exactly this purpose: to define a
-<em>custom resource class</em> of a node. Since the transitional period ended in the
-Rocky cycle, each node exposes one instance of its custom resource class and
-nothing else.</p>
-<p>For example, a node defined as</p>
-<pre class="code console"><a name="rest_code_d442bb11143b4ca3955b5cb7f56cfbf2-1"></a><span class="gp">$</span> openstack baremetal node create --name large-01 --driver ipmi --resource-class baremetal-large
-</pre>
-<p>will expose (once made <tt class="docutils literal">available</tt>) one instance of custom resource class
-called <tt class="docutils literal">CUSTOM_BAREMETAL_LARGE</tt>. It can be consumed by a flavor defined with
-(see <a class="reference external" href="https://docs.openstack.org/ironic/latest/install/configure-nova-flavors.html">baremetal flavor documentation</a> for details):</p>
-<pre class="code console"><a name="rest_code_e45be3934931466f961d231412dd3394-1"></a><span class="gp">$</span> openstack flavor <span class="nb">set</span> --property resources:CUSTOM_BAREMETAL_LARGE<span class="o">=</span><span class="m">1</span> my-baremetal-flavor
-</pre>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p>To completely opt-out of scheduling based on CPU/RAM/disk, your flavor must
-also contain:</p>
-<div class="last"><pre class="code console"><a name="rest_code_e84073f2de27498fb7e13b7f97379161-1"></a><span class="gp">$</span> openstack flavor <span class="nb">set</span> my-baremetal-flavor <span class="se">\</span>
-<a name="rest_code_e84073f2de27498fb7e13b7f97379161-2"></a>    --property resources:VCPU<span class="o">=</span><span class="m">0</span> <span class="se">\</span>
-<a name="rest_code_e84073f2de27498fb7e13b7f97379161-3"></a>    --property resources:MEMORY_MB<span class="o">=</span><span class="m">0</span> <span class="se">\</span>
-<a name="rest_code_e84073f2de27498fb7e13b7f97379161-4"></a>    --property resources:DISK_GB<span class="o">=</span><span class="m">0</span>
-</pre></div>
-</div>
-<p>What is a resource class for bare metal in the end? These are just
-non-overlapping groups of the bare metal nodes. If it's not possible to split
-your nodes into such groups, you may opt for using only one custom resource
-class (<a class="reference external" href="https://tripleo.org">TripleO</a> uses <tt class="docutils literal">baremetal</tt> by default) and schedule bare metal nodes
-solely using <a class="reference internal" href="#traits">Traits</a>.</p>
-</div>
-<div class="section" id="traits">
-<h2><a class="toc-backref" href="#id4">Traits</a></h2>
-<p><em>Trait</em> is another concept that came into bare metal world from Placement. Its
-name is mostly self-explanatory: it is something that can be true or false
-about a node. Think, <em>Does this node have an OpenCV-enabled GPU?</em> or <em>Does this
-node have virtualization CPU extension?</em> A whole bunch of <em>standard traits</em> is
-defined by the <a class="reference external" href="https://docs.openstack.org/os-traits/latest/user/index.html">os-traits</a> library, but you can also define custom ones by
-prefixing them with <tt class="docutils literal">CUSTOM_</tt>.</p>
-<p>Starting with the Queens release, traits can be added to bare metal nodes:</p>
-<pre class="code console"><a name="rest_code_161ebd51b6cb49cfb5af9574d3807c79-1"></a><span class="gp">$</span> openstack baremetal node add trait large-01 HW_CPU_X86_VMX CUSTOM_OPENCV
-<a name="rest_code_161ebd51b6cb49cfb5af9574d3807c79-2"></a><span class="go">Added trait HW_CPU_X86_VMX</span>
-<a name="rest_code_161ebd51b6cb49cfb5af9574d3807c79-3"></a><span class="go">Added trait CUSTOM_OPENCV</span>
-</pre>
-<p>As you see, I'm associating two traits with the node: one is standard (coming
-from <a class="reference external" href="https://docs.openstack.org/os-traits/latest/user/index.html">os-traits</a>), the other is custom (invented by me). Now we can update our
-flavor to request them:</p>
-<pre class="code console"><a name="rest_code_71855a75ccd944f2bfb98bb0f9ca79d5-1"></a><span class="gp">$</span> openstack flavor <span class="nb">set</span> my-baremetal-flavor <span class="se">\</span>
-<a name="rest_code_71855a75ccd944f2bfb98bb0f9ca79d5-2"></a>    --property trait:HW_CPU_X86_VMX<span class="o">=</span>required <span class="se">\</span>
-<a name="rest_code_71855a75ccd944f2bfb98bb0f9ca79d5-3"></a>    --property trait:CUSTOM_OPENCV<span class="o">=</span>required
-</pre>
-<p>Now this flavor will make the scheduler take nodes with the resource class
-<tt class="docutils literal"><span class="pre">baremetal-large</span></tt> (defined in the previous section) and then choose from only
-those with our two traits defined.</p>
-</div>
-<div class="section" id="allocation-api">
-<h2><a class="toc-backref" href="#id5">Allocation API</a></h2>
-<p>The previous two sections have covered scheduling bare metal nodes with Nova
-pretty well. But what about using Ironic standalone? Indeed, we have been
-advertizing standalone Ironic as a viable solution for a long time, including
-maintaining the <a class="reference external" href="https://docs.openstack.org/bifrost/latest/">Bifrost</a> project as one of the ways to install and use it.
-However, we did not have any scheduling story for standalone Ironic - until the
-Stein release.</p>
-<p>In the Stein release (Ironic 12.1.0+ and python-ironicclient 2.7.0+) a new
-concept of an <em>allocation</em> is introduced (again, borrowing a similar term from
-Placement). An allocation is a request to find a bare metal node with
-suitable resource class and traits and reserve it via the existing
-<tt class="docutils literal">instance_uuid</tt> mechanism (making it compatible with Nova).</p>
-<pre class="code console"><a name="rest_code_39d7329d09804a9f872d785e5a8d6173-1"></a><span class="gp">$</span> openstack baremetal allocation create --resource-class baremetal-large --wait
-<a name="rest_code_39d7329d09804a9f872d785e5a8d6173-2"></a><span class="go">+-----------------+--------------------------------------+</span>
-<a name="rest_code_39d7329d09804a9f872d785e5a8d6173-3"></a><span class="go">| Field           | Value                                |</span>
-<a name="rest_code_39d7329d09804a9f872d785e5a8d6173-4"></a><span class="go">+-----------------+--------------------------------------+</span>
-<a name="rest_code_39d7329d09804a9f872d785e5a8d6173-5"></a><span class="go">| candidate_nodes | []                                   |</span>
-<a name="rest_code_39d7329d09804a9f872d785e5a8d6173-6"></a><span class="go">| created_at      | 2019-04-03T12:18:26+00:00            |</span>
-<a name="rest_code_39d7329d09804a9f872d785e5a8d6173-7"></a><span class="go">| extra           | {}                                   |</span>
-<a name="rest_code_39d7329d09804a9f872d785e5a8d6173-8"></a><span class="go">| last_error      | None                                 |</span>
-<a name="rest_code_39d7329d09804a9f872d785e5a8d6173-9"></a><span class="go">| name            | None                                 |</span>
-<a name="rest_code_39d7329d09804a9f872d785e5a8d6173-10"></a><span class="go">| node_uuid       | 5d946337-b1d9-4b06-8eda-4fb77e994a0d |</span>
-<a name="rest_code_39d7329d09804a9f872d785e5a8d6173-11"></a><span class="go">| resource_class  | baremetal-large                      |</span>
-<a name="rest_code_39d7329d09804a9f872d785e5a8d6173-12"></a><span class="go">| state           | active                               |</span>
-<a name="rest_code_39d7329d09804a9f872d785e5a8d6173-13"></a><span class="go">| traits          | []                                   |</span>
-<a name="rest_code_39d7329d09804a9f872d785e5a8d6173-14"></a><span class="go">| updated_at      | 2019-04-03T12:18:26+00:00            |</span>
-<a name="rest_code_39d7329d09804a9f872d785e5a8d6173-15"></a><span class="go">| uuid            | e84f5d60-84f1-4701-a635-10ff90e2f3b0 |</span>
-<a name="rest_code_39d7329d09804a9f872d785e5a8d6173-16"></a><span class="go">+-----------------+--------------------------------------+</span>
-</pre>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p>Allocations in Ironic (including the earlier approach of using
-<tt class="docutils literal">instance_uuid</tt>) are cooperative. API consumers that are not using the
-allocation API are required to set <tt class="docutils literal">instance_uuid</tt> directly before doing
-anything with a node. The allocation API does it for you:</p>
-<div class="last"><pre class="code console"><a name="rest_code_126c344c83964e60ac04a8a8bb50ac92-1"></a><span class="gp">$</span> openstack baremetal node show 5d946337-b1d9-4b06-8eda-4fb77e994a0d --fields instance_uuid
-<a name="rest_code_126c344c83964e60ac04a8a8bb50ac92-2"></a><span class="go">+---------------+--------------------------------------+</span>
-<a name="rest_code_126c344c83964e60ac04a8a8bb50ac92-3"></a><span class="go">| Field         | Value                                |</span>
-<a name="rest_code_126c344c83964e60ac04a8a8bb50ac92-4"></a><span class="go">+---------------+--------------------------------------+</span>
-<a name="rest_code_126c344c83964e60ac04a8a8bb50ac92-5"></a><span class="go">| instance_uuid | e84f5d60-84f1-4701-a635-10ff90e2f3b0 |</span>
-<a name="rest_code_126c344c83964e60ac04a8a8bb50ac92-6"></a><span class="go">+---------------+--------------------------------------+</span>
-</pre></div>
-</div>
-<p>Now that you have an <tt class="docutils literal">active</tt> allocation, you can proceed with the
-deployment of the node specified in the <tt class="docutils literal">node_uuid</tt> field, for example:</p>
-<pre class="code console"><a name="rest_code_fefe558ba1c84306a23744b709f0ee5e-1"></a><span class="gp">$</span> openstack baremetal node <span class="nb">set</span> 5d946337-b1d9-4b06-8eda-4fb77e994a0d <span class="se">\</span>
-<a name="rest_code_fefe558ba1c84306a23744b709f0ee5e-2"></a>    --instance-info <span class="nv">image_source</span><span class="o">=</span>https://images.local/image.img <span class="se">\</span>
-<a name="rest_code_fefe558ba1c84306a23744b709f0ee5e-3"></a>    --instance-info <span class="nv">image_checksum</span><span class="o">=</span>9dba20bace2bf54b63154a473feea422
-<a name="rest_code_fefe558ba1c84306a23744b709f0ee5e-4"></a><span class="gp">$</span> openstack baremetal node deploy 5d946337-b1d9-4b06-8eda-4fb77e994a0d <span class="se">\</span>
-<a name="rest_code_fefe558ba1c84306a23744b709f0ee5e-5"></a>    --config-drive /path/to/config/drive --wait
-</pre>
-<p>An error to allocate will be clearly communicated to you:</p>
-<pre class="code console"><a name="rest_code_0bf6413d63c3474687361c073af461be-1"></a><span class="gp">$</span> openstack baremetal allocation create --resource-class I-dont-exist --wait
-<a name="rest_code_0bf6413d63c3474687361c073af461be-2"></a><span class="go">Allocation 34202b56-389a-4845-ae36-90e82a707adc failed: Failed to process allocation 34202b56-389a-4845-ae36-90e82a707adc: no available nodes match the resource class I-dont-exist.</span>
-</pre>
-<p>Allocations are automatically deleted when an associated node is undeployed, so
-usually you don't have to worry about them. If you decided not to deploy at
-all (or if allocation has failed), delete the allocation:</p>
-<pre class="code console"><a name="rest_code_129e1a18e77d414a8bf64dc6d6870ee7-1"></a><span class="gp">$</span> openstack baremetal allocation delete 34202b56-389a-4845-ae36-90e82a707adc
-<a name="rest_code_129e1a18e77d414a8bf64dc6d6870ee7-2"></a><span class="go">Deleted allocation 34202b56-389a-4845-ae36-90e82a707adc</span>
-</pre>
-<div class="section" id="allocations-and-traits">
-<h3><a class="toc-backref" href="#id6">Allocations and Traits</a></h3>
-<p>Since we're aiming for compatibility with Nova, traits are also supported.</p>
-<pre class="code console"><a name="rest_code_615f224319924ae99c8654e4f8cea4c2-1"></a><span class="gp">$</span> openstack baremetal allocation create --resource-class baremetal-large <span class="se">\</span>
-<a name="rest_code_615f224319924ae99c8654e4f8cea4c2-2"></a>    --trait HW_CPU_X86_VMX --trait CUSTOM_OPENCV --wait
-<a name="rest_code_615f224319924ae99c8654e4f8cea4c2-3"></a><span class="go">+-----------------+---------------------------------------+</span>
-<a name="rest_code_615f224319924ae99c8654e4f8cea4c2-4"></a><span class="go">| Field           | Value                                 |</span>
-<a name="rest_code_615f224319924ae99c8654e4f8cea4c2-5"></a><span class="go">+-----------------+---------------------------------------+</span>
-<a name="rest_code_615f224319924ae99c8654e4f8cea4c2-6"></a><span class="go">| candidate_nodes | []                                    |</span>
-<a name="rest_code_615f224319924ae99c8654e4f8cea4c2-7"></a><span class="go">| created_at      | 2019-04-03T13:28:45+00:00             |</span>
-<a name="rest_code_615f224319924ae99c8654e4f8cea4c2-8"></a><span class="go">| extra           | {}                                    |</span>
-<a name="rest_code_615f224319924ae99c8654e4f8cea4c2-9"></a><span class="go">| last_error      | None                                  |</span>
-<a name="rest_code_615f224319924ae99c8654e4f8cea4c2-10"></a><span class="go">| name            | None                                  |</span>
-<a name="rest_code_615f224319924ae99c8654e4f8cea4c2-11"></a><span class="go">| node_uuid       | 3ddb8b0c-8cc2-4c23-8239-eeda4e93d07f  |</span>
-<a name="rest_code_615f224319924ae99c8654e4f8cea4c2-12"></a><span class="go">| resource_class  | baremetal-large                       |</span>
-<a name="rest_code_615f224319924ae99c8654e4f8cea4c2-13"></a><span class="go">| state           | active                                |</span>
-<a name="rest_code_615f224319924ae99c8654e4f8cea4c2-14"></a><span class="go">| traits          | [u'HW_CPU_X86_VMX', u'CUSTOM_OPENCV'] |</span>
-<a name="rest_code_615f224319924ae99c8654e4f8cea4c2-15"></a><span class="go">| updated_at      | 2019-04-03T13:28:45+00:00             |</span>
-<a name="rest_code_615f224319924ae99c8654e4f8cea4c2-16"></a><span class="go">| uuid            | 7b3bd8bf-3a00-41a4-a018-69b620226629  |</span>
-<a name="rest_code_615f224319924ae99c8654e4f8cea4c2-17"></a><span class="go">+-----------------+---------------------------------------+</span>
-</pre>
-<p>This list of matched traits is automatically added to the node's
-<tt class="docutils literal">instance_info</tt> for seamless integration with <em>Deploy Templates</em> in the
-future:</p>
-<pre class="code console"><a name="rest_code_4c13b790fde7415dbfc2a14d6160adac-1"></a><span class="gp">$</span> openstack baremetal node show 3ddb8b0c-8cc2-4c23-8239-eeda4e93d07f --fields instance_info
-<a name="rest_code_4c13b790fde7415dbfc2a14d6160adac-2"></a><span class="go">+---------------+----------------------------------------------------+</span>
-<a name="rest_code_4c13b790fde7415dbfc2a14d6160adac-3"></a><span class="go">| Field         | Value                                              |</span>
-<a name="rest_code_4c13b790fde7415dbfc2a14d6160adac-4"></a><span class="go">+---------------+----------------------------------------------------+</span>
-<a name="rest_code_4c13b790fde7415dbfc2a14d6160adac-5"></a><span class="go">| instance_info | {u'traits': [u'HW_CPU_X86_VMX', u'CUSTOM_OPENCV']} |</span>
-<a name="rest_code_4c13b790fde7415dbfc2a14d6160adac-6"></a><span class="go">+---------------+----------------------------------------------------+</span>
-</pre>
-<p>And again, errors are pretty clear:</p>
-<pre class="code console"><a name="rest_code_04316e3cf2d948fca0d44a87aad75d56-1"></a><span class="gp">$</span> openstack baremetal allocation create --resource-class baremetal --trait CUSTOM_UNKNOWN --wait
-<a name="rest_code_04316e3cf2d948fca0d44a87aad75d56-2"></a><span class="go">Allocation e34af6cb-1a4b-4437-a252-7aac560ab257 failed: Failed to process allocation e34af6cb-1a4b-4437-a252-7aac560ab257: no suitable nodes have the requested traits CUSTOM_UNKNOWN.</span>
-</pre>
-</div>
-<div class="section" id="candidate-nodes">
-<h3><a class="toc-backref" href="#id7">Candidate Nodes</a></h3>
-<p>There are just too many ways to choose nodes, we cannot cover them all in the
-API. For example, a common request is to support <em>capabilities</em>, which can be
-seen as traits with values. To avoid bloating the API further, we have an
-ability to provide a list of <em>candidate nodes</em> for an allocation</p>
-<pre class="code console"><a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-1"></a><span class="gp">$</span> openstack baremetal allocation create --resource-class baremetal-large <span class="se">\</span>
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-2"></a>    --candidate-node ae1ebb09-a903-4199-8616-a0a5f3334203 <span class="se">\</span>
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-3"></a>    --candidate-node 3ddb8b0c-8cc2-4c23-8239-eeda4e93d07f --wait
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-4"></a><span class="go">+-----------------+------------------------------------------------------------------------------------+</span>
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-5"></a><span class="go">| Field           | Value                                                                              |</span>
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-6"></a><span class="go">+-----------------+------------------------------------------------------------------------------------+</span>
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-7"></a><span class="go">| candidate_nodes | [u'ae1ebb09-a903-4199-8616-a0a5f3334203', u'3ddb8b0c-8cc2-4c23-8239-eeda4e93d07f'] |</span>
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-8"></a><span class="go">| created_at      | 2019-04-03T13:50:24+00:00                                                          |</span>
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-9"></a><span class="go">| extra           | {}                                                                                 |</span>
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-10"></a><span class="go">| last_error      | None                                                                               |</span>
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-11"></a><span class="go">| name            | None                                                                               |</span>
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-12"></a><span class="go">| node_uuid       | 3ddb8b0c-8cc2-4c23-8239-eeda4e93d07f                                               |</span>
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-13"></a><span class="go">| resource_class  | baremetal-large                                                                    |</span>
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-14"></a><span class="go">| state           | active                                                                             |</span>
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-15"></a><span class="go">| traits          | []                                                                                 |</span>
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-16"></a><span class="go">| updated_at      | 2019-04-03T13:50:24+00:00                                                          |</span>
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-17"></a><span class="go">| uuid            | 199a7e80-e688-4244-83de-ae9b21aac4a0                                               |</span>
-<a name="rest_code_bf59f87edfb7473694edcf96c5fe93d6-18"></a><span class="go">+-----------------+------------------------------------------------------------------------------------+</span>
-</pre>
-<p>This feature allows pre-filtering nodes based on any criteria.</p>
-</div>
-</div>
-<div class="section" id="future-work">
-<h2><a class="toc-backref" href="#id8">Future Work</a></h2>
-<p>While the core allocation API is available, there is still work to be done:</p>
-<ul class="simple">
-<li><a class="reference external" href="https://storyboard.openstack.org/#!/story/2005126">Updating allocation name and extra</a></li>
-<li><a class="reference external" href="https://storyboard.openstack.org/#!/story/2005014">Backfilling allocations for deployed nodes</a></li>
-<li>Updating <a class="reference external" href="https://docs.openstack.org/metalsmith/latest/">metalsmith</a> to use the allocation API</li>
-</ul>
-<p>Something I would love to see done, but certainly won't have time for, is
-adding <a class="reference external" href="https://docs.openstack.org/placement/latest/">Placement</a> as an optional backend for the allocation API. This may
-enable using <a class="reference external" href="https://docs.openstack.org/blazar/latest/">Blazar</a>, the OpenStack reservation service, with Ironic directly,
-rather than through Nova.</p>
-<p>Finally, the idea of replacing direct updates of <tt class="docutils literal">instance_info</tt> with a new
-<em>deployment API</em> has been in the air for years.</p>
-</div>
-</div>
+    <p>Content migrated to <a href="https://owlet.today/posts/resource-classes-traits-and-allocations/">https://owlet.today/posts/resource-classes-traits-and-allocations/</a>.</p>
+    
     </div>
-    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
-<li><a class="tag p-category" href="../../categories/coding/" rel="tag">coding</a></li>
-            <li><a class="tag p-category" href="../../categories/openstack/" rel="tag">openstack</a></li>
-        </ul>
-<ul class="pager hidden-print">
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
-                <a href="../ironic-ptg-denver-2017-2/" rel="prev" title="Denver PTG Summary: Ironic (part 2)">Previous post</a>
+                <a href="../ironic-ptg-denver-2017-2/" rel="prev" title="Denver PTG Summary">Previous post</a>
             </li>
             <li class="next">
                 <a href="../ironic-denver-2019/" rel="next" title="Ironic at OpenInfra Summit and PTG">Next post</a>
@@ -394,8 +139,9 @@ rather than through Nova.</p>
 
 
         </section></article><script>var disqus_shortname="diviusnet2";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
-            Contents © 2019 Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+            Contents © 2020 Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
 <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"></a> - Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a>
+            
             
         </footer>
 </div>
@@ -405,9 +151,7 @@ rather than through Nova.</p>
         <script src="../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script>
 </body>
 </html>

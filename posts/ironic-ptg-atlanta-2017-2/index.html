@@ -4,30 +4,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Atlanta PTG Summary: Ironic (part 2) | Coding Music</title>
+<title>Atlanta PTG Summary | Coding Music</title>
 <link href="../../assets/css/all-nocdn.css" rel="stylesheet" type="text/css">
 <meta name="theme-color" content="#FFFFFF">
 <meta name="generator" content="Nikola (getnikola.com)">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="../../rss.xml">
+<link rel="alternate" type="application/rss+xml" title="RSS" hreflang="en" href="../../rss.xml">
 <link rel="canonical" href="http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-2/">
 <!--[if lt IE 9]><script src="../../assets/js/html5.js"></script><![endif]--><meta name="author" content="Dmitry Tantsur">
-<link rel="prev" href="../ironic-ptg-atlanta-2017-1/" title="Atlanta PTG Summary: Ironic (part 1)" type="text/html">
-<link rel="next" href="../ironic-ptg-atlanta-2017-3/" title="Atlanta PTG Summary: Ironic (part 3)" type="text/html">
+<link rel="prev" href="../ironic-ptg-atlanta-2017-1/" title="Atlanta PTG Summary" type="text/html">
+<link rel="next" href="../ironic-ptg-atlanta-2017-3/" title="Atlanta PTG Summary" type="text/html">
 <meta property="og:site_name" content="Coding Music">
-<meta property="og:title" content="Atlanta PTG Summary: Ironic (part 2)">
+<meta property="og:title" content="Atlanta PTG Summary">
 <meta property="og:url" content="http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-2/">
-<meta property="og:description" content="This is an extract from my personal notes and public etherpads from the
-OpenStack PTG 2017 in Atlanta. A lot of text ahead!
-The previous part,
-the next part.
-
-
-CI and testing
-Etherpad: https://etherpa">
+<meta property="og:description" content="Content migrated to https://owlet.today/posts/ironic-ptg-atlanta-2017-2/.">
 <meta property="og:type" content="article">
 <meta property="article:published_time" content="2017-03-01T15:30:00+01:00">
-<meta property="article:tag" content="openstack">
-<meta property="article:tag" content="software">
 </head>
 <body>
 <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
@@ -35,10 +26,11 @@ Etherpad: https://etherpa">
 <!-- Menubar -->
 
 <nav class="navbar navbar-expand-md static-top mb-4
-navbar-dark bg-dark
+navbar-dark
+bg-dark
 "><div class="container">
 <!-- This keeps the margins nice -->
-        <a class="navbar-brand" href="http://dtantsur.github.io/">
+        <a class="navbar-brand" href="../../">
 
             <span id="blog-title">Coding Music</span>
         </a>
@@ -91,10 +83,11 @@ navbar-dark bg-dark
         <!--Body content-->
         
         
-<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Atlanta PTG Summary: Ironic (part 2)</a></h1>
+        
+<article class="post-text h-entry hentry postpage" itemscope="itemscope" itemtype="http://schema.org/Article"><header><h1 class="p-name entry-title" itemprop="headline name"><a href="." class="u-url">Atlanta PTG Summary</a></h1>
 
         <div class="metadata">
-            <p class="byline author vcard"><span class="byline-name fn" itemprop="author">
+            <p class="byline author vcard p-author h-card"><span class="byline-name fn p-name" itemprop="author">
                     Dmitry Tantsur
             </span></p>
             <p class="dateline">
@@ -113,149 +106,15 @@ navbar-dark bg-dark
         
 
     </header><div class="e-content entry-content" itemprop="articleBody text">
-    <div>
-<p>This is an extract from my personal notes and public etherpads from the
-OpenStack PTG 2017 in Atlanta. A lot of text ahead!</p>
-<p><a class="reference external" href="../posts/ironic-ptg-atlanta-2017-1.html">The previous part</a>,
-<a class="reference external" href="../posts/ironic-ptg-atlanta-2017-3.html">the next part</a>.</p>
-<!-- TEASER_END: Read more -->
-<div class="section" id="ci-and-testing">
-<h2>CI and testing</h2>
-<p>Etherpad: <a class="reference external" href="https://etherpad.openstack.org/p/ironic-pike-ptg-ci-testing">https://etherpad.openstack.org/p/ironic-pike-ptg-ci-testing</a></p>
-<div class="section" id="missing-ci-coverage">
-<h3>Missing CI coverage</h3>
-<dl class="docutils">
-<dt>UEFI</dt>
-<dd>Cirros finally released a stable version with UEFI support built in.
-A non-voting job is running with partition images, should be made voting
-soon. A test with whole disk images will be introduced as part of
-<a class="reference external" href="https://review.openstack.org/#/c/423556/">standalone tests</a>.</dd>
-<dt>Local bootloader</dt>
-<dd>
-<p class="first">Requires small enough instance images with Grub2 present (Cirros does not
-have it). We agreed to create a new repository with scripts to build
-suitable images. Potentially can be shared with other teams (e.g. Neutron).</p>
-<p class="last">Actions: <strong>lucasagomes</strong> and/or <strong>vsaienko</strong> to look into it.</p>
-</dd>
-<dt>Adopt state</dt>
-<dd>Tests have been up for some time, but have ordering issues with nova-based
-tests. Suggesting <strong>TheJulia</strong> to move them to <a class="reference external" href="https://review.openstack.org/#/c/423556/">standalone tests</a>.</dd>
-<dt>Root device hints</dt>
-<dd>
-<p class="first">Not covered by any CI. Will need modifying how we create virtual machines.
-First step is to get size-based hints work. Check two cases: with size
-strictly equal and greater than requested.</p>
-<p class="last">Actions: <strong>dtantsur</strong> to look into it.</p>
-</dd>
-<dt>Capabilities-based scheduling</dt>
-<dd>
-<p class="first">This may actually go to Nova gate, not ours. Still, it relies on some code
-in our driver, so we'd better cover it to ensure that the placement API
-changes don't break it.</p>
-<p class="last">Actions: <strong>vsaienko</strong> to look into it.</p>
-</dd>
-<dt>Port groups</dt>
-<dd>The same image problem as with local boot - the same action item to create
-a repository with build scripts to build our images.</dd>
-<dt>VLAN-aware instances</dt>
-<dd>The same image problem + requires <a class="reference external" href="https://review.openstack.org/#/c/392959/">reworking our network simulation code</a>.</dd>
-<dt>Conductor take over and hash ring</dt>
-<dd>
-<p class="first">Requires a separate multi-node job.</p>
-<p class="last">Action: <strong>vsaienko</strong> to investigate.</p>
-</dd>
-</dl>
-<div class="section" id="dib-based-ipa-image">
-<h4>DIB-based IPA image</h4>
-<p>Currently the <tt class="docutils literal"><span class="pre">ironic-agent</span></tt> element to build such image is in the DIB
-repository outside of our control. If we want to properly support it, we need
-to gate on its changes, and to gate IPA changes on its job. Some time ago we
-had a tentative agreement to move the element to our tree.</p>
-<p>It was blocked by the fact that DIB rarely or never removes elements, and does
-not have a way to properly de-duplicate elements with the same name.</p>
-<p>An obvious solution we are going to propose is to take this element in IPA
-tree under a different name (<tt class="docutils literal"><span class="pre">ironic-python-agent</span></tt>?). The old element will
-get deprecated and only critical fixes will be accepted for it.</p>
-<dl class="docutils">
-<dt>Action</dt>
-<dd>
-<strong>dtantsur</strong> to (re)start this discussion with the TripleO and DIB teams.</dd>
-</dl>
-</div>
-<div class="section" id="api-microversions-testing">
-<h4>API microversions testing</h4>
-<p>We are not sure we have tests covering all microversions. We seem to have API
-tests using <tt class="docutils literal">fake</tt> driver that cover at least some of them. We should start
-paying more attention to this part of our testing.</p>
-<dl class="docutils">
-<dt>Actions</dt>
-<dd>
-<strong>dtantsur</strong> to check if these tests are up-to-date and split them to a
-separate CI job.
-<strong>pas-ha</strong> to write API tests for internal API (i.e. lookup/heartbeat).</dd>
-</dl>
-</div>
-</div>
-<div class="section" id="global-openstack-goals">
-<h3>Global OpenStack goals</h3>
-<div class="section" id="splitting-away-tempest-plugins">
-<h4>Splitting away tempest plugins</h4>
-<p>It did not end up a goal for Pike, and there are still some concerns in the
-community. Still, as we already apply ugly hacks in our jobs to use the
-tempest plugin from master, we agreed to proceed with the split.</p>
-<p>To simplify both maintenance and consuming our tests, we agreed to merge
-ironic and ironic-inspector plugins. The introspection tests will or will
-not run based on ironic-inspector presence.</p>
-<p>We propose having a merged core team (i.e. ironic-inspector-core which
-already includes ironic-core) for this repository. We trust people who
-only have core rights on ironic-inspector to not approve things they're
-not authorized to approve.</p>
-</div>
-<div class="section" id="python-3-support">
-<h4>Python 3 support</h4>
-<p>We've been running Python 3 unit tests for quite some time. Additionally,
-ironic-inspector runs a non-voting Python 3 functional test. Ironic has an
-experimental job which fails, apparently, because of swift. We can start with
-switching this job to the <tt class="docutils literal">pxe_ipmitool</tt> driver (not requiring swift).
-Inspector does not have a Python 3 integration tests job proposed yet.</p>
-<dl class="docutils">
-<dt>Actions</dt>
-<dd>
-<p class="first"><strong>JayF</strong> and <strong>hurricanerix</strong> will drive this work in both ironic and
-ironic-inspector.</p>
-<p><strong>lucasagomes</strong> to check pyghmi and virtualbmc compatibility.</p>
-<p class="last"><strong>krtaylor</strong> and/or <strong>mjturek</strong> to check MoltenIron.</p>
-</dd>
-</dl>
-<p>We agreed that Bifrost is out of scope for this task. Its Python 3
-compatibility mostly depends on one of Ansible anyway. Similarly, for the UI
-we need horizon to be fully Python 3 compatible first.</p>
-<dl class="docutils">
-<dt>Important decisions</dt>
-<dd>We recommend vendors to make their libraries compatible with Python 3.
-It may become a strict requirement in one of the coming releases.</dd>
-</dl>
-</div>
-<div class="section" id="api-behind-wsgi-container">
-<h4>API behind WSGI container</h4>
-<p>This seems quite straightforward. The work has started to switch ironic CI to
-WSGI already. For ironic-inspector it's going to be done as part of the HA
-work.</p>
-</div>
-</div>
-</div>
-</div>
+    <p>Content migrated to <a href="https://owlet.today/posts/ironic-ptg-atlanta-2017-2/">https://owlet.today/posts/ironic-ptg-atlanta-2017-2/</a>.</p>
+    
     </div>
-    <aside class="postpromonav"><nav><ul itemprop="keywords" class="tags">
-<li><a class="tag p-category" href="../../categories/openstack/" rel="tag">openstack</a></li>
-            <li><a class="tag p-category" href="../../categories/software/" rel="tag">software</a></li>
-        </ul>
-<ul class="pager hidden-print">
+    <aside class="postpromonav"><nav><ul class="pager hidden-print">
 <li class="previous">
-                <a href="../ironic-ptg-atlanta-2017-1/" rel="prev" title="Atlanta PTG Summary: Ironic (part 1)">Previous post</a>
+                <a href="../ironic-ptg-atlanta-2017-1/" rel="prev" title="Atlanta PTG Summary">Previous post</a>
             </li>
             <li class="next">
-                <a href="../ironic-ptg-atlanta-2017-3/" rel="next" title="Atlanta PTG Summary: Ironic (part 3)">Next post</a>
+                <a href="../ironic-ptg-atlanta-2017-3/" rel="next" title="Atlanta PTG Summary">Next post</a>
             </li>
         </ul></nav></aside><section class="comments hidden-print"><h2>Comments</h2>
         
@@ -264,7 +123,7 @@ work.</p>
         <script>
         var disqus_shortname ="diviusnet2",
             disqus_url="http://dtantsur.github.io/posts/ironic-ptg-atlanta-2017-2/",
-        disqus_title="Atlanta PTG Summary: Ironic (part 2)",
+        disqus_title="Atlanta PTG Summary",
         disqus_identifier="cache/posts/ironic-ptg-atlanta-2017-2.html",
         disqus_config = function () {
             this.language = "en";
@@ -280,8 +139,9 @@ work.</p>
 
 
         </section></article><script>var disqus_shortname="diviusnet2";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());</script><!--End of body content--><footer id="footer">
-            Contents © 2019 Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+            Contents © 2020 Dmitry Tantsur <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
 <img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png"></a> - Powered by <a href="http://getnikola.com" rel="nofollow">Nikola</a>
+            
             
         </footer>
 </div>
@@ -291,9 +151,7 @@ work.</p>
         <script src="../../assets/js/all-nocdn.js"></script><script>
     baguetteBox.run('div#content', {
         ignoreClass: 'islink',
-        captions: function(element) {
-            return element.getElementsByTagName('img')[0].alt;
-    }});
+        captions: function(element){var i=element.getElementsByTagName('img')[0];return i===undefined?'':i.alt;}});
     </script>
 </body>
 </html>
